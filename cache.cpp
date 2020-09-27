@@ -7,25 +7,26 @@
 using std::optional;
 using std::nullopt;
 using std::function;
+using std::string;
 
 template <typename Key, typename Value>
-Cache<Key,Value>::Cache(function<Value(String)> pickle, function<String(Value)> unpickle){
+Cache<Key,Value>::Cache(function<string(Value)> pickle, function<Value(string)> unpickle){
   this->pickle = pickle;
   this->unpickle = unpickle;
 }
 
 template <typename Key, typename Value>
 optional<Value> Cache<Key,Value>::get(Key key){
-    ifstream inFile("test.txt");
+    std::ifstream inFile("test.txt");
     if (!inFile) {
-        cout << "Unable to open file";
+        std::cout << "Unable to open file";
         return nullopt;
     }    
-    ostringstream ss;
+    std::ostringstream ss;
     ss << inFile.rdbuf(); 
-    String str = ss.str();
+    string str = ss.str();
     inFile.close();
-    return str;
+    return optional<Value>{unpickle(str)};
 };
 
 template <typename Key, typename Value>

@@ -9,12 +9,12 @@ using std::string;
 template <typename Key, typename Value> class Cache
 {
   public:
-    Cache(function<Value(string)>, function<string(Value)>);
+    Cache(function<string(Value)>, function<Value(string)>);
     std::optional<Value> get(Key);
     void put(Key, Value);
   private:
-    function<Value(string)> pickle;
-    function<string(Value)> unpickle;
+    function<string(Value)> pickle;
+    function<Value(string)> unpickle;
 };
 
 #include "cache.cpp"
