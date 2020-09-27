@@ -1,5 +1,3 @@
-#if !defined(CACHE_H_FILE)
-#define CACHE_H_FILE
 #include <optional>
 #include <string>
 #include <functional>
@@ -9,6 +7,7 @@ using std::string;
 template <typename Key, typename Value> class Cache
 {
   public:
+    Cache();
     Cache(function<string(Key)>, function<string(Value)>, function<Value(string)>);
     std::optional<Value> get(Key);
     void put(Key, Value);
@@ -18,6 +17,10 @@ template <typename Key, typename Value> class Cache
     function<Value(string)> unpickle;
 };
 
+#if !defined(CACHE_H_FILE)
+#define CACHE_H_FILE
+
 #include "cache.cpp"
 
-#endif // MACRO
+#endif
+

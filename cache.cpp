@@ -1,5 +1,3 @@
-#include <iostream>
-#include <iomanip>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -9,6 +7,7 @@ using std::nullopt;
 using std::function;
 using std::string;
 
+//Constructors
 template <typename Key, typename Value>
 Cache<Key,Value>::Cache(function<string(Key)> key, function<string(Value)> pickle, function<Value(string)> unpickle){
   this->key = key;
