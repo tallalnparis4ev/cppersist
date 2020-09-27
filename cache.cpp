@@ -10,14 +10,15 @@ using std::function;
 using std::string;
 
 template <typename Key, typename Value>
-Cache<Key,Value>::Cache(function<string(Value)> pickle, function<Value(string)> unpickle){
+Cache<Key,Value>::Cache(function<string(Key)> key, function<string(Value)> pickle, function<Value(string)> unpickle){
+  this->key = key;
   this->pickle = pickle;
   this->unpickle = unpickle;
 }
 
 template <typename Key, typename Value>
 optional<Value> Cache<Key,Value>::get(Key key){
-    std::ifstream inFile("test.txt");
+    std::ifstream inFile(this->key(key));
     if (!inFile) {
         std::cout << "Unable to open file";
         return nullopt;
@@ -31,7 +32,9 @@ optional<Value> Cache<Key,Value>::get(Key key){
 
 template <typename Key, typename Value>
 void Cache<Key,Value>::put(Key key, Value value){
-  // return "put key for value";
+  std::ofstream myfile(this->key(key));
+  myfile << pickle(value);
+  myfile.close();
 };
 
 
