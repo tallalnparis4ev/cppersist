@@ -4,7 +4,8 @@
 #include <iostream>
 using std::function;
 using std::string;
-template <typename Key, typename Value> class Cache
+template <typename Key, typename Value> 
+class Cache
 {
   public:
     Cache();
@@ -23,4 +24,3 @@ template <typename Key, typename Value> class Cache
 #include "cache.cpp"
 
 #endif
-

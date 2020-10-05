@@ -9,15 +9,15 @@ using std::string;
 
 //Constructors
 template <typename Key, typename Value>
-Cache<Key,Value>::Cache(function<string(Key)> key, function<string(Value)> pickle, function<Value(string)> unpickle){
-  this->key = key;
-  this->pickle = pickle;
-  this->unpickle = unpickle;
-}
+Cache<Key,Value>::Cache(function<string(Key)> key, function<string(Value)> pickle, function<Value(string)> unpickle):
+  key(key),
+  pickle(pickle),
+  unpickle(unpickle)
+{}
 
 template <typename Key, typename Value>
 optional<Value> Cache<Key,Value>::get(Key key){
-    std::ifstream inFile(this->key(key));
+    std::ifstream inFile(this->key(key)+".txt");
     if (!inFile) {
         std::cout << "Unable to open file";
         return nullopt;
@@ -31,7 +31,7 @@ optional<Value> Cache<Key,Value>::get(Key key){
 
 template <typename Key, typename Value>
 void Cache<Key,Value>::put(Key key, Value value){
-  std::ofstream myfile(this->key(key));
+  std::ofstream myfile(this->key(key)+".txt");
   myfile << pickle(value);
   myfile.close();
 };
