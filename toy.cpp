@@ -1,16 +1,18 @@
 #include "persister.hpp"
 #include <iostream>
-class Solver: public PersistentMemoizable<int, int, int, int>{
+//Fibonacci Sequence Example
+class FibonacciSolver: public PersistentMemoizable<int, int>{
   public:
-    int solve(int x, int y, int z) override {
+    int solve(int n) override {
       std::cout << "Original" << std::endl;
-      if(x<0) return 42;
-      return solve(x-1,1,1);
+      if(n==0) return 0;
+      if(n==1) return 1;
+      return solve(n-1) + solve(n-2);
     } 
 };
 
 int main(){
-  Solver solver;
-  PersistentMemoized memoizedSolver2 = Persister::getMemoizedObj<Solver>(solver);
-  memoizedSolver2.solve(4,2,3);
+  FibonacciSolver fibonacciSolver;
+  PersistentMemoized memoizedFib = Persister::getMemoizedObj<FibonacciSolver>(fibonacciSolver);
+  memoizedFib.solve(2);
 }
