@@ -6,9 +6,9 @@ using std::function;
 using std::string;
 
 template<typename T, typename Ret, typename ...Args>
-class Memoized: public T{
+class PersistentMemoized: public T{
   public:
-    Ret solve(Args... args) override {
+    Ret solve(Args... args) {
       std::cout << "Modified" << std::endl;
       return T::solve(args...);
     } 
@@ -19,9 +19,14 @@ class PersistentMemoizable
 {
   public:
     virtual Ret solve(Args... args) = 0;
-    template<typename T> 
-    Memoized<T,Ret,Args...> getMemoized(T method){
-      Memoized<T,Ret,Args...> memoized;
+};
+
+class Persister
+{
+  public:
+    template<typename T, typename Ret, typename... Args> 
+    static PersistentMemoized<T,Ret,Args...> getMemoizedObj(PersistentMemoizable<Ret, Args...>& object){
+      PersistentMemoized<T,Ret,Args...> memoized;
       return memoized;
-    };
+    }
 };

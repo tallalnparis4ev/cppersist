@@ -9,9 +9,8 @@ class Solver: public PersistentMemoizable<int, int, int, int>{
     } 
 };
 
-
 int main(){
   Solver solver;
-  Memoized memoizedSolver = solver.getMemoized(solver);
-  memoizedSolver.solve(4,2,3);
+  PersistentMemoized memoizedSolver2 = Persister::getMemoizedObj<Solver>(solver);
+  memoizedSolver2.solve(4,2,3);
 }
