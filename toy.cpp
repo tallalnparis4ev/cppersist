@@ -1,25 +1,17 @@
 #include "persister.hpp"
 #include <iostream>
-class Lol2: public Persister<int, int, int, int>{
+class Solver: public PersistentMemoizable<int, int, int, int>{
   public:
     int solve(int x, int y, int z) override {
       std::cout << "Original" << std::endl;
-      if(x<0) return 69;
+      if(x<0) return 42;
       return solve(x-1,1,1);
     } 
 };
 
-class Lol3: public Lol2{
-  public:
-    int solve(int x, int y, int z) override {
-      std::cout << "Modified" << std::endl;
-      return Lol2::solve(x,1,1);
-    } 
-};
 
 int main(){
-  // Lol lol;
-  // lol.getAnswer(4);
-  Lol3 Lol3;
-  Lol3.solve(4,1,1);
+  Solver solver;
+  Memoized memoizedSolver = solver.getMemoized(solver);
+  memoizedSolver.solve(4,2,3);
 }

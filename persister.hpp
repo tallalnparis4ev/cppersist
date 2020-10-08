@@ -4,15 +4,24 @@
 #include <iostream>
 using std::function;
 using std::string;
+
+template<typename T, typename Ret, typename ...Args>
+class Memoized: public T{
+  public:
+    Ret solve(Args... args) override {
+      std::cout << "Modified" << std::endl;
+      return T::solve(args...);
+    } 
+};
+
 template<typename Ret, typename... Args>
-class Persister
+class PersistentMemoizable
 {
   public:
     virtual Ret solve(Args... args) = 0;
-    int getAnswer(int x){
-      std::cout << "Modified" << std::endl;
-      return solve(x);
+    template<typename T> 
+    Memoized<T,Ret,Args...> getMemoized(T method){
+      Memoized<T,Ret,Args...> memoized;
+      return memoized;
     };
 };
-
-
