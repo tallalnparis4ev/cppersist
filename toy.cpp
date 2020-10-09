@@ -14,5 +14,6 @@ class FibonacciSolver: public PersistentMemoizable<int, int>{
 int main(){
   FibonacciSolver fibonacciSolver;
   PersistentMemoized memoizedFib = Persister::getMemoizedObj<FibonacciSolver>(fibonacciSolver);
-  memoizedFib.solve(2);
+  memoizedFib(2);
 }
+

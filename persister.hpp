@@ -8,10 +8,14 @@ using std::string;
 template<typename T, typename Ret, typename ...Args>
 class PersistentMemoized: public T{
   public:
+    Ret operator()(Args... args) {
+      return solve(args...);
+    }
+  private:
     Ret solve(Args... args) {
       std::cout << "Modified" << std::endl;
       return T::solve(args...);
-    } 
+    }
 };
 
 template<typename Ret, typename... Args>
