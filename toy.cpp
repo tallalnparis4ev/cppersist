@@ -10,10 +10,22 @@ class FibonacciSolver: public PersistentMemoizable<int, int>{
       return solve(n-1) + solve(n-2);
     } 
 };
+int strtoi(string lol){
+  return std::stoi(lol);
+}
+string intostr(int lol){
+  return std::to_string(lol);
+}
 
+string keymaker(int lol){
+  return std::to_string(lol);
+}
 int main(){
+  int x =2;
+  int y= 3;
   FibonacciSolver fibonacciSolver;
-  PersistentMemoized memoizedFib = Persister::getMemoizedObj<FibonacciSolver>(fibonacciSolver);
-  memoizedFib(2);
+  PersistentMemoized memoizedFib = Persister::getMemoizedObj<FibonacciSolver>(fibonacciSolver,keymaker,intostr,strtoi);
+  int z = memoizedFib(3);
+  int asdf = 2;
 }
 

@@ -4,18 +4,21 @@
 #include <iostream>
 using std::function;
 using std::string;
-template <typename Key, typename Value> 
+template <typename Ret, typename ...Args> 
 class Cache
 {
   public:
     Cache();
-    Cache(function<string(Key)>, function<string(Value)>, function<Value(string)>);
-    std::optional<Value> get(Key);
-    void put(Key, Value);
+    Cache(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string));
+    std::optional<Ret> get(Args...);
+    void put(Args..., Ret);
   private:
-    function<string(Key)> key;
-    function<string(Value)> pickle;
-    function<Value(string)> unpickle;
+    string (*key)(Args...);
+    // function<string(Args...)> key;
+    string (*pickle)(Ret);
+    // function<string(Ret)> pickle;
+    Ret (*unpickle)(string);
+    // function<Ret(string)> unpickle;
 };
 
 #if !defined(CACHE_H_FILE)
