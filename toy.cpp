@@ -21,11 +21,9 @@ string keymaker(int lol){
   return std::to_string(lol);
 }
 int main(){
-  int x =2;
-  int y= 3;
   FibonacciSolver fibonacciSolver;
   PersistentMemoized memoizedFib = Persister::getMemoizedObj<FibonacciSolver>(fibonacciSolver,keymaker,intostr,strtoi);
   int z = memoizedFib(3);
-  int asdf = 2;
+  std::cout << z << std::endl;
 }
 
