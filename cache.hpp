@@ -1,3 +1,6 @@
+#if !defined(CACHE_H_FILE)
+#define CACHE_H_FILE
+
 #include <optional>
 #include <string>
 #include <functional>
@@ -8,22 +11,12 @@ template <typename Ret, typename ...Args>
 class Cache
 {
   public:
-    Cache();
-    Cache(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string));
-    std::optional<Ret> get(Args...);
-    void put(Args..., Ret);
-  private:
+    virtual std::optional<Ret> get(Args...) = 0;
+    virtual void put(Args..., Ret) = 0;
+  protected:
     string (*key)(Args...);
-    // function<string(Args...)> key;
     string (*pickle)(Ret);
-    // function<string(Ret)> pickle;
     Ret (*unpickle)(string);
-    // function<Ret(string)> unpickle;
 };
-
-#if !defined(CACHE_H_FILE)
-#define CACHE_H_FILE
-
-#include "cache.cpp"
 
 #endif

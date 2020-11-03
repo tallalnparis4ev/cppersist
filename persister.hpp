@@ -3,28 +3,31 @@
 #include <functional>
 #include <iostream>
 #include "cache.hpp"
+#include "diskcache.hpp"
 using std::function;
 using std::string;
 
 template<typename T, typename Ret, typename ...Args>
 class PersistentMemoized: public T{
   public:
-    PersistentMemoized(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string)):
-    persistentCache(Cache(key,pickle,unpickle))
+    PersistentMemoized(Cache<Ret,Args...>* cache):persistentCache(cache)
     {}
+    ~PersistentMemoized(){
+      free(persistentCache);
+    }
     Ret operator()(Args... args) {
       return solve(args...);
     }
   private:
-    Cache<Ret,Args...> persistentCache;
+    Cache<Ret,Args...>* persistentCache;
     Ret solve(Args... args) {
-      optional<Ret> answer = persistentCache.get(args...);  
+      optional<Ret> answer = persistentCache->get(args...);  
       if(answer){
         std::cout << "inside for" << std::endl;
         return answer.value();
       }
       Ret realAnswer = T::solve(args...);
-      persistentCache.put(args..., realAnswer);
+      persistentCache->put(args..., realAnswer);
       return realAnswer;
     }
 };
@@ -40,9 +43,16 @@ class Persister
 {
   public:
     template<typename T, typename Ret, typename... Args> 
-    static PersistentMemoized<T,Ret,Args...> getMemoizedObj(PersistentMemoizable<Ret, Args...>& object,
+    static PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(PersistentMemoizable<Ret, Args...>& object,
     string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string)){
-      PersistentMemoized<T,Ret,Args...> memoized(key,pickle,unpickle);
+      DiskCache<Ret,Args...>* diskCache = new DiskCache<Ret,Args...>(key,pickle,unpickle);
+      PersistentMemoized<T,Ret,Args...> memoized(diskCache);
       return memoized;
     }
+    // template<typename T, typename Ret, typename... Args> 
+    // static PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(PersistentMemoizable<Ret, Args...>& object,
+    // string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string)){
+    //   PersistentMemoized<T,Ret,Args...> memoized(key,pickle,unpickle);
+    //   return memoized;
+    // }
 };

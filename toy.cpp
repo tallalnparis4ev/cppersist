@@ -8,22 +8,23 @@ class FibonacciSolver: public PersistentMemoizable<int, int>{
       if(n==0) return 0;
       if(n==1) return 1;
       return solve(n-1) + solve(n-2);
-    } 
+    }
+    //()
+    //solveMemoized()
 };
-int strtoi(string lol){
-  return std::stoi(lol);
+int strtoi(string x){
+  return std::stoi(x);
 }
-string intostr(int lol){
-  return std::to_string(lol);
+string intostr(int x){
+  return std::to_string(x);
 }
 
-string keymaker(int lol){
-  return std::to_string(lol);
+string keymaker(int x){
+  return std::to_string(x);
 }
 int main(){
   FibonacciSolver fibonacciSolver;
-  PersistentMemoized memoizedFib = Persister::getMemoizedObj<FibonacciSolver>(fibonacciSolver,keymaker,intostr,strtoi);
+  PersistentMemoized memoizedFib = Persister::getLocalMemoizedObj<FibonacciSolver>(fibonacciSolver,keymaker,intostr,strtoi);
   int z = memoizedFib(3);
   std::cout << z << std::endl;
 }
-
