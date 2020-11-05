@@ -4,6 +4,7 @@
 #include <iostream>
 #include "cache.hpp"
 #include "diskcache.hpp"
+#include "mongodbcache.hpp"
 using std::function;
 using std::string;
 
@@ -49,10 +50,11 @@ class Persister
       PersistentMemoized<T,Ret,Args...> memoized(diskCache);
       return memoized;
     }
-    // template<typename T, typename Ret, typename... Args> 
-    // static PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(PersistentMemoizable<Ret, Args...>& object,
-    // string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string)){
-    //   PersistentMemoized<T,Ret,Args...> memoized(key,pickle,unpickle);
-    //   return memoized;
-    // }
+    template<typename T, typename Ret, typename... Args> 
+    static PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(PersistentMemoizable<Ret, Args...>& object,
+    string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string)){
+      MongoDBCache<Ret,Args...>* mongoCache = new MongoDBCache<Ret,Args...>(key,pickle,unpickle);
+      PersistentMemoized<T,Ret,Args...> memoized(mongoCache);
+      return memoized;
+    }
 };

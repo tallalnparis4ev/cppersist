@@ -24,7 +24,11 @@ string keymaker(int x){
 }
 int main(){
   FibonacciSolver fibonacciSolver;
-  PersistentMemoized memoizedFib = Persister::getLocalMemoizedObj<FibonacciSolver>(fibonacciSolver,keymaker,intostr,strtoi);
+  // PersistentMemoized memoizedFib = Persister::getLocalMemoizedObj<FibonacciSolver>(fibonacciSolver,keymaker,intostr,strtoi);
+  PersistentMemoized memoizedFib = Persister::getMongoMemoizedObj<FibonacciSolver>(fibonacciSolver,keymaker,intostr,strtoi);
+  PersistentMemoized memoizedFib2 = Persister::getMongoMemoizedObj<FibonacciSolver>(fibonacciSolver,keymaker,intostr,strtoi);
   int z = memoizedFib(3);
+  int y = memoizedFib2(3);
   std::cout << z << std::endl;
+  std::cout << y << std::endl;
 }
