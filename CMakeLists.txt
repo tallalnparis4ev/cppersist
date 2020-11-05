@@ -23,4 +23,3 @@ include_directories("/usr/local/lib")
 
 target_link_libraries(cppersist ${LIBMONGOCXX_LIBRARIES})
 target_link_libraries(cppersist ${LIBBSONCXX_LIBRARIES})
-
