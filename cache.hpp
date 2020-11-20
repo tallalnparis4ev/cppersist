@@ -1,6 +1,4 @@
-#if !defined(CACHE_H_FILE)
-#define CACHE_H_FILE
-
+#pragma once 
 #include <optional>
 #include <string>
 #include <functional>
@@ -17,6 +15,5 @@ class Cache
     string (*key)(Args...);
     string (*pickle)(Ret);
     Ret (*unpickle)(string);
+    string funcName;
 };
-
-#endif
