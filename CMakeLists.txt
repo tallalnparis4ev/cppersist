@@ -1,6 +1,6 @@
 # replace PROJECT_NAME by the name of your clion project
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.0)
 project(cppersist)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -10,16 +10,9 @@ set(sources cache.hpp diskcache.hpp mongodbcache.hpp persister.hpp)
 
 add_executable(cppersist ${sources} ${main})
 
-find_package(libmongocxx REQUIRED)
-find_package(libbsoncxx REQUIRED)
-include_directories(${LIBMONGOCXX_INCLUDE_DIR})
-include_directories(${LIBBSONCXX_INCLUDE_DIR})
-include_directories("/usr/local/include/mongocxx/v_noabi")
-include_directories("/usr/local/include/bsoncxx/v_noabi")
-include_directories("/usr/local/include/libmongoc-1.0")
-include_directories("/usr/local/include/libbson-1.0")
-include_directories("/usr/local/lib")
+find_package(OpenSSL REQUIRED)
+include(FetchContent)
+FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/whoshuu/cpr.git GIT_TAG c8d33915dbd88ad6c92b258869b03aba06587ff9) # the commit hash for 1.5.0
+FetchContent_MakeAvailable(cpr)
 
-
-target_link_libraries(cppersist ${LIBMONGOCXX_LIBRARIES})
-target_link_libraries(cppersist ${LIBBSONCXX_LIBRARIES})
+target_link_libraries(cppersist PRIVATE cpr::cpr)
