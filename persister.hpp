@@ -1,3 +1,4 @@
+#pragma once 
 #include <optional>
 #include <string>
 #include <functional>
@@ -45,16 +46,36 @@ class Persister
   public:
     template<typename T, typename Ret, typename... Args> 
     static PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(PersistentMemoizable<Ret, Args...>& object,
-    string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string)){
-      DiskCache<Ret,Args...>* diskCache = new DiskCache<Ret,Args...>(key,pickle,unpickle);
+    string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string funcName){
+      std::cout << "ALERT: No function name passed, using " << funcName << " as the function name instead!" << std::endl;
+      DiskCache<Ret,Args...>* diskCache = new DiskCache<Ret,Args...>(key,pickle,unpickle,funcName);
       PersistentMemoized<T,Ret,Args...> memoized(diskCache);
       return memoized;
     }
     template<typename T, typename Ret, typename... Args> 
-    static PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(PersistentMemoizable<Ret, Args...>& object,
+    static PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(PersistentMemoizable<Ret, Args...>& object,
     string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string)){
-      MongoDBCache<Ret,Args...>* mongoCache = new MongoDBCache<Ret,Args...>(key,pickle,unpickle);
+      DiskCache<Ret,Args...>* diskCache = new DiskCache<Ret,Args...>(key,pickle,unpickle,typeid(object).name());
+      PersistentMemoized<T,Ret,Args...> memoized(diskCache);
+      return memoized;
+    }
+
+    template<typename T, typename Ret, typename... Args> 
+    static PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(PersistentMemoizable<Ret, Args...>& object,
+    string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string dbURL){
+      string funcName = typeid(object).name();
+      std::cout << "ALERT: No function name passed, using " << funcName << " as the function name instead!" << std::endl;
+      MongoDBCache<Ret,Args...>* mongoCache = new MongoDBCache<Ret,Args...>(key,pickle,unpickle,dbURL,funcName);
       PersistentMemoized<T,Ret,Args...> memoized(mongoCache);
       return memoized;
     }
+
+    template<typename T, typename Ret, typename... Args> 
+    static PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(PersistentMemoizable<Ret, Args...>& object,
+    string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string dbURL, string funcName){
+      MongoDBCache<Ret,Args...>* mongoCache = new MongoDBCache<Ret,Args...>(key,pickle,unpickle,dbURL,funcName);
+      PersistentMemoized<T,Ret,Args...> memoized(mongoCache);
+      return memoized;
+    }
+
 };
