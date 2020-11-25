@@ -25,7 +25,7 @@ class PersistentMemoized: public T{
     Ret solve(Args... args) {
       optional<Ret> answer = persistentCache->get(args...);  
       if(answer){
-        std::cout << "inside for" << std::endl;
+        std::cout << "CACHE HIT" << std::endl;
         return answer.value();
       }
       Ret realAnswer = T::solve(args...);
