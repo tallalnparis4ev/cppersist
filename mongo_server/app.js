@@ -16,6 +16,7 @@ app.listen(5000, () => {
         if(error) {
             throw error;
         }
+	collection = "-1"
         database = client.db(DATABASE_NAME);
         console.log("Connected to `" + DATABASE_NAME + "`!");
     });
@@ -23,6 +24,8 @@ app.listen(5000, () => {
 
 app.get("/:function/:id", (request, response) => {
   setCollection(request.params.function);
+  console.log("GET REQUEST:")
+  console.log(request.params.function + "," + request.params.id);
   collection.findOne({ "_id": request.params.id }, (error, result) => {
     if(error || (result == null)) 
       response.sendStatus(500);
@@ -33,7 +36,8 @@ app.get("/:function/:id", (request, response) => {
 
 app.post("/:function/:id", (request, response) => {
   setCollection(request.params.function);
-  console.log("REQUEST BODY: ");
+  console.log("POST REQUEST")
+  console.log(request.params.function + "," + request.params.id)  
   console.log(request.body)
   const insert = {_id:request.params.id, return:request.body.return}
   collection.insertOne(insert, function(err, res) {
