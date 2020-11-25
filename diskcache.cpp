@@ -2,6 +2,7 @@
 #include <sstream>
 #include <string>
 #include <optional>
+#include "sha256.h"
 using std::optional;
 using std::nullopt;
 using std::function;
@@ -9,7 +10,7 @@ using std::string;
 
 template <typename Ret, typename ...Args> 
 string DiskCache<Ret,Args...>::makePathForKey(string key) {
-  return this->outputPath + key + ".txt";
+  return this->outputPath + sha256(key) + ".txt";
 }
 
 template <typename Ret, typename ...Args> 
