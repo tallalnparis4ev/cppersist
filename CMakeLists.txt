@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.0)
 project(cppersist)
 
 set(CMAKE_CXX_STANDARD 17)
-set(main toy.cpp)
+set(main examples/primes.cpp)
 
 include_directories(crypto)
 set(sources cache.hpp diskcache.hpp mongodbcache.hpp persister.hpp crypto/sha256.cpp)
