@@ -46,16 +46,18 @@ class Persister
   public:
     template<typename T, typename Ret, typename... Args> 
     static PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(PersistentMemoizable<Ret, Args...>& object,
-    string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string funcName){
+    string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string)){
+      string funcName = typeid(object).name();
       std::cout << "ALERT: No function name passed, using " << funcName << " as the function name instead!" << std::endl;
       DiskCache<Ret,Args...>* diskCache = new DiskCache<Ret,Args...>(key,pickle,unpickle,funcName);
       PersistentMemoized<T,Ret,Args...> memoized(diskCache);
       return memoized;
     }
+
     template<typename T, typename Ret, typename... Args> 
     static PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(PersistentMemoizable<Ret, Args...>& object,
-    string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string)){
-      DiskCache<Ret,Args...>* diskCache = new DiskCache<Ret,Args...>(key,pickle,unpickle,typeid(object).name());
+    string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string funcName){
+      DiskCache<Ret,Args...>* diskCache = new DiskCache<Ret,Args...>(key,pickle,unpickle,funcName);
       PersistentMemoized<T,Ret,Args...> memoized(diskCache);
       return memoized;
     }
