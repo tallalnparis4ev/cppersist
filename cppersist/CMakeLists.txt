@@ -1,10 +1,8 @@
-# replace PROJECT_NAME by the name of your clion project
-
 cmake_minimum_required(VERSION 3.0)
 project(cppersist)
 
 set(CMAKE_CXX_STANDARD 17)
-set(main examples/primes.cpp)
+set(main ${TEST})
 
 include_directories(crypto)
 set(sources cache.hpp diskcache.hpp mongodbcache.hpp persister.hpp crypto/sha256.cpp)

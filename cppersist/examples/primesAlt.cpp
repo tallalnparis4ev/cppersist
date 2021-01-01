@@ -10,16 +10,18 @@ class PrimeFactorizer: public PersistentMemoizable<list<int>, int>{
     list<int> solve(int n) override {
       list <int> primeFactors; 
       std::cout << "Original " << n << std::endl;
-      int curPrime = 2;
-      while(n >= (curPrime*curPrime)){
-        if(n%curPrime == 0){
-          primeFactors.push_back(curPrime);
-          n = n/curPrime;
-        }
-        else curPrime++;
+      while(n>1){
+        int nextPrime = smallestPrime(n);
+        primeFactors.push_back(nextPrime);
+        n /= nextPrime;
       }
-      primeFactors.push_back(n);
       return primeFactors;
+    }
+    int smallestPrime(int n){
+      for(int i=2;i<=n;i++){
+        if(n%i==0) return i;
+      }
+      return -1;
     } 
 };
 
@@ -51,14 +53,14 @@ string keymaker(int n){
 
 int main(){
   PrimeFactorizer primeFactorizer;
-  // PersistentMemoized memoizedPrimes = 
-    // Persister::getLocalMemoizedObj<PrimeFactorizer>
-      // (primeFactorizer,keymaker,listIntsToString,intListStrToList,"primes");
-
   PersistentMemoized memoizedPrimes = 
-    Persister::getMongoMemoizedObj<PrimeFactorizer>
-      (primeFactorizer,keymaker,listIntsToString,intListStrToList,"https://tm214.host.cs.st-andrews.ac.uk","primes");
-
-  list<int> z = memoizedPrimes(20);
+    Persister::getLocalMemoizedObj<PrimeFactorizer>
+      (primeFactorizer,keymaker,listIntsToString,intListStrToList,"primesAlt");
+// 
+  // PersistentMemoized memoizedPrimes = 
+    // Persister::getMongoMemoizedObj<PrimeFactorizer>
+      // (primeFactorizer,keymaker,listIntsToString,intListStrToList,"https://tm214.host.cs.st-andrews.ac.uk","primes");
+// 
+  list<int> z = memoizedPrimes(1000);
   std::cout << listIntsToString(z) << std::endl;
 }
