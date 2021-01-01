@@ -39,15 +39,6 @@ class PersistentMemoizable
 {
   public:
     virtual Ret solve(Args... args) = 0;
-    template<typename T>
-    PersistentMemoized<T,Ret,Args...> getLocalMemoizedObjTest(string (*key)(Args...),
-    string (*pickle)(Ret),Ret (*unpickle)(string)){
-      string funcName = "fib";
-      std::cout << "ALERT: No function name passed, using " << funcName << " as the function name instead!" << std::endl;
-      DiskCache<Ret,Args...>* diskCache = new DiskCache<Ret,Args...>(key,pickle,unpickle,funcName);
-      PersistentMemoized<T,Ret,Args...> memoized(diskCache);
-      return memoized;
-    }
 };
 
 class Persister
