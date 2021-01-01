@@ -1,3 +1,5 @@
+cppersist
+build/
 # Prerequisites
 *.d
 .idea/

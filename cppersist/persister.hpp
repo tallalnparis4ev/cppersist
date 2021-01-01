@@ -39,13 +39,24 @@ class PersistentMemoizable
 {
   public:
     virtual Ret solve(Args... args) = 0;
+    template<typename T>
+    PersistentMemoized<T,Ret,Args...> getLocalMemoizedObjTest(string (*key)(Args...),
+    string (*pickle)(Ret),Ret (*unpickle)(string)){
+      string funcName = "fib";
+      std::cout << "ALERT: No function name passed, using " << funcName << " as the function name instead!" << std::endl;
+      DiskCache<Ret,Args...>* diskCache = new DiskCache<Ret,Args...>(key,pickle,unpickle,funcName);
+      PersistentMemoized<T,Ret,Args...> memoized(diskCache);
+      return memoized;
+    }
 };
 
 class Persister
 {
   public:
-    template<typename T, typename Ret, typename... Args> 
-    static PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(PersistentMemoizable<Ret, Args...>& object,
+    template<typename T, typename Ret, typename... Args, 
+      typename std::enable_if<std::is_base_of<PersistentMemoizable<Ret, Args...>, T>::value>::type* 
+        = nullptr>
+    static PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(T& object,
     string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string)){
       string funcName = typeid(object).name();
       std::cout << "ALERT: No function name passed, using " << funcName << " as the function name instead!" << std::endl;
@@ -54,16 +65,20 @@ class Persister
       return memoized;
     }
 
-    template<typename T, typename Ret, typename... Args> 
-    static PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(PersistentMemoizable<Ret, Args...>& object,
+    template<typename T, typename Ret, typename... Args, 
+      typename std::enable_if<std::is_base_of<PersistentMemoizable<Ret, Args...>, T>::value>::type* 
+        = nullptr>
+    static PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(T& object,
     string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string funcName){
       DiskCache<Ret,Args...>* diskCache = new DiskCache<Ret,Args...>(key,pickle,unpickle,funcName);
       PersistentMemoized<T,Ret,Args...> memoized(diskCache);
       return memoized;
     }
 
-    template<typename T, typename Ret, typename... Args> 
-    static PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(PersistentMemoizable<Ret, Args...>& object,
+    template<typename T, typename Ret, typename... Args, 
+      typename std::enable_if<std::is_base_of<PersistentMemoizable<Ret, Args...>, T>::value>::type* 
+        = nullptr>
+    static PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(T& object,
     string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string dbURL){
       string funcName = typeid(object).name();
       std::cout << "ALERT: No function name passed, using " << funcName << " as the function name instead!" << std::endl;
@@ -72,8 +87,10 @@ class Persister
       return memoized;
     }
 
-    template<typename T, typename Ret, typename... Args> 
-    static PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(PersistentMemoizable<Ret, Args...>& object,
+    template<typename T, typename Ret, typename... Args, 
+      typename std::enable_if<std::is_base_of<PersistentMemoizable<Ret, Args...>, T>::value>::type* 
+        = nullptr>
+    static PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(T& object,
     string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string dbURL, string funcName){
       MongoDBCache<Ret,Args...>* mongoCache = new MongoDBCache<Ret,Args...>(key,pickle,unpickle,dbURL,funcName);
       PersistentMemoized<T,Ret,Args...> memoized(mongoCache);

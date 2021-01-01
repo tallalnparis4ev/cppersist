@@ -9,9 +9,8 @@ class FibonacciSolver: public PersistentMemoizable<int, int>{
       if(n==1) return 1;
       return solve(n-1) + solve(n-2);
     }
-    //()
-    //solveMemoized()
 };
+
 int strtoi(string x){
   return std::stoi(x);
 }
@@ -25,9 +24,12 @@ string keymaker(int x){
 using namespace std;
 int main(){
   FibonacciSolver fibonacciSolver;
-  PersistentMemoized memoizedFib = Persister::getLocalMemoizedObj<FibonacciSolver>(fibonacciSolver,keymaker,intostr,strtoi,"fib");
   // PersistentMemoized memoizedFib = 
-    // Persister::getMongoMemoizedObj<FibonacciSolver>(fibonacciSolver,keymaker,intostr,strtoi,"https://tm214.host.cs.st-andrews.ac.uk");
+    // fibonacciSolver.template getLocalMemoizedObjTest<X>(keymaker,intostr,strtoi);
+  // PersistentMemoized memoizedFib = Persister::getLocalMemoizedObj(fibonacciSolver,keymaker,intostr,strtoi);
+  PersistentMemoized memoizedFib = Persister::getLocalMemoizedObj(fibonacciSolver,keymaker,intostr,strtoi,"fib");
+  // PersistentMemoized memoizedFib = 
+    // Persister::getMongoMemoizedObj<FibonacciSolver>(x,keymaker,intostr,strtoi,"https://tm214.host.cs.st-andrews.ac.uk");
   int z = memoizedFib(3);
   std::cout << z << std::endl;
   cout << typeid(memoizedFib).name() << endl;
