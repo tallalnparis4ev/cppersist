@@ -1,4 +1,5 @@
 #include "../persister.hpp"
+#include "../persister.hpp"
 #include <iostream>
 #include <list> 
 #define STOP "A "
@@ -12,24 +13,13 @@ class Node{
     
 };
 
-class DFSSolver{
+class DFSSolver: public PersistentMemoizable<int, Node*, int>{
   public: 
-    virtual int solve(Node* root, int find){
+    int solve(Node* root, int find) override{
       if(root == NULL) return 0;
       if(root->label == find) return 1;
       return solve(root->left, find) == 1 || solve(root->right, find) == 1 ? 1 : 0;
     };
-};
-
-
-class FibonacciSolver: public PersistentMemoizable<int, int>{
-  public:
-    int solve(int n) override {
-      std::cout << "Original" << std::endl;
-      if(n==0) return 0;
-      if(n==1) return 1;
-      return solve(n-1) + solve(n-2);
-    }
 };
 
 
@@ -92,13 +82,7 @@ string keymaker2(int n){
 int main(){
   string tree = "1 2 A A 3 A A ";
   Node* root = deSerialize(tree);
-  // PersistentMemoized memoizedFib = 
-  // Persister::getLocalMemoizedObj(dfsSolver,keymaker,intostr,strtoi,"dfs");
-  // PersistentMemoized memoizedFib = getLocalMemoizedObj<DFSSolver>(keymaker,intostr,strtoi);
-  PersistentMemoized memoizedFib2 = getLocalMemoizedObj<FibonacciSolver>(keymaker2,intostr,strtoi);
-  // PersistentMemoized memoizedFib = 
-    // Persister::getMongoMemoizedObj<FibonacciSolver>(fibonacciSolver,keymaker,intostr,strtoi,"https://tm214.host.cs.st-andrews.ac.uk");
-  // int z = memoizedFib(root,3);
-  int y = memoizedFib2(3);
-  // cout << z << endl;
+  PersistentMemoized memoizedFib = getLocalMemoizedObj<DFSSolver>(keymaker,intostr,strtoi);
+  int z = memoizedFib(root,3);
+  cout << z << endl;
 }

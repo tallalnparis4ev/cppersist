@@ -52,15 +52,7 @@ string keymaker(int n){
 }
 
 int main(){
-  PrimeFactorizer primeFactorizer;
-  PersistentMemoized memoizedPrimes = 
-    Persister::getLocalMemoizedObj<PrimeFactorizer>
-      (primeFactorizer,keymaker,listIntsToString,intListStrToList,"primesAlt");
-// 
-  // PersistentMemoized memoizedPrimes = 
-    // Persister::getMongoMemoizedObj<PrimeFactorizer>
-      // (primeFactorizer,keymaker,listIntsToString,intListStrToList,"https://tm214.host.cs.st-andrews.ac.uk","primes");
-// 
+  PersistentMemoized memoizedPrimes = getLocalMemoizedObj<PrimeFactorizer>(keymaker,listIntsToString,intListStrToList,"primesAlt");
   list<int> z = memoizedPrimes(1000);
   std::cout << listIntsToString(z) << std::endl;
 }
