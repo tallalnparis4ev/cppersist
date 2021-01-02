@@ -1,3 +1,6 @@
+#ifndef PERSISTER_H_FILE
+#define PERSISTER_H_FILE
+
 #include <string>
 #include "cache.hpp"
 using std::string;
@@ -38,7 +41,5 @@ template<typename T, typename Ret, typename... Args,
     = nullptr>
 PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string dbURL, string funcName);
 
-#if !defined(PERSISTER_H_FILE)
-#define PERSISTER_H_FILE
 #include "persister.cpp"
 #endif
