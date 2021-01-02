@@ -1,9 +1,6 @@
 #pragma once 
 #include <optional>
 #include <string>
-#include <functional>
-#include <iostream>
-using std::function;
 using std::string;
 template <typename Ret, typename ...Args> 
 class Cache
@@ -12,8 +9,8 @@ class Cache
     virtual std::optional<Ret> get(Args...) = 0;
     virtual void put(Args..., Ret) = 0;
   protected:
-    string (*key)(Args...);
-    string (*pickle)(Ret);
+    std::string (*key)(Args...);
+    std::string (*pickle)(Ret);
     Ret (*unpickle)(string);
-    string funcName;
+    std::string funcName;
 };
