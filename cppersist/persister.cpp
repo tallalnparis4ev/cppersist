@@ -1,4 +1,3 @@
-#pragma once 
 #include <optional>
 #include <string>
 #include <functional>
@@ -26,7 +25,6 @@ Ret PersistentMemoized<T,Ret,Args...>::operator()(Args... args) {
 
 template<typename T, typename Ret, typename ...Args>
 Ret PersistentMemoized<T,Ret,Args...>::solve(Args... args){
-  std::cout << "Modified" << std::endl;
   optional<Ret> answer = persistentCache->get(args...);  
   if(answer){
     std::cout << "CACHE HIT" << std::endl;
