@@ -14,7 +14,4 @@ class MongoDBCache : public Cache<Ret,Args...>{
     string makeUrlForKey(string key);
 };
 
-#if !defined(MONGODBCACHE_H_FILE)
-#define MONGODBCACHE_H_FILE
 #include "mongodbcache.cpp"
-#endif

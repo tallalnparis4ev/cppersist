@@ -12,7 +12,4 @@ class DiskCache : public Cache<Ret,Args...>{
     string outputPath;
 };
 
-#if !defined(DISKCACHE_H_FILE)
-#define DISKCACHE_H_FILE
 #include "diskcache.cpp"
-#endif
