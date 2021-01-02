@@ -9,6 +9,17 @@ using std::function;
 using std::string;
 
 template <typename Ret, typename ...Args> 
+DiskCache<Ret,Args...>::DiskCache(string (*key)(Args...),
+  string (*pickle)(Ret),Ret (*unpickle)(string), string funcName)
+{
+  this->key = key;
+  this->pickle = pickle;
+  this->unpickle = unpickle;
+  this->funcName = funcName;
+  this->outputPath = "./"+funcName+"/";
+}
+
+template <typename Ret, typename ...Args> 
 string DiskCache<Ret,Args...>::makePathForKey(string key) {
   return this->outputPath + sha256(key) + ".txt";
 }
