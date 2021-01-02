@@ -1,7 +1,6 @@
 #pragma once 
 #include <optional>
 #include <string>
-using std::string;
 template <typename Ret, typename ...Args> 
 class Cache
 {
@@ -11,6 +10,6 @@ class Cache
   protected:
     std::string (*key)(Args...);
     std::string (*pickle)(Ret);
-    Ret (*unpickle)(string);
+    Ret (*unpickle)(std::string);
     std::string funcName;
 };
