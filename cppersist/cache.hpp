@@ -1,4 +1,6 @@
-#pragma once 
+#ifndef CACHE_H_FILE
+#define CACHE_H_FILE
+
 #include <optional>
 #include <string>
 template <typename Ret, typename ...Args> 
@@ -13,3 +15,5 @@ class Cache
     Ret (*unpickle)(std::string);
     std::string funcName;
 };
+
+#endif
