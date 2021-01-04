@@ -1,4 +1,4 @@
-#include "../persister.hpp"
+#include "../mongo.hpp"
 #include <iostream>
 //Fibonacci Sequence Example
 class FibonacciSolver: public PersistentMemoizable<int, int>{
@@ -11,26 +11,26 @@ class FibonacciSolver: public PersistentMemoizable<int, int>{
     }
 };
 
-int strtoi(string x){
+int strtoi(const string& x){
   return std::stoi(x);
 }
-string intostr(int x){
+string intostr(const int& x){
   return std::to_string(x);
 }
 
-string keymaker(int x){
+string keymaker(const int& x){
   return std::to_string(x);
 }
 using namespace std;
 int main(){
   FibonacciSolver fibonacciSolver;
-  // PersistentMemoized memoizedFib = 
-    // fibonacciSolver.template getLocalMemoizedObjTest<X>(keymaker,intostr,strtoi);
-  // PersistentMemoized memoizedFib = Persister::getLocalMemoizedObj(fibonacciSolver,keymaker,intostr,strtoi);
-  PersistentMemoized memoizedFib = Persister::getLocalMemoizedObj(fibonacciSolver,keymaker,intostr,strtoi,"fib");
-  // PersistentMemoized memoizedFib = 
-    // Persister::getMongoMemoizedObj<FibonacciSolver>(x,keymaker,intostr,strtoi,"https://tm214.host.cs.st-andrews.ac.uk");
-  int z = memoizedFib(3);
+  // PersistentMemoized memoizedFib = getLocalMemoizedObj<FibonacciSolver>(keymaker,intostr,strtoi);
+  // PersistentMemoized memoizedFib2 = getLocalMemoizedObj<FibonacciSolver>(keymaker,intostr,strtoi,"fib");
+  PersistentMemoized memoizedFibDb1 = getMongoMemoizedObj<FibonacciSolver>(keymaker,intostr,strtoi,
+  "http://localhost:5000");
+  // int z = memoizedFib(3);
+  // int z = memoizedFib2(3);
+  int z = memoizedFibDb1(3);
   std::cout << z << std::endl;
-  cout << typeid(memoizedFib).name() << endl;
+
 }
