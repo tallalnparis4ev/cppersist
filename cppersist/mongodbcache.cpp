@@ -12,7 +12,7 @@ using std::string;
 
 
 template <typename Ret, typename ...Args>
-MongoDBCache<Ret,Args...>::MongoDBCache(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string),
+MongoDBCache<Ret,Args...>::MongoDBCache(string (*key)(const Args&...),string (*pickle)(const Ret&),Ret (*unpickle)(const string&),
 string dbURL, string funcName){
   this->key = key;
   this->pickle = pickle;
@@ -22,12 +22,12 @@ string dbURL, string funcName){
 }
 
 template <typename Ret, typename ...Args> 
-string MongoDBCache<Ret,Args...>::makeUrlForKey(string key) {
+string MongoDBCache<Ret,Args...>::makeUrlForKey(const string& key) {
   return this->base + key;
 }
 
 template <typename Ret, typename ...Args> 
-std::optional<Ret> MongoDBCache<Ret,Args...>::get(Args... args) {
+std::optional<Ret> MongoDBCache<Ret,Args...>::get(const Args&... args) {
   cpr::Response response = cpr::Get(cpr::Url{makeUrlForKey(this->key(args...))}); //catch error
   if(response.status_code == 200){
     return optional<Ret>{this->unpickle(response.text)};
@@ -36,7 +36,7 @@ std::optional<Ret> MongoDBCache<Ret,Args...>::get(Args... args) {
 }
 
 template <typename Ret, typename ...Args> 
-void MongoDBCache<Ret,Args...>::put(Args... args, Ret value) {
+void MongoDBCache<Ret,Args...>::put(const Args&... args, const Ret& value) {
   cpr::Response response = cpr::Post(cpr::Url{makeUrlForKey(this->key(args...))},
                    cpr::Body{"{\"return\": \"" +this->pickle(value)+"\"}"},
                    cpr::Header{{"Content-Type", "application/json"}});
