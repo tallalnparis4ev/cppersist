@@ -2,7 +2,7 @@
 #include <sstream>
 #include <string>
 #include <optional>
-#include "sha256.h"
+#include "crypto/sha256.h"
 using std::optional;
 using std::nullopt;
 using std::function;

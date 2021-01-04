@@ -23,17 +23,5 @@ class PersistentMemoizable
     virtual Ret solve(Args... args) = 0;
 };
 
-template<typename T, typename Ret, typename ...Args>
-PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string));
-
-template<typename T, typename Ret, typename... Args>
-PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string funcName);
-
-template<typename T, typename Ret, typename... Args>
-PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string dbURL);
-
-template<typename T, typename Ret, typename... Args>
-PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string dbURL, string funcName);
-
 #include "persister.cpp"
 #endif
