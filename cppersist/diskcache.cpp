@@ -9,8 +9,8 @@ using std::function;
 using std::string;
 
 template <typename Ret, typename ...Args> 
-DiskCache<Ret,Args...>::DiskCache(string (*key)(Args...),
-  string (*pickle)(Ret),Ret (*unpickle)(string), string funcName)
+DiskCache<Ret,Args...>::DiskCache(string (*key)(const Args&...),
+  string (*pickle)(const Ret&),Ret (*unpickle)(const string&), const string& funcName)
 {
   this->key = key;
   this->pickle = pickle;
@@ -20,12 +20,12 @@ DiskCache<Ret,Args...>::DiskCache(string (*key)(Args...),
 }
 
 template <typename Ret, typename ...Args> 
-string DiskCache<Ret,Args...>::makePathForKey(string key) {
+string DiskCache<Ret,Args...>::makePathForKey(const string& key) {
   return this->outputPath + sha256(key) + ".txt";
 }
 
 template <typename Ret, typename ...Args> 
-std::optional<Ret> DiskCache<Ret,Args...>::get(Args... args) {
+std::optional<Ret> DiskCache<Ret,Args...>::get(const Args&... args) {
   std::ifstream inFile(makePathForKey(this->key(args...)));
   if (!inFile) {
       std::cout << "Unable to open file" << std::endl;
@@ -39,7 +39,7 @@ std::optional<Ret> DiskCache<Ret,Args...>::get(Args... args) {
 }
 
 template <typename Ret, typename ...Args> 
-void DiskCache<Ret,Args...>::put(Args... args, Ret value)  {
+void DiskCache<Ret,Args...>::put(const Args&... args, const Ret& value)  {
   std::cout << "keying for put: " << this->key(args...) << std::endl;
   std::ofstream myfile(makePathForKey(this->key(args...)));
   myfile << this->pickle(value);
