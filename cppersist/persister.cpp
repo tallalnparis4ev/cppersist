@@ -11,7 +11,7 @@ PersistentMemoized<T,Ret,Args...>::PersistentMemoized(Cache<Ret,Args...>* cache)
 
 template<typename T, typename Ret, typename ...Args>
 PersistentMemoized<T,Ret,Args...>::~PersistentMemoized(){
-  free(this->persistentCache);
+  delete this->persistentCache;
 }
 
 template<typename T, typename Ret, typename ...Args>
