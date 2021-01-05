@@ -8,14 +8,13 @@
 template <typename Ret, typename ...Args> 
 class RegCache : public MemCache<Ret,Args...>{
   public:
-    RegCache(string (*key)(const Args&...),string (*pickle)(const Ret&),Ret (*unpickle)(const string&), const string& funcName);
+    RegCache(string (*key)(const Args&...),string (*pickle)(const Ret&),Ret (*unpickle)(const string&));
     std::optional<Ret> get(const Args&... args);
     void put(const Args&... args, const Ret& value);
     void put(const std::string&, const std::string&);
     const std::map<string,string>& getContents();
   private:
     std::optional<string> getFromCache(string);
-    void putInCache(string);
     std::map<string,string> cache;
     string makePathForKey(const string& key);
     string outputPath;

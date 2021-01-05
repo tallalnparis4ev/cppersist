@@ -7,18 +7,12 @@ using std::string;
 
 template <typename Ret, typename ...Args> 
 RegCache<Ret,Args...>::RegCache(string (*key)(const Args&...),
-  string (*pickle)(const Ret&),Ret (*unpickle)(const string&), const string& funcName)
+  string (*pickle)(const Ret&),Ret (*unpickle)(const string&))
 {
   this->key = key;
   this->pickle = pickle;
   this->unpickle = unpickle;
-  this->funcName = funcName;
 }
-
-// template <typename Ret, typename ...Args> 
-// void MemCache<Ret,Args...>::putInCache(string key, string value){
-  // this->cache[key] = value;
-// }
 
 template <typename Ret, typename ...Args> 
 const std::map<string,string>& RegCache<Ret,Args...>::getContents(){
