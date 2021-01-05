@@ -44,6 +44,14 @@ Ret PersistentMemoized<T,Ret,Args...>::solve(Args... args){
     std::cout << "CACHE HIT" << std::endl;
     return answer.value();
   }
+  if(this->secondaryCache != NULL){
+    answer = secondaryCache->get(args...);
+    if(answer){
+      std::cout << "SECONDARY CACHE HIT" << std::endl;
+      return answer.value();
+    }
+  }
+
   Ret realAnswer = T::solve(args...);
   primaryCache->put(args..., realAnswer);
   return realAnswer;  
