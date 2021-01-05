@@ -39,31 +39,3 @@ PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(MemCacheType type,string (
   PersistentMemoized<T,Ret,Args...> memoized(primaryCache,diskCache);
   return memoized;
 }
-
-// template<typename Ret>
-// string ser(Ret x){
-//   string ret = "";
-//   ret << x;
-//   return ret;
-// }
-
-// template<typename Ret>
-// Ret deser(string x){
-//   Ret ret;
-//   x >> ret;
-//   return ret;
-// }
-
-// template<typename... Args>
-// string key(Args... args){
-//   string ret = "";
-//   ((ret << args), ...);
-//   return ret;
-// }
-
-// template<typename T, typename Ret, typename... Args>
-// PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(){
-//   DiskCache<Ret,Args...>* diskCache = new DiskCache<Ret,Args...>(key<Args...>,ser<Ret>,deser<Ret>,"test");
-//   PersistentMemoized<T,Ret,Args...> memoized(diskCache);
-//   return memoized;
-// }

@@ -3,6 +3,7 @@
 
 #include "../interfaces/percache.hpp"
 #include <optional>
+#include <string>
 
 template <typename Ret, typename ...Args> 
 class DiskCache : public PerCache<Ret,Args...>{

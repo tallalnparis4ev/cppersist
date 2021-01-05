@@ -4,6 +4,7 @@
 #include "../interfaces/memcache.hpp"
 #include <optional>
 #include <map>
+#include <string>
 
 template <typename Ret, typename ...Args> 
 class RegCache : public MemCache<Ret,Args...>{
@@ -14,7 +15,7 @@ class RegCache : public MemCache<Ret,Args...>{
     void put(const std::string&, const std::string&);
     const std::map<string,string>& getContents();
   private:
-    std::optional<string> getFromCache(string);
+    std::optional<string> getFromCache(const string&);
     std::map<string,string> cache;
     string makePathForKey(const string& key);
     string outputPath;

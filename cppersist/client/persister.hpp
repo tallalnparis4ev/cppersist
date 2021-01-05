@@ -1,10 +1,8 @@
 #ifndef PERSISTER_H_FILE
 #define PERSISTER_H_FILE
 
-#include <string>
 #include "../interfaces/cache.hpp"
 #include "../interfaces/memcache.hpp"
-using std::string;
 
 template<typename T, typename Ret, typename ...Args>
 class PersistentMemoized: public T{
