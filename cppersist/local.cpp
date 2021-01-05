@@ -1,5 +1,5 @@
-#include "../cacheimpl/diskcache.hpp"
-#include "../cacheimpl/regcache.hpp"
+#include "cacheimpl/diskcache.hpp"
+#include "cacheimpl/regcache.hpp"
 #include <iostream>
 #include <string>
 

@@ -1,4 +1,4 @@
-#include "../cacheimpl/mognodbcache.hpp"
+#include "cacheimpl/mognodbcache.hpp"
 #include <iostream>
 #include <string>
 
