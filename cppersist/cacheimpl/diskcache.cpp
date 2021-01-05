@@ -2,7 +2,7 @@
 #include <sstream>
 #include <string>
 #include <optional>
-#include "crypto/sha256.h"
+#include "../crypto/sha256.h"
 using std::optional;
 using std::nullopt;
 using std::function;
@@ -43,5 +43,13 @@ void DiskCache<Ret,Args...>::put(const Args&... args, const Ret& value)  {
   std::cout << "keying for put: " << this->key(args...) << std::endl;
   std::ofstream myfile(makePathForKey(this->key(args...)));
   myfile << this->pickle(value);
+  myfile.close();
+}
+
+template <typename Ret, typename ...Args> 
+void DiskCache<Ret,Args...>::put(const string& key, const string& value){
+  // std::cout << "keying for put: " << this->key(args...) << std::endl;
+  std::ofstream myfile(makePathForKey(key));
+  myfile << value;
   myfile.close();
 }

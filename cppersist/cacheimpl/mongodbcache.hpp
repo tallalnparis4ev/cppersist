@@ -1,4 +1,7 @@
-#include "cache.hpp"
+#ifndef MONGO_CACHE_H_FILE
+#define MONGO_CACHE_H_FILE
+
+#include "../interfaces/percache.hpp"
 #include <optional>
 #include <string>
 using std::string;
@@ -15,3 +18,4 @@ class MongoDBCache : public Cache<Ret,Args...>{
 };
 
 #include "mongodbcache.cpp"
+#endif
