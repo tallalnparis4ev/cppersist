@@ -15,7 +15,6 @@ class Cache
     std::string (*key)(const Args&...);
     std::string (*pickle)(const Ret&);
     Ret (*unpickle)(const std::string&);
-    std::string funcName;
 };
 
 #endif

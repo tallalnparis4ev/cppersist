@@ -3,5 +3,7 @@
 #include "cache.hpp"
 template <typename Ret, typename ...Args> 
 class PerCache : public Cache<Ret,Args...>{
+  protected:
+    std::string funcName;
 };
 #endif
