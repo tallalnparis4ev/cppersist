@@ -35,7 +35,14 @@ std::optional<Ret> MongoDBCache<Ret,Args...>::get(const Args&... args) {
 
 template <typename Ret, typename ...Args> 
 void MongoDBCache<Ret,Args...>::put(const Args&... args, const Ret& value) {
-  cpr::Response response = cpr::Post(cpr::Url{makeUrlForKey(this->key(args...))},
-                   cpr::Body{"{\"return\": \"" +this->pickle(value)+"\"}"},
+  string key = this->key(args...);
+  string valueStr = this->pickle(value);
+  put(key,valueStr);
+}
+
+template <typename Ret, typename ...Args> 
+void MongoDBCache<Ret,Args...>::put(const std::string& key, const std::string& value){
+  cpr::Response response = cpr::Post(cpr::Url{makeUrlForKey(key)},
+                   cpr::Body{"{\"return\": \"" +value+"\"}"},
                    cpr::Header{{"Content-Type", "application/json"}});
 }
