@@ -33,7 +33,7 @@ PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(MemCacheType type,string (
     "Must Memoize a class that inherits from PersistentMemoizable");
   MemCache<Ret,Args...>* primaryCache = NULL;
   switch(type){
-    default: primaryCache = new RegCache<Ret,Args...>(key,pickle,unpickle,funcName);
+    default: primaryCache = new RegCache<Ret,Args...>(key,pickle,unpickle);
   }
   DiskCache<Ret,Args...>* diskCache = new DiskCache<Ret,Args...>(key,pickle,unpickle,funcName);
   PersistentMemoized<T,Ret,Args...> memoized(primaryCache,diskCache);
