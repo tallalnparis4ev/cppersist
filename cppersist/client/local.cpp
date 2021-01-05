@@ -1,4 +1,5 @@
-#include "diskcache.hpp"
+#include "../cacheimpl/diskcache.hpp"
+#include "../cacheimpl/regcache.hpp"
 #include <iostream>
 #include <string>
 
@@ -23,6 +24,19 @@ PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(string (*key)(const Args&.
 
   DiskCache<Ret,Args...>* diskCache = new DiskCache<Ret,Args...>(key,pickle,unpickle,funcName);
   PersistentMemoized<T,Ret,Args...> memoized(diskCache);
+  return memoized;
+}
+
+template<typename T, typename Ret, typename... Args>
+PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(MemCacheType type,string (*key)(const Args&...),string (*pickle)(const Ret&),Ret (*unpickle)(const string&), string funcName){
+  static_assert(std::is_base_of<PersistentMemoizable<Ret,Args...>, T>::value, 
+    "Must Memoize a class that inherits from PersistentMemoizable");
+  MemCache<Ret,Args...>* primaryCache = NULL;
+  switch(type){
+    default: primaryCache = new RegCache<Ret,Args...>(key,pickle,unpickle,funcName);
+  }
+  DiskCache<Ret,Args...>* diskCache = new DiskCache<Ret,Args...>(key,pickle,unpickle,funcName);
+  PersistentMemoized<T,Ret,Args...> memoized(primaryCache,diskCache);
   return memoized;
 }
 

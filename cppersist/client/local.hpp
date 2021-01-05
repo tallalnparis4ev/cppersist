@@ -9,5 +9,8 @@ PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(string (*key)(const Args&.
 template<typename T, typename Ret, typename... Args>
 PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(string (*key)(const Args&...),string (*pickle)(const Ret&),Ret (*unpickle)(const string&));
 
+template<typename T, typename Ret, typename... Args>
+PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(MemCacheType primaryCache,string (*key)(const Args&...),string (*pickle)(const Ret&),Ret (*unpickle)(const string&));
+
 #include "local.cpp"
 #endif
