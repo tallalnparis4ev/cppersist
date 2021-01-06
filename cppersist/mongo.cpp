@@ -1,5 +1,6 @@
 #include "cacheimpl/persistent/mongodbcache.hpp"
 #include "cacheimpl/memory/regcache.hpp"
+#include "cacheimpl/memory/lrucache.hpp"
 #include <iostream>
 #include <string>
 
@@ -50,6 +51,7 @@ PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(MemCacheType type,string (
   
   MemCache<Ret,Args...>* primaryCache = NULL;
   switch(type){
+    case LRU_CACHE: new LRUCache<Ret,Args...>(1000,key,pickle,unpickle); break;
     default: primaryCache = new RegCache<Ret,Args...>(key,pickle,unpickle);
   }
   MongoDBCache<Ret,Args...>* mongoCache = new MongoDBCache<Ret,Args...>(key,pickle,unpickle,dbURL,funcName);

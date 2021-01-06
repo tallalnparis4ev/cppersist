@@ -15,8 +15,10 @@ RegCache<Ret,Args...>::RegCache(string (*key)(const Args&...),
 }
 
 template <typename Ret, typename ...Args> 
-const std::unordered_map<string,string>& RegCache<Ret,Args...>::getContents(){
-  return this->cache;
+void RegCache<Ret,Args...>::populateCache(Cache<Ret,Args...>* secondaryCache){
+  for ( const std::pair<const string&, const string&> &pair : this->cache ) {
+    secondaryCache->put(pair.first,pair.second);
+  } 
 }
 
 template <typename Ret, typename ...Args> 
