@@ -24,5 +24,7 @@ class PersistentMemoizable
     virtual Ret solve(Args... args) = 0;
 };
 
+enum MemCacheType { REGULAR, LRU_CACHE };
+
 #include "persister.cpp"
 #endif

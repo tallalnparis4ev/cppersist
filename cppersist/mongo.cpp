@@ -1,5 +1,5 @@
-#include "cacheimpl/mongodbcache.hpp"
-#include "cacheimpl/regcache.hpp"
+#include "cacheimpl/persistent/mongodbcache.hpp"
+#include "cacheimpl/memory/regcache.hpp"
 #include <iostream>
 #include <string>
 

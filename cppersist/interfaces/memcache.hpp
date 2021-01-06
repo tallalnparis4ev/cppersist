@@ -7,6 +7,4 @@ class MemCache : public Cache<Ret,Args...>{
   public:
     const virtual std::map<std::string,std::string>& getContents() = 0;
 };
-
-enum MemCacheType { REGULAR, LRU_CACHE };
 #endif
