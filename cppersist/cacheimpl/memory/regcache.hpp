@@ -3,7 +3,7 @@
 
 #include "../interfaces/memcache.hpp"
 #include <optional>
-#include <map>
+#include <unordered_map>
 #include <string>
 
 template <typename Ret, typename ...Args> 
@@ -13,12 +13,10 @@ class RegCache : public MemCache<Ret,Args...>{
     std::optional<Ret> get(const Args&... args);
     void put(const Args&... args, const Ret& value);
     void put(const std::string&, const std::string&);
-    const std::map<string,string>& getContents();
+    const std::unordered_map<string,string>& getContents();
   private:
     std::optional<string> getFromCache(const string&);
-    std::map<string,string> cache;
-    string makePathForKey(const string& key);
-    string outputPath;
+    std::unordered_map<string,string> cache;
 };
 
 #include "regcache.cpp"

@@ -1,7 +1,7 @@
 #include <optional>
 #include <functional>
 #include <iostream>
-#include <map>
+#include <unordered_map>
 using std::function;
 using std::string;
 
@@ -23,7 +23,7 @@ template<typename T, typename Ret, typename ...Args>
 PersistentMemoized<T,Ret,Args...>::~PersistentMemoized(){
   if(this->secondaryCache != NULL){
     MemCache<Ret,Args...>* primaryCacheCast = (MemCache<Ret,Args...>*) this->primaryCache;
-    std::map<string,string> contents = primaryCacheCast->getContents();
+    std::unordered_map<string,string> contents = primaryCacheCast->getContents();
     for ( const std::pair<const string&, const string&> &pair : contents ) {
       this->secondaryCache->put(pair.first,pair.second);
     } 

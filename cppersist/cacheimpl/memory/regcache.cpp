@@ -15,7 +15,7 @@ RegCache<Ret,Args...>::RegCache(string (*key)(const Args&...),
 }
 
 template <typename Ret, typename ...Args> 
-const std::map<string,string>& RegCache<Ret,Args...>::getContents(){
+const std::unordered_map<string,string>& RegCache<Ret,Args...>::getContents(){
   return this->cache;
 }
 
