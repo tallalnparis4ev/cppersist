@@ -14,9 +14,9 @@ class Cache
     virtual Cache* clone() = 0;
     virtual ~Cache() {};
   protected:
-    std::string (*key)(const Args&...);
-    std::string (*pickle)(const Ret&);
-    Ret (*unpickle)(const std::string&);
+    std::string (*key)(Args...);
+    std::string (*pickle)(Ret);
+    Ret (*unpickle)(std::string);
 };
 
 #endif
