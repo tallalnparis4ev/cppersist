@@ -67,7 +67,7 @@ std::optional<Ret> LRUCache<Ret,Args...>::get(const Args&... args) {
 template <typename Ret, typename ...Args> 
 void LRUCache<Ret,Args...>::put(const Args&... args, const Ret& value)  {
   string key = this->key(args...);
-  string valueStr = this->key(value);
+  string valueStr = this->pickle(value);
   put(key,valueStr);
 }
 
