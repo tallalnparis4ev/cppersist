@@ -4,16 +4,16 @@
 #include "memoization/persister.hpp"
 
 template<typename T, typename Ret, typename ...Args>
-PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(string (*key)(const Args&...),string (*pickle)(const Ret&),Ret (*unpickle)(const string&));
+PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string));
 
 template<typename T, typename Ret, typename... Args>
-PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(string (*key)(const Args&...),string (*pickle)(const Ret&),Ret (*unpickle)(const string&), string funcName);
+PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string funcName);
 
 template<typename T, typename Ret, typename... Args>
-PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(MemCacheType primaryCache,string (*key)(const Args&...),string (*pickle)(const Ret&),Ret (*unpickle)(const string&));
+PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(MemCacheType primaryCache,string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string));
 
 template<typename T, typename Ret, typename... Args>
-PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(MemCacheType primaryCache,string (*key)(const Args&...),string (*pickle)(const Ret&),Ret (*unpickle)(const string&), string funcName);
+PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(MemCacheType primaryCache,string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string funcName);
 
 #include "local.cpp"
 #endif

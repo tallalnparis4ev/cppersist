@@ -8,7 +8,7 @@
 using std::string;
 
 template<typename T, typename Ret, typename... Args>
-PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(string (*key)(const Args&...),string (*pickle)(const Ret&),Ret (*unpickle)(const string&), string dbURL){
+PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string dbURL){
   static_assert(std::is_base_of<PersistentMemoizable<Ret,Args...>, T>::value, 
     "Must Memoize a class that inherits from PersistentMemoizable");
   
@@ -20,7 +20,7 @@ PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(string (*key)(const Args&.
 }
 
 template<typename T, typename Ret, typename... Args>
-PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(string (*key)(const Args&...),string (*pickle)(const Ret&),Ret (*unpickle)(const string&), string dbURL, string funcName){
+PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string dbURL, string funcName){
   static_assert(std::is_base_of<PersistentMemoizable<Ret,Args...>, T>::value, 
     "Must Memoize a class that inherits from PersistentMemoizable");
   
@@ -30,7 +30,7 @@ PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(string (*key)(const Args&.
 }
 
 template<typename T, typename Ret, typename... Args>
-PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(MemCacheType type,string (*key)(const Args&...),string (*pickle)(const Ret&),Ret (*unpickle)(const string&), string dbURL){
+PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(MemCacheType type,string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string dbURL){
   static_assert(std::is_base_of<PersistentMemoizable<Ret,Args...>, T>::value, 
     "Must Memoize a class that inherits from PersistentMemoizable");
   
@@ -44,7 +44,7 @@ PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(MemCacheType type,string (
 }
 
 template<typename T, typename Ret, typename... Args>
-PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(MemCacheType type,string (*key)(const Args&...),string (*pickle)(const Ret&),Ret (*unpickle)(const string&), string dbURL, string funcName){
+PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(MemCacheType type,string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string dbURL, string funcName){
   static_assert(std::is_base_of<PersistentMemoizable<Ret,Args...>, T>::value, 
     "Must Memoize a class that inherits from PersistentMemoizable");
   MemCache<Ret,Args...>* primaryCache = getMemoryCache(type,key,pickle,unpickle);

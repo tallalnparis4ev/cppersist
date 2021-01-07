@@ -14,7 +14,7 @@ MongoDBCache<Ret,Args...>* MongoDBCache<Ret,Args...>::clone(){
 }
 
 template <typename Ret, typename ...Args>
-MongoDBCache<Ret,Args...>::MongoDBCache(string (*key)(const Args&...),string (*pickle)(const Ret&),Ret (*unpickle)(const string&),
+MongoDBCache<Ret,Args...>::MongoDBCache(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string),
 string base){
   this->key = key;
   this->pickle = pickle;
@@ -23,7 +23,7 @@ string base){
 }
 
 template <typename Ret, typename ...Args>
-MongoDBCache<Ret,Args...>::MongoDBCache(string (*key)(const Args&...),string (*pickle)(const Ret&),Ret (*unpickle)(const string&),
+MongoDBCache<Ret,Args...>::MongoDBCache(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string),
 string dbURL, string funcName) : MongoDBCache(key,pickle,unpickle,dbURL + "/" + funcName + "/") {}
 
 template <typename Ret, typename ...Args> 

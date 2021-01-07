@@ -9,7 +9,7 @@
 template <typename Ret, typename ...Args> 
 class RegCache : public MemCache<Ret,Args...>{
   public:
-    RegCache(string (*key)(const Args&...),string (*pickle)(const Ret&),Ret (*unpickle)(const string&));
+    RegCache(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string));
     RegCache* clone();
     std::optional<Ret> get(const Args&... args);
     void put(const Args&... args, const Ret& value);

@@ -14,8 +14,8 @@ DiskCache<Ret,Args...>* DiskCache<Ret,Args...>::clone(){
 }
 
 template <typename Ret, typename ...Args> 
-DiskCache<Ret,Args...>::DiskCache(string (*key)(const Args&...),
-  string (*pickle)(const Ret&),Ret (*unpickle)(const string&), const string& funcName)
+DiskCache<Ret,Args...>::DiskCache(string (*key)(Args...),
+  string (*pickle)(Ret),Ret (*unpickle)(string), string funcName)
 {
   this->key = key;
   this->pickle = pickle;

@@ -14,7 +14,7 @@ void PersistentMemoized<T,Ret,Args...>::printCaches(){
   log(this->primaryCache, this->secondaryCache);
 }
 template<typename Ret, typename... Args>
-MemCache<Ret,Args...>* getMemoryCache(MemCacheType type,string (*key)(const Args&...),string (*pickle)(const Ret&),Ret (*unpickle)(const string&)){
+MemCache<Ret,Args...>* getMemoryCache(MemCacheType type,string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string)){
   switch(type){
     case LRU_CACHE: return new LRUCache<Ret,Args...>(1000,key,pickle,unpickle);
     case REGULAR: return new RegCache<Ret,Args...>(key,pickle,unpickle);
@@ -59,11 +59,13 @@ PersistentMemoized<T,Ret,Args...>::PersistentMemoized(PersistentMemoized<T,Ret,A
 template<typename T, typename Ret, typename ...Args>
 PersistentMemoized<T,Ret,Args...>& PersistentMemoized<T,Ret,Args...>::operator=(PersistentMemoized<T,Ret,Args...>&& rvalue){
   log("move assignment");
-  deleteCaches();
-  this->primaryCache = rvalue.primaryCache;
-  this->secondaryCache = rvalue.secondaryCache;
-  rvalue.primaryCache = NULL;
-  rvalue.secondaryCache = NULL;
+  if(this != &rvalue){
+    deleteCaches();
+    this->primaryCache = rvalue.primaryCache;
+    this->secondaryCache = rvalue.secondaryCache;
+    rvalue.primaryCache = NULL;
+    rvalue.secondaryCache = NULL;
+  }
   return *this;
 }
 
@@ -101,12 +103,12 @@ void PersistentMemoized<T,Ret,Args...>::deleteCaches(){
 }
 
 template<typename T, typename Ret, typename ...Args>
-Ret PersistentMemoized<T,Ret,Args...>::operator()(const Args&... args) {
+Ret PersistentMemoized<T,Ret,Args...>::operator()(Args const&... args) {
   return solve(args...);
 }
 
 template<typename T, typename Ret, typename ...Args>
-Ret PersistentMemoized<T,Ret,Args...>::solve(const Args&... args){
+Ret PersistentMemoized<T,Ret,Args...>::solve(Args... args){
   std::optional<Ret> answer = primaryCache->get(args...);  
   if(answer){
     std::cout << "CACHE HIT" << std::endl;

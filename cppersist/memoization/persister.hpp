@@ -14,7 +14,7 @@ class PersistentMemoized: public T{
     PersistentMemoized(const PersistentMemoized& lvalue);
     PersistentMemoized(PersistentMemoized&& rvalue);
     ~PersistentMemoized();
-    Ret operator()(const Args&... args);
+    Ret operator()(Args const&... args);
     PersistentMemoized& operator=(PersistentMemoized&& rvalue);
     PersistentMemoized& operator=(const PersistentMemoized& lvalue);
     void printCaches();
@@ -22,7 +22,7 @@ class PersistentMemoized: public T{
     void deleteCaches();
     Cache<Ret,Args...>* primaryCache;
     Cache<Ret,Args...>* secondaryCache;
-    virtual Ret solve(const Args&... args);
+    virtual Ret solve(Args... args);
 };
 
 template<typename Ret, typename... Args>

@@ -12,8 +12,8 @@ RegCache<Ret,Args...>* RegCache<Ret,Args...>::clone(){
 }
 
 template <typename Ret, typename ...Args> 
-RegCache<Ret,Args...>::RegCache(string (*key)(const Args&...),
-  string (*pickle)(const Ret&),Ret (*unpickle)(const string&))
+RegCache<Ret,Args...>::RegCache(string (*key)(Args...),
+  string (*pickle)(Ret),Ret (*unpickle)(string))
 {
   this->key = key;
   this->pickle = pickle;
