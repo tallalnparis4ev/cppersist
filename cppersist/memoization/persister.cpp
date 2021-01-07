@@ -101,12 +101,12 @@ void PersistentMemoized<T,Ret,Args...>::deleteCaches(){
 }
 
 template<typename T, typename Ret, typename ...Args>
-Ret PersistentMemoized<T,Ret,Args...>::operator()(Args... args) {
+Ret PersistentMemoized<T,Ret,Args...>::operator()(const Args&... args) {
   return solve(args...);
 }
 
 template<typename T, typename Ret, typename ...Args>
-Ret PersistentMemoized<T,Ret,Args...>::solve(Args... args){
+Ret PersistentMemoized<T,Ret,Args...>::solve(const Args&... args){
   std::optional<Ret> answer = primaryCache->get(args...);  
   if(answer){
     std::cout << "CACHE HIT" << std::endl;
