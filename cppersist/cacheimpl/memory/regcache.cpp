@@ -5,6 +5,12 @@ using std::nullopt;
 using std::function;
 using std::string;
 
+
+template <typename Ret, typename ...Args> 
+RegCache<Ret,Args...>* RegCache<Ret,Args...>::clone(){
+  return new RegCache<Ret,Args...>(this->key,this->pickle,this->unpickle);
+}
+
 template <typename Ret, typename ...Args> 
 RegCache<Ret,Args...>::RegCache(string (*key)(const Args&...),
   string (*pickle)(const Ret&),Ret (*unpickle)(const string&))

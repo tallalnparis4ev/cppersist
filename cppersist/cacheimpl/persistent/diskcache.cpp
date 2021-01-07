@@ -9,6 +9,11 @@ using std::function;
 using std::string;
 
 template <typename Ret, typename ...Args> 
+DiskCache<Ret,Args...>* DiskCache<Ret,Args...>::clone(){
+  return new DiskCache<Ret,Args...>(this->key,this->pickle,this->unpickle,this->funcName);
+}
+
+template <typename Ret, typename ...Args> 
 DiskCache<Ret,Args...>::DiskCache(string (*key)(const Args&...),
   string (*pickle)(const Ret&),Ret (*unpickle)(const string&), const string& funcName)
 {
@@ -40,7 +45,6 @@ std::optional<Ret> DiskCache<Ret,Args...>::get(const Args&... args) {
 
 template <typename Ret, typename ...Args> 
 void DiskCache<Ret,Args...>::put(const Args&... args, const Ret& value)  {
-  std::cout << "keying for put: " << this->key(args...) << std::endl;
   std::ofstream myfile(makePathForKey(this->key(args...)));
   myfile << this->pickle(value);
   myfile.close();
@@ -48,7 +52,6 @@ void DiskCache<Ret,Args...>::put(const Args&... args, const Ret& value)  {
 
 template <typename Ret, typename ...Args> 
 void DiskCache<Ret,Args...>::put(const string& key, const string& value){
-  // std::cout << "keying for put: " << this->key(args...) << std::endl;
   std::ofstream myfile(makePathForKey(key));
   myfile << value;
   myfile.close();

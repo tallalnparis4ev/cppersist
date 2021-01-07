@@ -2,10 +2,16 @@
 #include <unordered_map>
 #include <list>
 #include <string>
+#include "../../utils/log.hpp"
 using std::optional;
 using std::nullopt;
 using std::function;
 using std::string;
+
+template <typename Ret, typename ...Args> 
+LRUCache<Ret,Args...>* LRUCache<Ret,Args...>::clone(){
+  return new LRUCache<Ret,Args...>(this->cacheSize,this->key,this->pickle,this->unpickle);
+}
 
 template <typename Ret, typename ...Args> 
 LRUCache<Ret,Args...>::LRUCache(int cacheSize, string (*key)(const Args&...),
@@ -26,14 +32,12 @@ void LRUCache<Ret,Args...>::populateCache(Cache<Ret,Args...>* secondaryCache){
   } 
 }
 
-#include <iostream>
-using namespace std;
 template <typename Ret, typename ...Args> 
 void LRUCache<Ret,Args...>::print(){
   for ( const std::pair<const string&, const string&> &pair : cache ) {
     string key = pair.first;
     string value = pair.second;
-    std::cout << pair.first << " , " << value << std::endl;
+    log(key,value);
   } 
 }
 
@@ -67,11 +71,8 @@ void LRUCache<Ret,Args...>::put(const Args&... args, const Ret& value)  {
 
 template <typename Ret, typename ...Args> 
 void LRUCache<Ret,Args...>::put(const string& key, const string& value)  {
-  cout << "Putting " << key << ", " << value << endl;
-  cout << "cur size " << recentlyUsed.size() << endl;
   if(recentlyUsed.size() == cacheSize){
     string oldestKey = recentlyUsed.back();
-    cout << "removing " << oldestKey << endl;
     recentlyUsed.pop_back();
     positionCache.erase(oldestKey);
     cache.erase(oldestKey);

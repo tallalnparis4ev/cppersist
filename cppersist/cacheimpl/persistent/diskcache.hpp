@@ -8,6 +8,7 @@
 template <typename Ret, typename ...Args> 
 class DiskCache : public PerCache<Ret,Args...>{
   public:
+    DiskCache<Ret,Args...>* clone();
     DiskCache(string (*key)(const Args&...),string (*pickle)(const Ret&),Ret (*unpickle)(const string&), const string& funcName);
     std::optional<Ret> get(const Args&... args);
     void put(const Args&... args, const Ret& value);
