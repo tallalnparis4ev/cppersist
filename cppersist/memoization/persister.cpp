@@ -28,6 +28,7 @@ namespace cpst{
   //Destructor
   template<typename T, typename Ret, typename ...Args>
   PersistentMemoized<T,Ret,Args...>::~PersistentMemoized(){
+    this->cacheConsistent.lock();
     deleteCaches();
   }
 
@@ -129,7 +130,7 @@ namespace cpst{
     Ret realAnswer = T::solve(args...);
     if(this->secondaryCache != NULL){
       this->cacheConsistent.lock();
-      discard = std::async(std::launch::async,&PersistentMemoized<T,Ret,Args...>::write,this,args..., realAnswer);
+      discard = std::async(&PersistentMemoized<T,Ret,Args...>::write,this,args..., realAnswer);
     }
     primaryCache->put(args..., realAnswer);
     return realAnswer;  
