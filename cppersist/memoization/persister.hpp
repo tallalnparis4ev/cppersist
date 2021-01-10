@@ -4,8 +4,10 @@
 #include "../interfaces/cache.hpp"
 #include "../interfaces/memcache.hpp"
 #include <string>
-using std::string;
+#include <mutex>
+#include <future>
 
+using std::string;
 template<typename T, typename Ret, typename ...Args>
 class PersistentMemoized: public T{
   public:
@@ -19,6 +21,9 @@ class PersistentMemoized: public T{
     PersistentMemoized& operator=(const PersistentMemoized& lvalue);
     void printCaches();
   private:
+    std::future<void> discard;
+    void write(Args const&..., Ret const&);
+    std::mutex cacheConsistent;
     void deleteCaches();
     Cache<Ret,Args...>* primaryCache;
     Cache<Ret,Args...>* secondaryCache;

@@ -2,6 +2,8 @@
 #include <functional>
 #include <iostream>
 #include <unordered_map>
+#include <future>
+#include <mutex>
 #include "../cacheimpl/memory/regcache.hpp"
 #include "../cacheimpl/memory/lrucache.hpp"
 #include "../utils/log.hpp"
@@ -94,17 +96,19 @@ PersistentMemoized<T,Ret,Args...>& PersistentMemoized<T,Ret,Args...>::operator=(
 
 template<typename T, typename Ret, typename ...Args>
 void PersistentMemoized<T,Ret,Args...>::deleteCaches(){
-  if(this->secondaryCache != NULL){
-    MemCache<Ret,Args...>* primaryCacheCast = (MemCache<Ret,Args...>*) this->primaryCache;
-    primaryCacheCast->populateCache(this->secondaryCache);
-    delete this->secondaryCache;
-  }
   delete this->primaryCache;
+  delete this->secondaryCache;
 }
 
 template<typename T, typename Ret, typename ...Args>
 Ret PersistentMemoized<T,Ret,Args...>::operator()(Args const&... args) {
   return solve(args...);
+}
+
+template<typename T, typename Ret, typename ...Args>
+void PersistentMemoized<T,Ret,Args...>::write(Args const&... args, Ret const& realAnswer){
+  secondaryCache->put(args...,realAnswer);
+  cacheConsistent.unlock();
 }
 
 template<typename T, typename Ret, typename ...Args>
@@ -121,8 +125,11 @@ Ret PersistentMemoized<T,Ret,Args...>::solve(Args... args){
       return answer.value();
     }
   }
-
   Ret realAnswer = T::solve(args...);
+  if(this->secondaryCache != NULL){
+    this->cacheConsistent.lock();
+    discard = std::async(std::launch::async,&PersistentMemoized<T,Ret,Args...>::write,this,args..., realAnswer);
+  }
   primaryCache->put(args..., realAnswer);
   return realAnswer;  
 }
