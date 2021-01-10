@@ -2,7 +2,6 @@
 #include <optional>
 using std::optional;
 using std::nullopt;
-using std::function;
 using std::string;
 
 namespace cpst{
