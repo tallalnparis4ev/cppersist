@@ -6,6 +6,7 @@
 #include <mutex>
 #include "../cacheimpl/memory/regcache.hpp"
 #include "../cacheimpl/memory/lrucache.hpp"
+#include "../cacheimpl/memory/onecache.hpp"
 #include "../utils/log.hpp"
 using std::function;
 using std::string;
@@ -19,6 +20,7 @@ namespace cpst{
     switch(type){
       case LRU_CACHE: return new LRUCache<Ret,Args...>(1000,key,pickle,unpickle);
       case REGULAR: return new RegCache<Ret,Args...>(key,pickle,unpickle);
+      case ONE: return new OneCache<Ret,Args...>(key,pickle,unpickle);
     }
     return new RegCache<Ret,Args...>(key,pickle,unpickle);
   }

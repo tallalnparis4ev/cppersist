@@ -37,7 +37,7 @@ namespace cpst{
       virtual Ret solve(Args... args) = 0;
   };
 
-  enum MemCacheType { REGULAR, LRU_CACHE };
+  enum MemCacheType { REGULAR, LRU_CACHE, ONE };
 
   template<typename Ret, typename... Args>
   MemCache<Ret,Args...>* getMemoryCache(MemCacheType type,string (*key)(const Args&...),string (*pickle)(const Ret&),Ret (*unpickle)(const string&));
