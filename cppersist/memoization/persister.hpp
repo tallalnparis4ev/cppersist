@@ -20,7 +20,11 @@ namespace cpst{
       PersistentMemoized& operator=(PersistentMemoized&& rvalue);
       PersistentMemoized& operator=(const PersistentMemoized& lvalue);
       void printCaches();
+      void resetMetrics();
     private:
+      long cacheHits;
+      long cacheMisses;
+      long timeTaken; //wall clock time in ms
       std::future<void> discard;
       void write(Args const&..., Ret const&);
       std::mutex cacheConsistent;

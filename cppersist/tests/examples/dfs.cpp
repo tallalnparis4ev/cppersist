@@ -1,9 +1,11 @@
-#include "../local.hpp"
+#include "../../local.hpp"
+#include "../../mongo.hpp"
 #include <iostream>
 #include <list> 
 #define STOP "A "
 #define DELIMITER " "
 using namespace std;
+using namespace cpst;
 class Node{
   public:
     int label;
@@ -81,7 +83,36 @@ string keymaker2(int n){
 int main(){
   string tree = "1 2 A A 3 A A ";
   Node* root = deSerialize(tree);
-  PersistentMemoized memoizedFib = getLocalMemoizedObj<DFSSolver>(keymaker,intostr,strtoi);
+  PersistentMemoized memoizedFib = getLocalMemoizedObj<DFSSolver>(LRU_CACHE,keymaker,intostr,strtoi);
   int z = memoizedFib(root,3);
   cout << z << endl;
 }
+
+// #include <future>
+// #include <mutex>
+// #include <thread>         // std::this_thread::sleep_for
+// #include <chrono>
+// #include <iostream>
+// using namespace std;
+// namespace x{
+//   string x;
+// }
+// namespace cppst{
+
+// }
+// std::future<void> test;
+// void sleeper(){
+//   cout << "STARTED" << endl;
+//   std::this_thread::sleep_for (std::chrono::seconds(10));
+// };
+// void external(){
+//   test = std::async(&sleeper);
+// }
+// int main(int argc, char const *argv[])
+// {
+//   external();
+//   // std::future<void> writeRes = std::async(std::launch::async,&PersistentMemoized<T,Ret,Args...>::write,this,args..., realAnswer);
+//   cout << "DONE" << endl;
+//   /* code */
+//   return 0;
+// }

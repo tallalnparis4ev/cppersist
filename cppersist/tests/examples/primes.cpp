@@ -1,4 +1,4 @@
-#include "../local.hpp"
+#include "../../local.hpp"
 #include <iostream>
 #include <list> 
 #include <iterator> 
@@ -8,26 +8,18 @@ using namespace std;
 class PrimeFactorizer: public PersistentMemoizable<list<int>, int>{
   public:
     list<int> solve(int n) override {
-      cout << n << endl;
-      std::this_thread::sleep_for (std::chrono::seconds(1));
-      int nextPrime = smallestPrime(n);
-      if(n/nextPrime == 1){
-        list<int> primeFactors;
-        primeFactors.push_front(nextPrime);
-        return primeFactors;
+      list <int> primeFactors; 
+      std::cout << "Original " << n << std::endl;
+      int curPrime = 2;
+      while(n >= (curPrime*curPrime)){
+        if(n%curPrime == 0){
+          primeFactors.push_back(curPrime);
+          n = n/curPrime;
+        }
+        else curPrime++;
       }
-      else{
-        list<int> primeFactors = solve(n/nextPrime);
-        primeFactors.push_front(nextPrime);
-        return primeFactors;
-      }
-    }
-
-    int smallestPrime(int n){
-      for(int i=2;i<=n;i++){
-        if(n%i==0) return i;
-      }
-      return -1;
+      primeFactors.push_back(n);
+      return primeFactors;
     } 
 };
 
@@ -58,8 +50,7 @@ string keymaker(int n){
 }
 
 int main(){
-  PrimeFactorizer primeFactorizer;
-  PersistentMemoized memoizedPrimes = getLocalMemoizedObj<PrimeFactorizer>(keymaker,listIntsToString,intListStrToList,"primesAlt");
-  list<int> z = memoizedPrimes(25);
+  PersistentMemoized memoizedPrimes = getLocalMemoizedObj<PrimeFactorizer>(keymaker,listIntsToString,intListStrToList,"primes");
+  list<int> z = memoizedPrimes(20);
   std::cout << listIntsToString(z) << std::endl;
 }

@@ -4,13 +4,23 @@
 #include <unordered_map>
 #include <future>
 #include <mutex>
+#include <chrono>
 #include "../cacheimpl/memory/regcache.hpp"
 #include "../cacheimpl/memory/lrucache.hpp"
 #include "../cacheimpl/memory/onecache.hpp"
 #include "../utils/log.hpp"
 using std::function;
 using std::string;
+using std::chrono;
+
 namespace cpst{
+
+  template<typename T, typename Ret, typename ...Args>
+  PersistentMemoized<T,Ret,Args...>::resetMetrics(){
+    cacheHits = 0;
+    cacheMisses = 0;
+  }
+
   template<typename T, typename Ret, typename... Args>
   void PersistentMemoized<T,Ret,Args...>::printCaches(){
     log(this->primaryCache, this->secondaryCache);
@@ -104,7 +114,11 @@ namespace cpst{
 
   template<typename T, typename Ret, typename ...Args>
   Ret PersistentMemoized<T,Ret,Args...>::operator()(Args const&... args) {
-    return solve(args...);
+    auto start = system_clock::now();
+    Ret answer = solve(args...);
+    auto end = system_clock::now();
+    timeTaken = duration_cast<milliseconds>(end-start).count();
+    return answer;
   }
 
   template<typename T, typename Ret, typename ...Args>
@@ -117,6 +131,7 @@ namespace cpst{
   Ret PersistentMemoized<T,Ret,Args...>::solve(Args... args){
     std::optional<Ret> answer = primaryCache->get(args...);  
     if(answer){
+      cacheHits++;
       std::cout << "CACHE HIT" << std::endl;
       return answer.value();
     }
@@ -127,6 +142,7 @@ namespace cpst{
         return answer.value();
       }
     }
+    cacheMisses++;
     Ret realAnswer = T::solve(args...);
     if(this->secondaryCache != NULL){
       this->cacheConsistent.lock();
