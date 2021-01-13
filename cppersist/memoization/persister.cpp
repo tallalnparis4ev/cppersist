@@ -22,17 +22,36 @@ namespace cpst{
   }
 
   template<typename T, typename Ret, typename... Args>
-  void PersistentMemoized<T,Ret,Args...>::printCaches(){
-    log(this->primaryCache, this->secondaryCache);
+  void PersistentMemoized<T,Ret,Args...>::nullFields(){
+    this->primaryCache = NULL;
+    this->secondaryCache = NULL;
   }
-  template<typename Ret, typename... Args>
-  MemCache<Ret,Args...>* getMemoryCache(MemCacheType type,string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string)){
-    switch(type){
-      case LRU_CACHE: return new LRUCache<Ret,Args...>(1000,key,pickle,unpickle);
-      case REGULAR: return new RegCache<Ret,Args...>(key,pickle,unpickle);
-      case ONE: return new OneCache<Ret,Args...>(key,pickle,unpickle);
+
+  template<typename T, typename Ret, typename... Args>
+  void PersistentMemoized<T,Ret,Args...>::setMemoryCache(MemCacheType type){
+    setMemoryCache(type,1000);
+  }
+
+  template<typename T, typename Ret, typename... Args>
+  void PersistentMemoized<T,Ret,Args...>::setMemoryCache(MemCacheType type, int size){
+    if(this->secondaryCache == NULL){
+      if(this->primaryCache == NULL) return;
+      this->secondaryCache = this->primaryCache;
     }
-    return new RegCache<Ret,Args...>(key,pickle,unpickle);
+    else if(this->primaryCache != NULL) delete this->primaryCache;
+
+    memCacheType = type;
+    
+    auto key = this->secondaryCache->getKey();
+    auto pickle = this->secondaryCache->getPickle();
+    auto unpickle = this->secondaryCache->getUnpickle();
+    
+    switch(type){
+      case LRU_CACHE: primaryCache = new LRUCache<Ret,Args...>(size,key,pickle,unpickle); break;
+      case REGULAR: primaryCache = new RegCache<Ret,Args...>(key,pickle,unpickle); break;
+      case ONE: primaryCache = new OneCache<Ret,Args...>(key,pickle,unpickle); break;
+      default: primaryCache = new RegCache<Ret,Args...>(key,pickle,unpickle);
+    }
   }
 
   //Destructor
@@ -52,21 +71,27 @@ namespace cpst{
 
   //Constructor2
   template<typename T, typename Ret, typename ...Args>
-  PersistentMemoized<T,Ret,Args...>::PersistentMemoized(MemCache<Ret,Args...>* primaryCache, 
+  PersistentMemoized<T,Ret,Args...>::PersistentMemoized(MemCacheType type, 
     Cache<Ret,Args...>* secondaryCache){
     log("constructor2");
-    this->primaryCache = primaryCache;
+    this->primaryCache = NULL;
     this->secondaryCache = secondaryCache;
+    this->setMemoryCache(type);
+  }
+
+  template<typename T, typename Ret, typename ...Args>
+  void PersistentMemoized<T,Ret,Args...>::move(PersistentMemoized<T,Ret,Args...>&& rvalue){
+    this->primaryCache = rvalue.primaryCache;
+    this->secondaryCache = rvalue.secondaryCache;
+    this->memCacheType = rvalue.memCacheType;
   }
 
   //Move Constructor
   template<typename T, typename Ret, typename ...Args>
   PersistentMemoized<T,Ret,Args...>::PersistentMemoized(PersistentMemoized<T,Ret,Args...>&& rvalue){
     log("move constructor");
-    this->primaryCache = rvalue.primaryCache;
-    this->secondaryCache = rvalue.secondaryCache;
-    rvalue.primaryCache = NULL;
-    rvalue.secondaryCache = NULL;
+    move(std::move(rvalue));
+    rvalue.nullFields();
   }
 
   //Move Assignment
@@ -75,12 +100,20 @@ namespace cpst{
     log("move assignment");
     if(this != &rvalue){
       deleteCaches();
-      this->primaryCache = rvalue.primaryCache;
-      this->secondaryCache = rvalue.secondaryCache;
-      rvalue.primaryCache = NULL;
-      rvalue.secondaryCache = NULL;
+      move(std::move(rvalue));
+      rvalue.nullFields();
     }
     return *this;
+  }
+
+  template<typename T, typename Ret, typename ...Args>
+  void PersistentMemoized<T,Ret,Args...>::copy(const PersistentMemoized<T,Ret,Args...>& lvalue){
+    this->primaryCache = lvalue.primaryCache->clone();
+    this->secondaryCache = NULL;
+    if(lvalue.secondaryCache != NULL){
+      this->secondaryCache = lvalue.secondaryCache->clone();
+      this->memCacheType = lvalue.memCacheType;
+    }
   }
 
   //Copy Constructor
@@ -88,9 +121,7 @@ namespace cpst{
   PersistentMemoized<T,Ret,Args...>::PersistentMemoized(const PersistentMemoized<T,Ret,Args...>& lvalue)
   {
     log("copy constructor");
-    this->primaryCache = lvalue.primaryCache->clone();
-    this->secondaryCache = NULL;
-    if(lvalue.secondaryCache != NULL) this->secondaryCache = lvalue.secondaryCache->clone();
+    copy(lvalue);
   }
 
   //Copy Assignment
@@ -99,9 +130,7 @@ namespace cpst{
     log("copy assignment");
     if (this != &lvalue) { // no self-assignment
       deleteCaches();
-      this->primaryCache = lvalue.primaryCache->clone();
-      this->secondaryCache = NULL;
-      if(lvalue.secondaryCache != NULL) this->secondaryCache = lvalue.secondaryCache->clone();
+      copy(lvalue);
     }
     return *this;
   }

@@ -14,6 +14,9 @@ namespace cpst{
 
       virtual Cache* clone() = 0;
       virtual ~Cache() {};
+      auto getKey(){return key;}
+      auto getPickle(){return pickle;}
+      auto getUnpickle(){return unpickle;}
     protected:
       std::string (*key)(Args...);
       std::string (*pickle)(Ret);

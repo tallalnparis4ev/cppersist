@@ -37,9 +37,8 @@ namespace cpst{
     string funcName = typeid(T).name();
     std::cout << "ALERT: No function name passed, using " << funcName << " as the function name instead!" << std::endl;
     
-    MemCache<Ret,Args...>* primaryCache = getMemoryCache(type,key,pickle,unpickle);
     MongoDBCache<Ret,Args...>* mongoCache = new MongoDBCache<Ret,Args...>(key,pickle,unpickle,dbURL,funcName);
-    PersistentMemoized<T,Ret,Args...> memoized(primaryCache,mongoCache);
+    PersistentMemoized<T,Ret,Args...> memoized(type,mongoCache);
     return memoized;
   }
 
@@ -47,9 +46,9 @@ namespace cpst{
   PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(MemCacheType type,string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string dbURL, string funcName){
     static_assert(std::is_base_of<PersistentMemoizable<Ret,Args...>, T>::value, 
       "Must Memoize a class that inherits from PersistentMemoizable");
-    MemCache<Ret,Args...>* primaryCache = getMemoryCache(type,key,pickle,unpickle);
+
     MongoDBCache<Ret,Args...>* mongoCache = new MongoDBCache<Ret,Args...>(key,pickle,unpickle,dbURL,funcName);
-    PersistentMemoized<T,Ret,Args...> memoized(primaryCache,mongoCache);
+    PersistentMemoized<T,Ret,Args...> memoized(type,mongoCache);
     return memoized;
   }
 }

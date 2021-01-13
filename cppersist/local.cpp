@@ -1,5 +1,4 @@
 #include "cacheimpl/persistent/diskcache.hpp"
-#include "cacheimpl/memory/regcache.hpp"
 #include <iostream>
 #include <string>
 
@@ -32,9 +31,8 @@ namespace cpst{
     static_assert(std::is_base_of<PersistentMemoizable<Ret,Args...>, T>::value, 
       "Must Memoize a class that inherits from PersistentMemoizable");
     
-    MemCache<Ret,Args...>* primaryCache = getMemoryCache(type,key,pickle,unpickle);
     DiskCache<Ret,Args...>* diskCache = new DiskCache<Ret,Args...>(key,pickle,unpickle,funcName);
-    PersistentMemoized<T,Ret,Args...> memoized(primaryCache,diskCache);
+    PersistentMemoized<T,Ret,Args...> memoized(type,diskCache);
     return memoized;
   }
 
@@ -46,9 +44,8 @@ namespace cpst{
     string funcName = typeid(T).name();
     std::cout << "ALERT: No function name passed, using " << funcName << " as the function name instead!" << std::endl;
 
-    MemCache<Ret,Args...>* primaryCache = getMemoryCache(type,key,pickle,unpickle);
     DiskCache<Ret,Args...>* diskCache = new DiskCache<Ret,Args...>(key,pickle,unpickle,funcName);
-    PersistentMemoized<T,Ret,Args...> memoized(primaryCache,diskCache);
+    PersistentMemoized<T,Ret,Args...> memoized(type,diskCache);
     return memoized;
   }
 }

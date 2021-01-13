@@ -8,10 +8,12 @@
 #include <future>
 using std::string;
 namespace cpst{
+  enum MemCacheType { REGULAR, LRU_CACHE, ONE };
+
   template<typename T, typename Ret, typename ...Args>
   class PersistentMemoized: public T{
     public:
-      PersistentMemoized(MemCache<Ret,Args...>* primaryCache, Cache<Ret,Args...>* secondaryCache);
+      PersistentMemoized(MemCacheType primaryCache, Cache<Ret,Args...>* secondaryCache);
       PersistentMemoized(Cache<Ret,Args...>* primaryCache);
       PersistentMemoized(const PersistentMemoized& lvalue);
       PersistentMemoized(PersistentMemoized&& rvalue);
@@ -19,12 +21,17 @@ namespace cpst{
       Ret operator()(Args const&... args);
       PersistentMemoized& operator=(PersistentMemoized&& rvalue);
       PersistentMemoized& operator=(const PersistentMemoized& lvalue);
-      void printCaches();
       void resetMetrics();
+      void setMemoryCache(MemCacheType);
+      void setMemoryCache(MemCacheType, int);
     private:
       long cacheHits;
       long cacheMisses;
       long timeTaken; //wall clock time in ms
+      void nullFields();
+      void copy(const PersistentMemoized& lvalue);
+      void move(PersistentMemoized&& rvalue); 
+      MemCacheType memCacheType;
       std::future<void> discard;
       void write(Args const&..., Ret const&);
       std::mutex cacheConsistent;
@@ -40,11 +47,6 @@ namespace cpst{
     public:
       virtual Ret solve(Args... args) = 0;
   };
-
-  enum MemCacheType { REGULAR, LRU_CACHE, ONE };
-
-  template<typename Ret, typename... Args>
-  MemCache<Ret,Args...>* getMemoryCache(MemCacheType type,string (*key)(const Args&...),string (*pickle)(const Ret&),Ret (*unpickle)(const string&));
 }
 #include "persister.cpp"
 #endif
