@@ -28,6 +28,7 @@ namespace cpst{
       if(this->primaryCache == NULL) return;
       this->secondaryCache = this->primaryCache;
     }
+    else if(this->primaryCache != NULL) delete this->primaryCache;
 
     memCacheType = type;
     
@@ -63,6 +64,7 @@ namespace cpst{
   PersistentMemoized<T,Ret,Args...>::PersistentMemoized(MemCacheType type, 
     Cache<Ret,Args...>* secondaryCache){
     log("constructor2");
+    this->primaryCache = NULL;
     this->secondaryCache = secondaryCache;
     this->setMemoryCache(type);
   }
