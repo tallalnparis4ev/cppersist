@@ -41,14 +41,7 @@ namespace cpst{
 
   template <typename Ret, typename ...Args> 
   void OneCache<Ret,Args...>::put(const Args&... args, const Ret& value)  {
-    string key = this->key(args...);
-    string valueStr = this->pickle(value);
-    put(key,valueStr);
-  }
-
-  template <typename Ret, typename ...Args> 
-  void OneCache<Ret,Args...>::put(const string& key, const string& value)  {
-    lastKey = key;
-    lastValue = value;
+    lastKey = this->key(args...);
+    lastValue = this->pickle(value);
   }
 }

@@ -46,12 +46,6 @@ namespace cpst{
   template <typename Ret, typename ...Args> 
   void RegCache<Ret,Args...>::put(const Args&... args, const Ret& value)  {
     string key = this->key(args...);
-    string valueStr = this->pickle(value);
-    put(key,valueStr);
-  }
-
-  template <typename Ret, typename ...Args> 
-  void RegCache<Ret,Args...>::put(const string& key, const string& value)  {
-    this->cache[key] = value;
+    this->cache[key] = this->pickle(value);
   }
 }

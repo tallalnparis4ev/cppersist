@@ -13,7 +13,6 @@ namespace cpst{
       RegCache* clone();
       std::optional<Ret> get(const Args&... args);
       void put(const Args&... args, const Ret& value);
-      void put(const std::string&, const std::string&);
       void populateCache(Cache<Ret,Args...>*);
     private:
       std::optional<string> getFromCache(const string&);

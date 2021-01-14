@@ -49,11 +49,4 @@ namespace cpst{
     myfile << this->pickle(value);
     myfile.close();
   }
-
-  template <typename Ret, typename ...Args> 
-  void DiskCache<Ret,Args...>::put(const string& key, const string& value){
-    std::ofstream myfile(makePathForKey(key));
-    myfile << value;
-    myfile.close();
-  }
 }

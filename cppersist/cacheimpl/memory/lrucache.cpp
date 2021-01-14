@@ -67,12 +67,6 @@ namespace cpst{
   template <typename Ret, typename ...Args> 
   void LRUCache<Ret,Args...>::put(const Args&... args, const Ret& value)  {
     string key = this->key(args...);
-    string valueStr = this->pickle(value);
-    put(key,valueStr);
-  }
-
-  template <typename Ret, typename ...Args> 
-  void LRUCache<Ret,Args...>::put(const string& key, const string& value)  {
     if(recentlyUsed.size() == cacheSize){
       string oldestKey = recentlyUsed.back();
       recentlyUsed.pop_back();
@@ -81,6 +75,6 @@ namespace cpst{
     }
     recentlyUsed.push_front(key);
     positionCache[key] = recentlyUsed.begin();
-    cache[key] = value;
+    cache[key] = this->pickle(value);
   }
 }

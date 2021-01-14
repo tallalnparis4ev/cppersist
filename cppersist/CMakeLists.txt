@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(main ${TEST})
 
 include_directories(crypto)
-set(sources cache.hpp diskcache.hpp mongodbcache.hpp persister.hpp crypto/sha256.cpp)
 
 add_executable(cppersist ${sources} ${main})
 

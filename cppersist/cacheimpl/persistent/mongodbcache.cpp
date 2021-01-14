@@ -46,11 +46,4 @@ namespace cpst{
     string valueStr = this->pickle(value);
     put(key,valueStr);
   }
-
-  template <typename Ret, typename ...Args> 
-  void MongoDBCache<Ret,Args...>::put(const std::string& key, const std::string& value){
-    cpr::Response response = cpr::Post(cpr::Url{makeUrlForKey(key)},
-                    cpr::Body{"{\"return\": \"" +value+"\"}"},
-                    cpr::Header{{"Content-Type", "application/json"}});
-  }
 }
