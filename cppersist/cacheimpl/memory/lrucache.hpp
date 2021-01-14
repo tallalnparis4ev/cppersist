@@ -17,7 +17,6 @@ namespace cpst{
       LRUCache* clone();
       std::optional<Ret> get(const Args&... args);
       void put(const Args&... args, const Ret& value);
-      void put(const std::string&, const std::string&);
       void populateCache(Cache<Ret,Args...>*);
       void print();
     private:

@@ -14,7 +14,6 @@ namespace cpst{
       MongoDBCache(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string);
       std::optional<Ret> get(const Args&... args);
       void put(const Args&... args, const Ret& value);
-      void put(const std::string& key, const std::string& value);
     private:
       string base;
       string makeUrlForKey(const string& key);

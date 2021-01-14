@@ -10,8 +10,6 @@ namespace cpst{
     public:
       virtual std::optional<Ret> get(const Args&...) = 0;
       virtual void put(const Args&..., const Ret&) = 0;
-      virtual void put(const std::string&, const std::string&) = 0;
-
       virtual Cache* clone() = 0;
       virtual ~Cache() {};
       auto getKey(){return key;}
