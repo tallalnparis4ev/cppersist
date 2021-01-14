@@ -143,10 +143,10 @@ namespace cpst{
 
   template<typename T, typename Ret, typename ...Args>
   Ret PersistentMemoized<T,Ret,Args...>::operator()(Args const&... args) {
-    auto start = system_clock::now();
+    auto start = high_resolution_clock::now();
     Ret answer = solve(args...);
-    auto end = system_clock::now();
-    timeTaken = duration_cast<milliseconds>(end-start).count();
+    auto end = high_resolution_clock::now();
+    solveTime = duration_cast<nanoseconds>(end-start).count();
     return answer;
   }
 
@@ -158,9 +158,14 @@ namespace cpst{
 
   template<typename T, typename Ret, typename ...Args>
   Ret PersistentMemoized<T,Ret,Args...>::solve(Args... args){
-    std::optional<Ret> answer = primaryCache->get(args...);  
+    std::optional<Ret> answer = primaryCache->get(args...);
+    auto start = high_resolution_clock::now();
+    auto end = high_resolution_clock::now();
     if(answer){
+      end = high_resolution_clock::now();
+      hitTime = duration_cast<nanoseconds>(end-start).count();
       cacheHits++;
+      miss = false;
       std::cout << "CACHE HIT" << std::endl;
       return answer.value();
     }
@@ -171,13 +176,27 @@ namespace cpst{
         return answer.value();
       }
     }
+    end = high_resolution_clock::now();
+    missTime = duration_cast<nanoseconds>(end-start).count();
     cacheMisses++;
+    miss = true;
     Ret realAnswer = T::solve(args...);
     if(this->secondaryCache != NULL){
       this->cacheConsistent.lock();
       discard = std::async(&PersistentMemoized<T,Ret,Args...>::write,this,args..., realAnswer);
     }
+
+    start = high_resolution_clock::now(); 
     primaryCache->put(args..., realAnswer);
+    end = high_resolution_clock::now();
+    missPenalty = duration_cast<nanoseconds>(end-start).count();
     return realAnswer;  
   }
+
+  template<typename T, typename Ret, typename ...Args>
+  void PersistentMemoized<T,Ret,Args...>::resetTimes(){
+    hitTime = 0;
+    missTime = 0;
+    missPenalty = 0;
+  } 
 }

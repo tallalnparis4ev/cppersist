@@ -24,10 +24,15 @@ namespace cpst{
       void resetMetrics();
       void setMemoryCache(MemCacheType);
       void setMemoryCache(MemCacheType, int);
+      size_t solveTime = 0; //wall clock time in ms
+      size_t cacheHits = 0;
+      size_t cacheMisses = 0;
+      size_t hitTime = 0; //wall clock time in ms
+      size_t missTime = 0; //wall clock time in ms
+      size_t missPenalty = 0; //wall clock time in ms
+      bool miss = false;
+      void resetTimes();
     private:
-      long cacheHits;
-      long cacheMisses;
-      long timeTaken; //wall clock time in ms
       void nullFields();
       void copy(const PersistentMemoized& lvalue);
       void move(PersistentMemoized&& rvalue); 
