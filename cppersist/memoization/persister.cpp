@@ -11,12 +11,12 @@
 #include "../utils/log.hpp"
 using std::function;
 using std::string;
-using std::chrono;
+using namespace std::chrono;
 
 namespace cpst{
 
   template<typename T, typename Ret, typename ...Args>
-  PersistentMemoized<T,Ret,Args...>::resetMetrics(){
+  void PersistentMemoized<T,Ret,Args...>::resetMetrics(){
     cacheHits = 0;
     cacheMisses = 0;
   }
