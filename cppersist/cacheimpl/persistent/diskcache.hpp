@@ -13,6 +13,7 @@ namespace cpst{
       std::optional<Ret> get(const Args&... args);
       void put(const Args&... args, const Ret& value);
     private:
+      static const string OUT_DIR;
       string makePathForKey(const string& key);
       string outputPath;
   };

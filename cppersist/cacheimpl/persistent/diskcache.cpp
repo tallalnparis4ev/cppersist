@@ -2,12 +2,16 @@
 #include <sstream>
 #include <string>
 #include <optional>
+#include <filesystem>
 #include "../../crypto/sha256.h"
 using std::optional;
 using std::nullopt;
 using std::function;
 using std::string;
 namespace cpst{
+  template <typename Ret, typename ...Args> 
+  const string DiskCache<Ret,Args...>::OUT_DIR = "persist";
+  
   template <typename Ret, typename ...Args> 
   DiskCache<Ret,Args...>* DiskCache<Ret,Args...>::clone(){
     return new DiskCache<Ret,Args...>(this->key,this->pickle,this->unpickle,this->funcName);
@@ -21,7 +25,8 @@ namespace cpst{
     this->pickle = pickle;
     this->unpickle = unpickle;
     this->funcName = funcName;
-    this->outputPath = "./"+funcName+"/";
+    std::filesystem::create_directories(OUT_DIR+"/"+funcName);
+    this->outputPath = "./"+OUT_DIR+"/"+funcName+"/";
   }
 
   template <typename Ret, typename ...Args> 
