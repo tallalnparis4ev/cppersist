@@ -14,9 +14,7 @@ namespace cpst{
     
     string funcName = typeid(T).name();
     std::cout << "ALERT: No function name passed, using " << funcName << " as the function name instead!" << std::endl;
-    MongoDBCache<Ret,Args...>* mongoCache = new MongoDBCache<Ret,Args...>(key,pickle,unpickle,dbURL,funcName);
-    PersistentMemoized<T,Ret,Args...> memoized(mongoCache);
-    return memoized;
+    return getMongoMemoizedObj<T,Ret,Args...>(key,pickle,unpickle,dbURL,funcName);
   }
 
   template<typename T, typename Ret, typename... Args>
@@ -36,10 +34,7 @@ namespace cpst{
     
     string funcName = typeid(T).name();
     std::cout << "ALERT: No function name passed, using " << funcName << " as the function name instead!" << std::endl;
-    
-    MongoDBCache<Ret,Args...>* mongoCache = new MongoDBCache<Ret,Args...>(key,pickle,unpickle,dbURL,funcName);
-    PersistentMemoized<T,Ret,Args...> memoized(type,mongoCache);
-    return memoized;
+    return getMongoMemoizedObj<T,Ret,Args...>(type,key,pickle,unpickle,dbURL,funcName);
   }
 
   template<typename T, typename Ret, typename... Args>
