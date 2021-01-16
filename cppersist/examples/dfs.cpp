@@ -4,6 +4,7 @@
 #define STOP "A "
 #define DELIMITER " "
 using namespace std;
+using namespace cpst;
 class Node{
   public:
     int label;

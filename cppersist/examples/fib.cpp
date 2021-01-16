@@ -1,5 +1,7 @@
 #include "../mongo.hpp"
+#include "../local.hpp"
 #include <iostream>
+using namespace cpst;
 //Fibonacci Sequence Example
 class FibonacciSolver: public PersistentMemoizable<int, int>{
   public:
@@ -11,14 +13,14 @@ class FibonacciSolver: public PersistentMemoizable<int, int>{
     }
 };
 
-int strtoi(const string& x){
+int strtoi(string x){
   return std::stoi(x);
 }
-string intostr(const int& x){
+string intostr(int x){
   return std::to_string(x);
 }
 
-string keymaker(const int& x){
+string keymaker(int x){
   return std::to_string(x);
 }
 using namespace std;
