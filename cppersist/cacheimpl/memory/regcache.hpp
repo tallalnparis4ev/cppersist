@@ -6,6 +6,10 @@
 #include <unordered_map>
 #include <string>
 namespace cpst{
+  /**
+   * This is a class that represents an in-memory cache with no bound on the
+   * number of entries it has.
+   */
   template <typename Ret, typename ...Args> 
   class RegCache : public MemCache<Ret,Args...>{
     public:

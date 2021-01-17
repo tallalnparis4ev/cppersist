@@ -6,6 +6,10 @@
 #include <string>
 using std::string;
 namespace cpst{
+  /**
+   * This is a class that represents a persistent cache which is stored in
+   * a MongoDB database. 
+   */
   template <typename Ret, typename ...Args> 
   class MongoDBCache : public PerCache<Ret,Args...>{
     public:

@@ -5,6 +5,10 @@
 #include <optional>
 #include <string>
 namespace cpst{
+  /**
+   * This is a class that represents an in-memory cache which only stores 
+   * the most recent key/value pair. 
+   */
   template <typename Ret, typename ...Args> 
   class OneCache : public MemCache<Ret,Args...>{
     public:

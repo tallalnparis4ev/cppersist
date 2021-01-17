@@ -4,6 +4,10 @@
 #include <string>
 #include <optional>
 namespace cpst{
+  /**
+   * This is an abstract class representing a cache that is stored 
+   * in-memory. 
+   */
   template <typename Ret, typename ...Args> 
   class MemCache : public Cache<Ret,Args...>{
     public:

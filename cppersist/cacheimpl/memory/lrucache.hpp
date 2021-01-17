@@ -10,6 +10,11 @@ using std::string;
 using std::list;
 using std::unordered_map;
 namespace cpst{
+  /**
+   * This is a class that represents an in-memory cache which has a limit
+   * on the number of entries it can store. When that limit is reached,
+   * entries are removed from the cache using a least recently used policy.
+   */
   template <typename Ret, typename ...Args> 
   class LRUCache : public MemCache<Ret,Args...>{
     public:
