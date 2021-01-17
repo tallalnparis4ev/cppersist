@@ -2,28 +2,42 @@
 
 ## TLDR
 
-cppersist is a small library which allows user's to convert member functions to a memoized equivalent. cppersist allows member functions can be memoized via disk storage or mongo collections.
+cppersist is a small library which allows users' to apply persistent memoization to a member function. cppersist allows member functions to be memoized via disk storage or mongoDB.
 
-Here is how cppersist is used:
+Here is an example of how cppersist is used:
 
 ```c++
 #include <cppersist/disk.h>
 #include <cppersist/mongo.h>
+#include <iostream>
 
 //The class to be memoized - must implement a solve method
 class FibonacciSolver: public PersistentMemoizable<int, int>{
   public:
-    int solve(int n) override {...}
+    int solve(int n) override {
+      if(n<=1) return n;
+      return fib(n-1) + fib(n-2);
+    }
 };
 
-int strtoi(string x){...}
-string intostr(int x){...}
-string keymaker(int x){...}
+//Pickle/serialize function
+std::string intostr(int x){
+  return std::to_string(x);
+}
+//Unpickle/deserialize function
+int strtoi(std::string x){
+  return std::stoi(x);
+}
+//Key function
+std::string keymaker(int x){
+  return std::to_string(x);
+}
 
 int main(int argc, char** argv) {
   PersistentMemoized memoizedFib = getLocalMemoizedObj<DFSSolver>(keymaker,intostr,strtoi); //disk cache
-  PersistentMemoized memoizedFib = getMongoMemoizedObj<DFSSolver>(keymaker,intostr,strtoi); //mongo cache
-  int fib = memoizedFib(...);
+  std::cout << memoizedFib(2) << std::endl;
+  memoizedFib = getMongoMemoizedObj<DFSSolver>(keymaker,intostr,strtoi); //mongo cache
+  std::cout << memoizedFib(2) << std::endl;
 }
 ```
 ## Usage
