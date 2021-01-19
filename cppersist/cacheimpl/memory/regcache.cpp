@@ -21,13 +21,6 @@ namespace cpst{
   }
 
   template <typename Ret, typename ...Args> 
-  void RegCache<Ret,Args...>::populateCache(Cache<Ret,Args...>* secondaryCache){
-    for ( const std::pair<const string&, const string&> &pair : this->cache ) {
-      secondaryCache->put(pair.first,pair.second);
-    } 
-  }
-
-  template <typename Ret, typename ...Args> 
   std::optional<string> RegCache<Ret,Args...>::getFromCache(const string& key){
     std::unordered_map<string,string>::iterator iter = cache.find(key);
     if(iter != cache.end()) //found it

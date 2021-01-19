@@ -24,15 +24,6 @@ namespace cpst{
   }
 
   template <typename Ret, typename ...Args> 
-  void LRUCache<Ret,Args...>::populateCache(Cache<Ret,Args...>* secondaryCache){
-    for ( const std::pair<const string&, const string&> &pair : cache ) {
-      string key = pair.first;
-      string value = pair.second;
-      secondaryCache->put(key,value);
-    } 
-  }
-
-  template <typename Ret, typename ...Args> 
   std::optional<string> LRUCache<Ret,Args...>::getFromCache(const string& key){
     std::unordered_map<string,string>::iterator iter = cache.find(key);
     if(iter != cache.end()) //found it

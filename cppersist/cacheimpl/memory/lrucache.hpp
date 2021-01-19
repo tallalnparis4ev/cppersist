@@ -22,7 +22,6 @@ namespace cpst{
       LRUCache* clone();
       std::optional<Ret> get(const Args&... args);
       void put(const Args&... args, const Ret& value);
-      void populateCache(Cache<Ret,Args...>*);
     private:
       list<string> recentlyUsed;
       unordered_map<string, list<string>::iterator> positionCache;

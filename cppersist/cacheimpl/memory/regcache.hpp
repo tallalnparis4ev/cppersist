@@ -17,7 +17,6 @@ namespace cpst{
       RegCache* clone();
       std::optional<Ret> get(const Args&... args);
       void put(const Args&... args, const Ret& value);
-      void populateCache(Cache<Ret,Args...>*);
     private:
       std::optional<string> getFromCache(const string&);
       std::unordered_map<string,string> cache;

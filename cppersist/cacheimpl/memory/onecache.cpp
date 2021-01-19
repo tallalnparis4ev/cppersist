@@ -21,10 +21,6 @@ namespace cpst{
   }
 
   template <typename Ret, typename ...Args> 
-  void OneCache<Ret,Args...>::populateCache(Cache<Ret,Args...>* secondaryCache){
-  }
-
-  template <typename Ret, typename ...Args> 
   std::optional<string> OneCache<Ret,Args...>::getFromCache(const string& key){
     if(key.compare(lastKey) == 0)
       return optional<string>{lastValue};

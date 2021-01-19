@@ -16,7 +16,6 @@ namespace cpst{
       OneCache* clone();
       std::optional<Ret> get(const Args&... args);
       void put(const Args&... args, const Ret& value);
-      void populateCache(Cache<Ret,Args...>*);
     private:
       std::optional<string> getFromCache(const string&);
       std::string lastKey;
