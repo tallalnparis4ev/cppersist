@@ -23,8 +23,7 @@ namespace cpst{
       "Must Memoize a class that inherits from PersistentMemoizable");
     
     MongoDBCache<Ret,Args...>* mongoCache = new MongoDBCache<Ret,Args...>(key,pickle,unpickle,dbURL,funcName);
-    PersistentMemoized<T,Ret,Args...> memoized(mongoCache);
-    return memoized;
+    return PersistentMemoized<T,Ret,Args...>(mongoCache);
   }
 
   template<typename T, typename Ret, typename... Args>
@@ -43,7 +42,6 @@ namespace cpst{
       "Must Memoize a class that inherits from PersistentMemoizable");
 
     MongoDBCache<Ret,Args...>* mongoCache = new MongoDBCache<Ret,Args...>(key,pickle,unpickle,dbURL,funcName);
-    PersistentMemoized<T,Ret,Args...> memoized(type,mongoCache);
-    return memoized;
+    return PersistentMemoized<T,Ret,Args...>(type,mongoCache);
   }
 }

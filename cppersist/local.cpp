@@ -21,8 +21,7 @@ namespace cpst{
       "Must Memoize a class that inherits from PersistentMemoizable");
 
     DiskCache<Ret,Args...>* diskCache = new DiskCache<Ret,Args...>(key,pickle,unpickle,funcName);
-    PersistentMemoized<T,Ret,Args...> memoized(diskCache);
-    return memoized;
+    return PersistentMemoized<T,Ret,Args...>(diskCache);
   }
 
   template<typename T, typename Ret, typename... Args>
@@ -31,8 +30,7 @@ namespace cpst{
       "Must Memoize a class that inherits from PersistentMemoizable");
     
     DiskCache<Ret,Args...>* diskCache = new DiskCache<Ret,Args...>(key,pickle,unpickle,funcName);
-    PersistentMemoized<T,Ret,Args...> memoized(type,diskCache);
-    return memoized;
+    return PersistentMemoized<T,Ret,Args...>(type,diskCache);
   }
 
   template<typename T, typename Ret, typename... Args>
