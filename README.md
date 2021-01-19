@@ -40,6 +40,12 @@ int main(int argc, char** argv) {
   std::cout << memoizedFib(2) << std::endl;
 }
 ```
+
+## Documentation
+
+[![Documentation](https://img.shields.io/badge/docs-online-informational?style=for-the-badge&link=https://tallalnparis4ev.github.io/)](https://tallalnparis4ev.github.io/)  
+This is the documentation of cppersist: [here](https://tallalnparis4ev.github.io/). 
+
 ## Usage
 To build your project, utilising cppersist, via CMake (version 3.0+ required):
 ```cmake
