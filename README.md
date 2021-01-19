@@ -41,20 +41,15 @@ int main(int argc, char** argv) {
 }
 ```
 ## Usage
-To build your project, utilising cppersist, via CMake:
+To build your project, utilising cppersist, via CMake (version 3.0+ required):
 ```cmake
-include(FetchContent)
-FetchContent_Declare(test GIT_REPOSITORY https://github.com/tallalnparis4ev/dnt GIT_TAG 1.0)  
-FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/whoshuu/cpr.git GIT_TAG c8d33915dbd88ad6c92b258869b03aba06587ff9) 
-FetchContent_MakeAvailable(cppersist cpr)
-include_directories(${test_SOURCE_DIR})
-target_link_libraries(cppersist PRIVATE cpr::cpr)
-```
-
-However, if you're not using the mongo cache, the following CMake suffices (and it will be faster because no HTTP request library is required):
-```cmake
-include(FetchContent)
-FetchContent_Declare(test GIT_REPOSITORY https://github.com/tallalnparis4ev/dnt GIT_TAG 1.0)  
+include(FetchContent) 
+FetchContent_Declare(cppersist GIT_REPOSITORY https://github.com/tallalnparis4ev/cppersist GIT_TAG master) 
 FetchContent_MakeAvailable(cppersist)
-include_directories(${test_SOURCE_DIR})
+include_directories(${cppersist_SOURCE_DIR}) 
+#Remove the following 4 lines if the MongoDB cache is not used 
+FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/whoshuu/cpr.git GIT_TAG c8d33915dbd88ad6c92b258869b03aba06587ff9) 
+FetchContent_MakeAvailable(cpr) 
+find_package(OpenSSL REQUIRED) #Remove this if you're communicating with the MongoDB server via HTTP and HTTPS is not needed
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE cpr::cpr) 
 ```
