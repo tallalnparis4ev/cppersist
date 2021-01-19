@@ -11,6 +11,7 @@
 using std::function;
 using std::string;
 namespace cpst{
+  //Helper function to null fields 
   template<typename T, typename Ret, typename... Args>
   void PersistentMemoized<T,Ret,Args...>::nullFields(){
     this->primaryCache = NULL;
@@ -25,11 +26,17 @@ namespace cpst{
   template<typename T, typename Ret, typename... Args>
   void PersistentMemoized<T,Ret,Args...>::setMemoryCache(MemCacheType type, int size){
     if(this->secondaryCache == NULL){
+      //If there's no primary cache or secondary cache, then this method
+      //should do nothing.
       if(this->primaryCache == NULL) return;
+      
+      //Make the primary cache the secondary cache
       this->secondaryCache = this->primaryCache;
     }
-    else if(this->primaryCache != NULL) delete this->primaryCache;
+    //The primary cache is being updated, therefore delete the old one
+    else if(this->primaryCache != NULL) delete this->primaryCache; 
 
+    //Get the key, pickle and unpickle functions from the initial cache
     auto key = this->secondaryCache->getKey();
     auto pickle = this->secondaryCache->getPickle();
     auto unpickle = this->secondaryCache->getUnpickle();
@@ -67,6 +74,7 @@ namespace cpst{
     this->setMemoryCache(type);
   }
 
+  //A helper function that moves fields from another PersistentMemoized object
   template<typename T, typename Ret, typename ...Args>
   void PersistentMemoized<T,Ret,Args...>::move(PersistentMemoized<T,Ret,Args...>&& rvalue){
     this->primaryCache = rvalue.primaryCache;
@@ -93,6 +101,7 @@ namespace cpst{
     return *this;
   }
 
+  //A helper function that copies from another PersistentMemoized object
   template<typename T, typename Ret, typename ...Args>
   void PersistentMemoized<T,Ret,Args...>::copy(const PersistentMemoized<T,Ret,Args...>& lvalue){
     this->primaryCache = lvalue.primaryCache->clone();
@@ -121,6 +130,7 @@ namespace cpst{
     return *this;
   }
 
+  //Deletes pointers
   template<typename T, typename Ret, typename ...Args>
   void PersistentMemoized<T,Ret,Args...>::deleteCaches(){
     delete this->primaryCache;
