@@ -53,8 +53,6 @@ namespace cpst{
       void nullFields();
       void copy(const PersistentMemoized& lvalue);
       void move(PersistentMemoized&& rvalue); 
-      /** Indicates the current memory cache being used */
-      MemCacheType memCacheType;
       std::future<void> discard;
       void write(Args const&..., Ret const&);
       std::mutex cacheConsistent;
