@@ -7,8 +7,8 @@ cppersist is a small library which allows users' to apply persistent memoization
 Here is an example of how cppersist is used:
 
 ```c++
-#include <cppersist/disk.h>
-#include <cppersist/mongo.h>
+#include <cppersist/disk.h> //if you need to memoize with the local filesystem
+#include <cppersist/mongo.h> //if you need to memoize with MongoDB
 #include <iostream>
 
 //The class to be memoized - must implement a solve method
@@ -51,7 +51,7 @@ include_directories(${test_SOURCE_DIR})
 target_link_libraries(cppersist PRIVATE cpr::cpr)
 ```
 
-However, if you're not using the mongo cache, the following CMake suffices (and it will be faster because no requests library is required):
+However, if you're not using the mongo cache, the following CMake suffices (and it will be faster because no HTTP request library is required):
 ```cmake
 include(FetchContent)
 FetchContent_Declare(test GIT_REPOSITORY https://github.com/tallalnparis4ev/dnt GIT_TAG 1.0)  
