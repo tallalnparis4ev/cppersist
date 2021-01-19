@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 ## Documentation
 
 [![Documentation](https://img.shields.io/badge/docs-online-informational?style=for-the-badge&link=https://tallalnparis4ev.github.io/)](https://tallalnparis4ev.github.io/)  
-This is the documentation of cppersist: [here](https://tallalnparis4ev.github.io/). 
+The documentation of cppersist is found [here](https://tallalnparis4ev.github.io/). Navigate to the 'modules' tab for documentation on the user-visible parts of cppersist.
 
 ## Usage
 To build your project, utilising cppersist, via CMake (version 3.0+ required):
