@@ -5,6 +5,7 @@
 
 using std::string;
 namespace cpst{
+  //Get a disk memoized function, using a default name for the collection
   template<typename T, typename Ret, typename ...Args>
   PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string)){
     static_assert(std::is_base_of<PersistentMemoizable<Ret,Args...>, T>::value, 
@@ -15,6 +16,7 @@ namespace cpst{
     return getLocalMemoizedObj<T,Ret,Args...>(key,pickle,unpickle,funcName);
   }
 
+  //Get a disk memoized function, using a user-specified name for the collection
   template<typename T, typename Ret, typename... Args>
   PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string funcName){
     static_assert(std::is_base_of<PersistentMemoizable<Ret,Args...>, T>::value, 
@@ -24,6 +26,8 @@ namespace cpst{
     return PersistentMemoized<T,Ret,Args...>(diskCache);
   }
 
+  //Get a MongoDB memoized function, using a user-specifed name for the collection.
+  //Also, use an in-memory cache of type Type.
   template<typename T, typename Ret, typename... Args>
   PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(MemCacheType type,string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string funcName){
     static_assert(std::is_base_of<PersistentMemoizable<Ret,Args...>, T>::value, 
@@ -33,6 +37,8 @@ namespace cpst{
     return PersistentMemoized<T,Ret,Args...>(type,diskCache);
   }
 
+  //Get a MongoDB memoized function, using a default name for the collection.
+  //Also, use an in-memory cache of type Type.
   template<typename T, typename Ret, typename... Args>
   PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(MemCacheType type,string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string)){
     static_assert(std::is_base_of<PersistentMemoizable<Ret,Args...>, T>::value, 
