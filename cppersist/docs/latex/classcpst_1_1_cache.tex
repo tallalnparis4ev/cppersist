@@ -1,0 +1,170 @@
+\hypertarget{classcpst_1_1_cache}{}\doxysection{cpst\+::Cache$<$ Ret, Args $>$ Class Template Reference}
+\label{classcpst_1_1_cache}\index{cpst::Cache$<$ Ret, Args $>$@{cpst::Cache$<$ Ret, Args $>$}}
+
+
+{\ttfamily \#include $<$cache.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual std\+::optional$<$ Ret $>$ \mbox{\hyperlink{classcpst_1_1_cache_ac063a30b903c0bda85da7ee251efb86f}{get}} (const Args \&... args)=0
+\item 
+\mbox{\Hypertarget{classcpst_1_1_cache_a84bed85c3f8329eee951f488a93cc99c}\label{classcpst_1_1_cache_a84bed85c3f8329eee951f488a93cc99c}} 
+virtual void {\bfseries put} (const Args \&... args, const Ret \&ret)=0
+\item 
+\mbox{\Hypertarget{classcpst_1_1_cache_ab5d13e56036853467c5a6a2a0c399b83}\label{classcpst_1_1_cache_ab5d13e56036853467c5a6a2a0c399b83}} 
+virtual \mbox{\hyperlink{classcpst_1_1_cache}{Cache}} $\ast$ {\bfseries clone} ()=0
+\item 
+virtual \mbox{\hyperlink{classcpst_1_1_cache_a00aaa8f001ef8e233a3e7fda583f1cca}{$\sim$\+Cache}} ()
+\item 
+auto \mbox{\hyperlink{classcpst_1_1_cache_ac9ef18b9fd128d5ca8d5bcaf31f34612}{get\+Key}} ()
+\item 
+auto \mbox{\hyperlink{classcpst_1_1_cache_a7af2f9c0ca66c186e7a0b59069f2a762}{get\+Pickle}} ()
+\item 
+auto \mbox{\hyperlink{classcpst_1_1_cache_a1199df990eb3b8cd410e2e286250a35e}{get\+Unpickle}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string($\ast$ \mbox{\hyperlink{classcpst_1_1_cache_a670f91dc553e82bd843f46347e757da6}{key}} )(Args...)
+\item 
+std\+::string($\ast$ \mbox{\hyperlink{classcpst_1_1_cache_a3ad437f4b2b35d4cd652fbe936b42281}{pickle}} )(Ret)
+\item 
+Ret($\ast$ \mbox{\hyperlink{classcpst_1_1_cache_ada2956a0faa3c609899eafbc529e89c1}{unpickle}} )(std\+::string)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename Ret, typename ... Args$>$\newline
+class cpst\+::\+Cache$<$ Ret, Args $>$}
+
+This is an abstract class representing a generic cache. 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Ret} & -\/ this specifies the type that this cache returns \\
+\hline
+{\em Args...} & -\/ this represnts the types of the \\
+\hline
+\end{DoxyTemplParams}
+
+
+Definition at line 13 of file cache.\+hpp.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classcpst_1_1_cache_a00aaa8f001ef8e233a3e7fda583f1cca}\label{classcpst_1_1_cache_a00aaa8f001ef8e233a3e7fda583f1cca}} 
+\index{cpst::Cache$<$ Ret, Args $>$@{cpst::Cache$<$ Ret, Args $>$}!````~Cache@{$\sim$Cache}}
+\index{````~Cache@{$\sim$Cache}!cpst::Cache$<$ Ret, Args $>$@{cpst::Cache$<$ Ret, Args $>$}}
+\doxysubsubsection{\texorpdfstring{$\sim$Cache()}{~Cache()}}
+{\footnotesize\ttfamily template$<$typename Ret , typename ... Args$>$ \\
+virtual \mbox{\hyperlink{classcpst_1_1_cache}{cpst\+::\+Cache}}$<$ Ret, Args $>$\+::$\sim$\mbox{\hyperlink{classcpst_1_1_cache}{Cache}} (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+Virtual destructor 
+
+Definition at line 30 of file cache.\+hpp.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classcpst_1_1_cache_ac063a30b903c0bda85da7ee251efb86f}\label{classcpst_1_1_cache_ac063a30b903c0bda85da7ee251efb86f}} 
+\index{cpst::Cache$<$ Ret, Args $>$@{cpst::Cache$<$ Ret, Args $>$}!get@{get}}
+\index{get@{get}!cpst::Cache$<$ Ret, Args $>$@{cpst::Cache$<$ Ret, Args $>$}}
+\doxysubsubsection{\texorpdfstring{get()}{get()}}
+{\footnotesize\ttfamily template$<$typename Ret , typename ... Args$>$ \\
+virtual std\+::optional$<$Ret$>$ \mbox{\hyperlink{classcpst_1_1_cache}{cpst\+::\+Cache}}$<$ Ret, Args $>$\+::get (\begin{DoxyParamCaption}\item[{const Args \&...}]{args }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+This function should attempt to fetch from the cache the value corresponding to the passed in arguments. If no such entry exists, then a nullopt should be returned. 
+\begin{DoxyParams}{Parameters}
+{\em args} & -\/ The arguments to be searched from the cache. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the value contained in the cache, corresponding to the key formed by args (if no such key exists, the nullopt is returned). 
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{classcpst_1_1_mongo_d_b_cache_a665cf40ee53506e0ddb3508fa7d67ade}{cpst\+::\+Mongo\+DBCache$<$ Ret, Args $>$}}, \mbox{\hyperlink{classcpst_1_1_disk_cache_a7e6685eaeb6e13402ab293904d3e57d4}{cpst\+::\+Disk\+Cache$<$ Ret, Args $>$}}, \mbox{\hyperlink{classcpst_1_1_reg_cache_af350bd1e80393516d6c05a5090b281f7}{cpst\+::\+Reg\+Cache$<$ Ret, Args $>$}}, \mbox{\hyperlink{classcpst_1_1_one_cache_a0f88598b987735c25e381ac1a6a24c17}{cpst\+::\+One\+Cache$<$ Ret, Args $>$}}, and \mbox{\hyperlink{classcpst_1_1_l_r_u_cache_afb0bb2d6d02d3105faf64bcab0b01a98}{cpst\+::\+LRUCache$<$ Ret, Args $>$}}.
+
+\mbox{\Hypertarget{classcpst_1_1_cache_ac9ef18b9fd128d5ca8d5bcaf31f34612}\label{classcpst_1_1_cache_ac9ef18b9fd128d5ca8d5bcaf31f34612}} 
+\index{cpst::Cache$<$ Ret, Args $>$@{cpst::Cache$<$ Ret, Args $>$}!getKey@{getKey}}
+\index{getKey@{getKey}!cpst::Cache$<$ Ret, Args $>$@{cpst::Cache$<$ Ret, Args $>$}}
+\doxysubsubsection{\texorpdfstring{getKey()}{getKey()}}
+{\footnotesize\ttfamily template$<$typename Ret , typename ... Args$>$ \\
+auto \mbox{\hyperlink{classcpst_1_1_cache}{cpst\+::\+Cache}}$<$ Ret, Args $>$\+::get\+Key (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Getter for the key function of the cache \begin{DoxyReturn}{Returns}
+the key function of the cache 
+\end{DoxyReturn}
+
+
+Definition at line 35 of file cache.\+hpp.
+
+\mbox{\Hypertarget{classcpst_1_1_cache_a7af2f9c0ca66c186e7a0b59069f2a762}\label{classcpst_1_1_cache_a7af2f9c0ca66c186e7a0b59069f2a762}} 
+\index{cpst::Cache$<$ Ret, Args $>$@{cpst::Cache$<$ Ret, Args $>$}!getPickle@{getPickle}}
+\index{getPickle@{getPickle}!cpst::Cache$<$ Ret, Args $>$@{cpst::Cache$<$ Ret, Args $>$}}
+\doxysubsubsection{\texorpdfstring{getPickle()}{getPickle()}}
+{\footnotesize\ttfamily template$<$typename Ret , typename ... Args$>$ \\
+auto \mbox{\hyperlink{classcpst_1_1_cache}{cpst\+::\+Cache}}$<$ Ret, Args $>$\+::get\+Pickle (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Getter for the pickle function of the cache \begin{DoxyReturn}{Returns}
+the pickle function of the cache 
+\end{DoxyReturn}
+
+
+Definition at line 40 of file cache.\+hpp.
+
+\mbox{\Hypertarget{classcpst_1_1_cache_a1199df990eb3b8cd410e2e286250a35e}\label{classcpst_1_1_cache_a1199df990eb3b8cd410e2e286250a35e}} 
+\index{cpst::Cache$<$ Ret, Args $>$@{cpst::Cache$<$ Ret, Args $>$}!getUnpickle@{getUnpickle}}
+\index{getUnpickle@{getUnpickle}!cpst::Cache$<$ Ret, Args $>$@{cpst::Cache$<$ Ret, Args $>$}}
+\doxysubsubsection{\texorpdfstring{getUnpickle()}{getUnpickle()}}
+{\footnotesize\ttfamily template$<$typename Ret , typename ... Args$>$ \\
+auto \mbox{\hyperlink{classcpst_1_1_cache}{cpst\+::\+Cache}}$<$ Ret, Args $>$\+::get\+Unpickle (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Getter for the unpickle function of the cache \begin{DoxyReturn}{Returns}
+the unpickle function of the cache 
+\end{DoxyReturn}
+
+
+Definition at line 45 of file cache.\+hpp.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classcpst_1_1_cache_a670f91dc553e82bd843f46347e757da6}\label{classcpst_1_1_cache_a670f91dc553e82bd843f46347e757da6}} 
+\index{cpst::Cache$<$ Ret, Args $>$@{cpst::Cache$<$ Ret, Args $>$}!key@{key}}
+\index{key@{key}!cpst::Cache$<$ Ret, Args $>$@{cpst::Cache$<$ Ret, Args $>$}}
+\doxysubsubsection{\texorpdfstring{key}{key}}
+{\footnotesize\ttfamily template$<$typename Ret , typename ... Args$>$ \\
+std\+::string($\ast$ \mbox{\hyperlink{classcpst_1_1_cache}{cpst\+::\+Cache}}$<$ Ret, Args $>$\+::key) (Args...)\hspace{0.3cm}{\ttfamily [protected]}}
+
+a function variable. Every cache should have a user defined key method. This method should create a string corresponding to the given arguments 
+
+Definition at line 52 of file cache.\+hpp.
+
+\mbox{\Hypertarget{classcpst_1_1_cache_a3ad437f4b2b35d4cd652fbe936b42281}\label{classcpst_1_1_cache_a3ad437f4b2b35d4cd652fbe936b42281}} 
+\index{cpst::Cache$<$ Ret, Args $>$@{cpst::Cache$<$ Ret, Args $>$}!pickle@{pickle}}
+\index{pickle@{pickle}!cpst::Cache$<$ Ret, Args $>$@{cpst::Cache$<$ Ret, Args $>$}}
+\doxysubsubsection{\texorpdfstring{pickle}{pickle}}
+{\footnotesize\ttfamily template$<$typename Ret , typename ... Args$>$ \\
+std\+::string($\ast$ \mbox{\hyperlink{classcpst_1_1_cache}{cpst\+::\+Cache}}$<$ Ret, Args $>$\+::pickle) (Ret)\hspace{0.3cm}{\ttfamily [protected]}}
+
+a function variable. Every cache should have a user defined pickle method. This method constructs a string representation of a given instance of the \textquotesingle{}Ret\textquotesingle{} type. 
+
+Definition at line 58 of file cache.\+hpp.
+
+\mbox{\Hypertarget{classcpst_1_1_cache_ada2956a0faa3c609899eafbc529e89c1}\label{classcpst_1_1_cache_ada2956a0faa3c609899eafbc529e89c1}} 
+\index{cpst::Cache$<$ Ret, Args $>$@{cpst::Cache$<$ Ret, Args $>$}!unpickle@{unpickle}}
+\index{unpickle@{unpickle}!cpst::Cache$<$ Ret, Args $>$@{cpst::Cache$<$ Ret, Args $>$}}
+\doxysubsubsection{\texorpdfstring{unpickle}{unpickle}}
+{\footnotesize\ttfamily template$<$typename Ret , typename ... Args$>$ \\
+Ret($\ast$ \mbox{\hyperlink{classcpst_1_1_cache}{cpst\+::\+Cache}}$<$ Ret, Args $>$\+::unpickle) (std\+::string)\hspace{0.3cm}{\ttfamily [protected]}}
+
+a function variable. Every cache should have a user defined unpickle method. This method constructs an instance of the \textquotesingle{}Ret\textquotesingle{} type from a string representation. 
+
+Definition at line 64 of file cache.\+hpp.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/tallal/\+Documents/sh/cppersist/cppersist/interfaces/cache.\+hpp\end{DoxyCompactItemize}

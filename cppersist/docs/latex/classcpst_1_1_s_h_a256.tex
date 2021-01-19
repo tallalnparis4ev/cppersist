@@ -1,0 +1,108 @@
+\hypertarget{classcpst_1_1_s_h_a256}{}\doxysection{cpst\+::SHA256 Class Reference}
+\label{classcpst_1_1_s_h_a256}\index{cpst::SHA256@{cpst::SHA256}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcpst_1_1_s_h_a256_a6dc2b574bb96f4c116fb4b7f85e6f32c}\label{classcpst_1_1_s_h_a256_a6dc2b574bb96f4c116fb4b7f85e6f32c}} 
+void {\bfseries init} ()
+\item 
+\mbox{\Hypertarget{classcpst_1_1_s_h_a256_a9ff6887ebc2df4bf67b3eeae2a9bed69}\label{classcpst_1_1_s_h_a256_a9ff6887ebc2df4bf67b3eeae2a9bed69}} 
+void {\bfseries update} (const unsigned char $\ast$message, unsigned int len)
+\item 
+\mbox{\Hypertarget{classcpst_1_1_s_h_a256_affb9500fe926a5ce5155fac644a0cc58}\label{classcpst_1_1_s_h_a256_affb9500fe926a5ce5155fac644a0cc58}} 
+void {\bfseries final} (unsigned char $\ast$digest)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcpst_1_1_s_h_a256_a3707666a983e62d98c64074804237fdf}\label{classcpst_1_1_s_h_a256_a3707666a983e62d98c64074804237fdf}} 
+static const unsigned int {\bfseries DIGEST\+\_\+\+SIZE} = ( 256 / 8)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcpst_1_1_s_h_a256_ac771ccb3ca3d9cb03427d30777d1e5c4}\label{classcpst_1_1_s_h_a256_ac771ccb3ca3d9cb03427d30777d1e5c4}} 
+typedef unsigned char {\bfseries uint8}
+\item 
+\mbox{\Hypertarget{classcpst_1_1_s_h_a256_a9d4f88091386278326b1455d371c8ae2}\label{classcpst_1_1_s_h_a256_a9d4f88091386278326b1455d371c8ae2}} 
+typedef unsigned int {\bfseries uint32}
+\item 
+\mbox{\Hypertarget{classcpst_1_1_s_h_a256_a57ebfbbe6e62eb67311f40c7d87b2f9a}\label{classcpst_1_1_s_h_a256_a57ebfbbe6e62eb67311f40c7d87b2f9a}} 
+typedef unsigned long long {\bfseries uint64}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcpst_1_1_s_h_a256_ac6b22fc2452f8f3b8ec603147865ab12}\label{classcpst_1_1_s_h_a256_ac6b22fc2452f8f3b8ec603147865ab12}} 
+void {\bfseries transform} (const unsigned char $\ast$message, unsigned int block\+\_\+nb)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcpst_1_1_s_h_a256_aa54bfb9cb237f16518249c8e73861d08}\label{classcpst_1_1_s_h_a256_aa54bfb9cb237f16518249c8e73861d08}} 
+unsigned int {\bfseries m\+\_\+tot\+\_\+len}
+\item 
+\mbox{\Hypertarget{classcpst_1_1_s_h_a256_ae796cef095350d5c0d0c59c00481d5c7}\label{classcpst_1_1_s_h_a256_ae796cef095350d5c0d0c59c00481d5c7}} 
+unsigned int {\bfseries m\+\_\+len}
+\item 
+\mbox{\Hypertarget{classcpst_1_1_s_h_a256_af748e4ef86da129e714cdb161005af36}\label{classcpst_1_1_s_h_a256_af748e4ef86da129e714cdb161005af36}} 
+unsigned char {\bfseries m\+\_\+block} \mbox{[}2 $\ast$SHA224\+\_\+256\+\_\+\+BLOCK\+\_\+\+SIZE\mbox{]}
+\item 
+\mbox{\Hypertarget{classcpst_1_1_s_h_a256_aa2f3d7b3afe55369c61728bf0e13c9b5}\label{classcpst_1_1_s_h_a256_aa2f3d7b3afe55369c61728bf0e13c9b5}} 
+uint32 {\bfseries m\+\_\+h} \mbox{[}8\mbox{]}
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const uint32 {\bfseries sha256\+\_\+k} \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\Hypertarget{classcpst_1_1_s_h_a256_ae36af108bd15c4a8e51c7c0a57dc6eea}\label{classcpst_1_1_s_h_a256_ae36af108bd15c4a8e51c7c0a57dc6eea}} 
+static const unsigned int {\bfseries SHA224\+\_\+256\+\_\+\+BLOCK\+\_\+\+SIZE} = (512/8)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line 5 of file sha256.\+h.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classcpst_1_1_s_h_a256_aa7a80cf428fdc02ab4db57564d619d57}\label{classcpst_1_1_s_h_a256_aa7a80cf428fdc02ab4db57564d619d57}} 
+\index{cpst::SHA256@{cpst::SHA256}!sha256\_k@{sha256\_k}}
+\index{sha256\_k@{sha256\_k}!cpst::SHA256@{cpst::SHA256}}
+\doxysubsubsection{\texorpdfstring{sha256\_k}{sha256\_k}}
+{\footnotesize\ttfamily const unsigned int cpst\+::\+SHA256\+::sha256\+\_\+k\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [protected]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= }
+\DoxyCodeLine{              \{0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,}
+\DoxyCodeLine{              0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,}
+\DoxyCodeLine{              0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,}
+\DoxyCodeLine{              0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,}
+\DoxyCodeLine{              0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc,}
+\DoxyCodeLine{              0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,}
+\DoxyCodeLine{              0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7,}
+\DoxyCodeLine{              0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,}
+\DoxyCodeLine{              0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13,}
+\DoxyCodeLine{              0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,}
+\DoxyCodeLine{              0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3,}
+\DoxyCodeLine{              0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,}
+\DoxyCodeLine{              0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5,}
+\DoxyCodeLine{              0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,}
+\DoxyCodeLine{              0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,}
+\DoxyCodeLine{              0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2\}}
+
+\end{DoxyCode}
+
+
+Definition at line 12 of file sha256.\+h.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/tallal/\+Documents/sh/cppersist/cppersist/crypto/sha256.\+h\item 
+/\+Users/tallal/\+Documents/sh/cppersist/cppersist/crypto/sha256.\+cpp\end{DoxyCompactItemize}

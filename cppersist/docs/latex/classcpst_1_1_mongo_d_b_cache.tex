@@ -1,0 +1,72 @@
+\hypertarget{classcpst_1_1_mongo_d_b_cache}{}\doxysection{cpst\+::Mongo\+DBCache$<$ Ret, Args $>$ Class Template Reference}
+\label{classcpst_1_1_mongo_d_b_cache}\index{cpst::MongoDBCache$<$ Ret, Args $>$@{cpst::MongoDBCache$<$ Ret, Args $>$}}
+
+
+{\ttfamily \#include $<$mongodbcache.\+hpp$>$}
+
+Inheritance diagram for cpst\+::Mongo\+DBCache$<$ Ret, Args $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classcpst_1_1_mongo_d_b_cache}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcpst_1_1_mongo_d_b_cache_a40c90b728fef6bc497c76fa99b1c5486}\label{classcpst_1_1_mongo_d_b_cache_a40c90b728fef6bc497c76fa99b1c5486}} 
+\mbox{\hyperlink{classcpst_1_1_mongo_d_b_cache}{Mongo\+DBCache}}$<$ Ret, Args... $>$ $\ast$ {\bfseries clone} ()
+\item 
+\mbox{\Hypertarget{classcpst_1_1_mongo_d_b_cache_a8354eeb69d5bd408fc9768f344e4cd9f}\label{classcpst_1_1_mongo_d_b_cache_a8354eeb69d5bd408fc9768f344e4cd9f}} 
+{\bfseries Mongo\+DBCache} (string($\ast$\mbox{\hyperlink{classcpst_1_1_cache_a670f91dc553e82bd843f46347e757da6}{key}})(Args...), string($\ast$\mbox{\hyperlink{classcpst_1_1_cache_a3ad437f4b2b35d4cd652fbe936b42281}{pickle}})(Ret), Ret($\ast$\mbox{\hyperlink{classcpst_1_1_cache_ada2956a0faa3c609899eafbc529e89c1}{unpickle}})(string), string, string)
+\item 
+\mbox{\Hypertarget{classcpst_1_1_mongo_d_b_cache_ae0f27e7036e1ed94aaab5bc343bdc15d}\label{classcpst_1_1_mongo_d_b_cache_ae0f27e7036e1ed94aaab5bc343bdc15d}} 
+{\bfseries Mongo\+DBCache} (string($\ast$\mbox{\hyperlink{classcpst_1_1_cache_a670f91dc553e82bd843f46347e757da6}{key}})(Args...), string($\ast$\mbox{\hyperlink{classcpst_1_1_cache_a3ad437f4b2b35d4cd652fbe936b42281}{pickle}})(Ret), Ret($\ast$\mbox{\hyperlink{classcpst_1_1_cache_ada2956a0faa3c609899eafbc529e89c1}{unpickle}})(string), string)
+\item 
+std\+::optional$<$ Ret $>$ \mbox{\hyperlink{classcpst_1_1_mongo_d_b_cache_a665cf40ee53506e0ddb3508fa7d67ade}{get}} (const Args \&... args)
+\item 
+\mbox{\Hypertarget{classcpst_1_1_mongo_d_b_cache_aa1c57d2fad0ec219c58241f789baaba5}\label{classcpst_1_1_mongo_d_b_cache_aa1c57d2fad0ec219c58241f789baaba5}} 
+void {\bfseries put} (const Args \&... args, const Ret \&value)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename Ret, typename ... Args$>$\newline
+class cpst\+::\+Mongo\+DBCache$<$ Ret, Args $>$}
+
+This is a class that represents a persistent cache which is stored in a Mongo\+DB database. 
+
+Definition at line 14 of file mongodbcache.\+hpp.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classcpst_1_1_mongo_d_b_cache_a665cf40ee53506e0ddb3508fa7d67ade}\label{classcpst_1_1_mongo_d_b_cache_a665cf40ee53506e0ddb3508fa7d67ade}} 
+\index{cpst::MongoDBCache$<$ Ret, Args $>$@{cpst::MongoDBCache$<$ Ret, Args $>$}!get@{get}}
+\index{get@{get}!cpst::MongoDBCache$<$ Ret, Args $>$@{cpst::MongoDBCache$<$ Ret, Args $>$}}
+\doxysubsubsection{\texorpdfstring{get()}{get()}}
+{\footnotesize\ttfamily template$<$typename Ret , typename ... Args$>$ \\
+std\+::optional$<$ Ret $>$ \mbox{\hyperlink{classcpst_1_1_mongo_d_b_cache}{cpst\+::\+Mongo\+DBCache}}$<$ Ret, Args $>$\+::get (\begin{DoxyParamCaption}\item[{const Args \&...}]{args }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+This function should attempt to fetch from the cache the value corresponding to the passed in arguments. If no such entry exists, then a nullopt should be returned. 
+\begin{DoxyParams}{Parameters}
+{\em args} & -\/ The arguments to be searched from the cache. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the value contained in the cache, corresponding to the key formed by args (if no such key exists, the nullopt is returned). 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classcpst_1_1_cache_ac063a30b903c0bda85da7ee251efb86f}{cpst\+::\+Cache$<$ Ret, Args... $>$}}.
+
+
+
+Definition at line 35 of file mongodbcache.\+cpp.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/tallal/\+Documents/sh/cppersist/cppersist/cacheimpl/persistent/mongodbcache.\+hpp\item 
+/\+Users/tallal/\+Documents/sh/cppersist/cppersist/cacheimpl/persistent/mongodbcache.\+cpp\end{DoxyCompactItemize}

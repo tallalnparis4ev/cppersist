@@ -1,0 +1,69 @@
+\hypertarget{classcpst_1_1_one_cache}{}\doxysection{cpst\+::One\+Cache$<$ Ret, Args $>$ Class Template Reference}
+\label{classcpst_1_1_one_cache}\index{cpst::OneCache$<$ Ret, Args $>$@{cpst::OneCache$<$ Ret, Args $>$}}
+
+
+{\ttfamily \#include $<$onecache.\+hpp$>$}
+
+Inheritance diagram for cpst\+::One\+Cache$<$ Ret, Args $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classcpst_1_1_one_cache}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcpst_1_1_one_cache_a3ad5cdbb8c070e2cfc99be118b81b829}\label{classcpst_1_1_one_cache_a3ad5cdbb8c070e2cfc99be118b81b829}} 
+{\bfseries One\+Cache} (string($\ast$\mbox{\hyperlink{classcpst_1_1_cache_a670f91dc553e82bd843f46347e757da6}{key}})(Args...), string($\ast$\mbox{\hyperlink{classcpst_1_1_cache_a3ad437f4b2b35d4cd652fbe936b42281}{pickle}})(Ret), Ret($\ast$\mbox{\hyperlink{classcpst_1_1_cache_ada2956a0faa3c609899eafbc529e89c1}{unpickle}})(string))
+\item 
+\mbox{\Hypertarget{classcpst_1_1_one_cache_a234a9a59afbfb334cd93d788e7a8add7}\label{classcpst_1_1_one_cache_a234a9a59afbfb334cd93d788e7a8add7}} 
+\mbox{\hyperlink{classcpst_1_1_one_cache}{One\+Cache}} $\ast$ {\bfseries clone} ()
+\item 
+std\+::optional$<$ Ret $>$ \mbox{\hyperlink{classcpst_1_1_one_cache_a0f88598b987735c25e381ac1a6a24c17}{get}} (const Args \&... args)
+\item 
+\mbox{\Hypertarget{classcpst_1_1_one_cache_ab35ffad33ca80fbe8ffe01370c995a30}\label{classcpst_1_1_one_cache_ab35ffad33ca80fbe8ffe01370c995a30}} 
+void {\bfseries put} (const Args \&... args, const Ret \&value)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename Ret, typename ... Args$>$\newline
+class cpst\+::\+One\+Cache$<$ Ret, Args $>$}
+
+This is a class that represents an in-\/memory cache which only stores the most recent key/value pair. 
+
+Definition at line 13 of file onecache.\+hpp.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classcpst_1_1_one_cache_a0f88598b987735c25e381ac1a6a24c17}\label{classcpst_1_1_one_cache_a0f88598b987735c25e381ac1a6a24c17}} 
+\index{cpst::OneCache$<$ Ret, Args $>$@{cpst::OneCache$<$ Ret, Args $>$}!get@{get}}
+\index{get@{get}!cpst::OneCache$<$ Ret, Args $>$@{cpst::OneCache$<$ Ret, Args $>$}}
+\doxysubsubsection{\texorpdfstring{get()}{get()}}
+{\footnotesize\ttfamily template$<$typename Ret , typename ... Args$>$ \\
+std\+::optional$<$ Ret $>$ \mbox{\hyperlink{classcpst_1_1_one_cache}{cpst\+::\+One\+Cache}}$<$ Ret, Args $>$\+::get (\begin{DoxyParamCaption}\item[{const Args \&...}]{args }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+This function should attempt to fetch from the cache the value corresponding to the passed in arguments. If no such entry exists, then a nullopt should be returned. 
+\begin{DoxyParams}{Parameters}
+{\em args} & -\/ The arguments to be searched from the cache. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the value contained in the cache, corresponding to the key formed by args (if no such key exists, the nullopt is returned). 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classcpst_1_1_cache_ac063a30b903c0bda85da7ee251efb86f}{cpst\+::\+Cache$<$ Ret, Args... $>$}}.
+
+
+
+Definition at line 33 of file onecache.\+cpp.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/tallal/\+Documents/sh/cppersist/cppersist/cacheimpl/memory/onecache.\+hpp\item 
+/\+Users/tallal/\+Documents/sh/cppersist/cppersist/cacheimpl/memory/onecache.\+cpp\end{DoxyCompactItemize}

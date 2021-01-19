@@ -1,0 +1,69 @@
+\hypertarget{classcpst_1_1_disk_cache}{}\doxysection{cpst\+::Disk\+Cache$<$ Ret, Args $>$ Class Template Reference}
+\label{classcpst_1_1_disk_cache}\index{cpst::DiskCache$<$ Ret, Args $>$@{cpst::DiskCache$<$ Ret, Args $>$}}
+
+
+{\ttfamily \#include $<$diskcache.\+hpp$>$}
+
+Inheritance diagram for cpst\+::Disk\+Cache$<$ Ret, Args $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classcpst_1_1_disk_cache}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcpst_1_1_disk_cache_af7f942b284ba7bf90bc8dc5677ff79a6}\label{classcpst_1_1_disk_cache_af7f942b284ba7bf90bc8dc5677ff79a6}} 
+\mbox{\hyperlink{classcpst_1_1_disk_cache}{Disk\+Cache}}$<$ Ret, Args... $>$ $\ast$ {\bfseries clone} ()
+\item 
+\mbox{\Hypertarget{classcpst_1_1_disk_cache_a99db4ed5af6ab4847fa593454ed89c3d}\label{classcpst_1_1_disk_cache_a99db4ed5af6ab4847fa593454ed89c3d}} 
+{\bfseries Disk\+Cache} (string($\ast$\mbox{\hyperlink{classcpst_1_1_cache_a670f91dc553e82bd843f46347e757da6}{key}})(Args...), string($\ast$\mbox{\hyperlink{classcpst_1_1_cache_a3ad437f4b2b35d4cd652fbe936b42281}{pickle}})(Ret), Ret($\ast$\mbox{\hyperlink{classcpst_1_1_cache_ada2956a0faa3c609899eafbc529e89c1}{unpickle}})(string), string func\+Name)
+\item 
+std\+::optional$<$ Ret $>$ \mbox{\hyperlink{classcpst_1_1_disk_cache_a7e6685eaeb6e13402ab293904d3e57d4}{get}} (const Args \&... args)
+\item 
+\mbox{\Hypertarget{classcpst_1_1_disk_cache_ac2ead015d72f07504337624cd9edb1b8}\label{classcpst_1_1_disk_cache_ac2ead015d72f07504337624cd9edb1b8}} 
+void {\bfseries put} (const Args \&... args, const Ret \&value)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename Ret, typename ... Args$>$\newline
+class cpst\+::\+Disk\+Cache$<$ Ret, Args $>$}
+
+This is a class that represents a persistent cache which is stored in the local filesystem. 
+
+Definition at line 13 of file diskcache.\+hpp.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classcpst_1_1_disk_cache_a7e6685eaeb6e13402ab293904d3e57d4}\label{classcpst_1_1_disk_cache_a7e6685eaeb6e13402ab293904d3e57d4}} 
+\index{cpst::DiskCache$<$ Ret, Args $>$@{cpst::DiskCache$<$ Ret, Args $>$}!get@{get}}
+\index{get@{get}!cpst::DiskCache$<$ Ret, Args $>$@{cpst::DiskCache$<$ Ret, Args $>$}}
+\doxysubsubsection{\texorpdfstring{get()}{get()}}
+{\footnotesize\ttfamily template$<$typename Ret , typename ... Args$>$ \\
+std\+::optional$<$ Ret $>$ \mbox{\hyperlink{classcpst_1_1_disk_cache}{cpst\+::\+Disk\+Cache}}$<$ Ret, Args $>$\+::get (\begin{DoxyParamCaption}\item[{const Args \&...}]{args }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+This function should attempt to fetch from the cache the value corresponding to the passed in arguments. If no such entry exists, then a nullopt should be returned. 
+\begin{DoxyParams}{Parameters}
+{\em args} & -\/ The arguments to be searched from the cache. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the value contained in the cache, corresponding to the key formed by args (if no such key exists, the nullopt is returned). 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classcpst_1_1_cache_ac063a30b903c0bda85da7ee251efb86f}{cpst\+::\+Cache$<$ Ret, Args... $>$}}.
+
+
+
+Definition at line 38 of file diskcache.\+cpp.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/tallal/\+Documents/sh/cppersist/cppersist/cacheimpl/persistent/diskcache.\+hpp\item 
+/\+Users/tallal/\+Documents/sh/cppersist/cppersist/cacheimpl/persistent/diskcache.\+cpp\end{DoxyCompactItemize}
