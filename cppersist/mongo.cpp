@@ -13,7 +13,7 @@ namespace cpst{
       "Must Memoize a class that inherits from PersistentMemoizable");
     
     string funcName = typeid(T).name();
-    std::cout << "ALERT: No function name passed, using " << funcName << " as the function name instead!" << std::endl;
+    logOne("ALERT: No function name passed, using " + funcName + " as the function name instead!");
     return getMongoMemoizedObj<T,Ret,Args...>(key,pickle,unpickle,dbURL,funcName);
   }
 
@@ -33,7 +33,7 @@ namespace cpst{
       "Must Memoize a class that inherits from PersistentMemoizable");
     
     string funcName = typeid(T).name();
-    std::cout << "ALERT: No function name passed, using " << funcName << " as the function name instead!" << std::endl;
+    logOne("ALERT: No function name passed, using " + funcName + " as the function name instead!");
     return getMongoMemoizedObj<T,Ret,Args...>(type,key,pickle,unpickle,dbURL,funcName);
   }
 

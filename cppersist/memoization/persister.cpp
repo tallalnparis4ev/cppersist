@@ -146,13 +146,13 @@ namespace cpst{
   Ret PersistentMemoized<T,Ret,Args...>::solve(Args... args){
     std::optional<Ret> answer = primaryCache->get(args...);  
     if(answer){
-      std::cout << "CACHE HIT" << std::endl;
+      logOne("CACHE HIT");
       return answer.value();
     }
     if(this->secondaryCache != NULL){
       answer = secondaryCache->get(args...);
       if(answer){
-        std::cout << "SECONDARY CACHE HIT" << std::endl;
+        logOne("SECONDARY CACHE HIT");
         return answer.value();
       }
     }

@@ -38,7 +38,7 @@ namespace cpst{
   std::optional<Ret> DiskCache<Ret,Args...>::get(const Args&... args) {
     std::ifstream inFile(makePathForKey(this->key(args...)));
     if (!inFile) {
-        std::cout << "Unable to open file" << std::endl;
+        logOne("Unable to open file");
         return nullopt;
     }    
     std::ostringstream ss;

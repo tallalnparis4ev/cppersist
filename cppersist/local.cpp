@@ -1,4 +1,5 @@
 #include "cacheimpl/persistent/diskcache.hpp"
+#include "utils/log.hpp"
 #include <iostream>
 #include <string>
 
@@ -10,7 +11,7 @@ namespace cpst{
       "Must Memoize a class that inherits from PersistentMemoizable");
 
     string funcName = typeid(T).name();
-    std::cout << "ALERT: No function name passed, using " << funcName << " as the function name instead!" << std::endl;
+    logOne("ALERT: No function name passed, using " + funcName + " as the function name instead!");
     return getLocalMemoizedObj<T,Ret,Args...>(key,pickle,unpickle,funcName);
   }
 
@@ -40,7 +41,7 @@ namespace cpst{
       "Must Memoize a class that inherits from PersistentMemoizable");
     
     string funcName = typeid(T).name();
-    std::cout << "ALERT: No function name passed, using " << funcName << " as the function name instead!" << std::endl;
+    logOne("ALERT: No function name passed, using " + funcName + " as the function name instead!");
     return getLocalMemoizedObj<T,Ret,Args...>(type,key,pickle,unpickle,funcName);
   }
 }
