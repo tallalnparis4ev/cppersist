@@ -62,6 +62,7 @@ namespace cpst{
        * constructs an instance of the 'Ret' type from a string representation.
        */
       Ret (*unpickle)(std::string);
+      std::string (*hash)(std::string);
   };
 }
 #endif

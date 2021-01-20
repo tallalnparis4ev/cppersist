@@ -8,6 +8,15 @@ namespace cpst{
    */
   template <typename Ret, typename ...Args> 
   class PerCache : public Cache<Ret,Args...>{
+    public:
+      PerCache(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string),
+      string (*hash)(string)) 
+      {
+        this->key=key;
+        this->pickle=pickle;
+        this->unpickle=unpickle;
+        this->hash = hash;
+      }  
     protected:
       std::string funcName;
   };

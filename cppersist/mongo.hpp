@@ -2,6 +2,8 @@
 #define MONGO_H_FILE
 
 #include "memoization/persister.hpp"
+#include "crypto/sha256.h"
+
 namespace cpst{
   /**
    * \defgroup PersistMongo Persist MongoDB
@@ -22,7 +24,7 @@ namespace cpst{
    * @param dbUrl - this corresponds to the URL of the mongoDB server.
    */ 
   template<typename T, typename Ret, typename... Args>
-  PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string dbURL);
+  PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string dbURL, string (*hash)(string) = sha256);
 
   /**
    * Creates an object, of type T, that has persistent memoization applied 
@@ -41,7 +43,7 @@ namespace cpst{
    * typeid(T).name() is used instead.
    */ 
   template<typename T, typename Ret, typename... Args>
-  PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string dbURL, string funcName);
+  PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string dbURL, string funcName, string (*hash)(string) = sha256);
 
   /**
    * Creates an object, of type T, that has persistent memoization applied 
@@ -59,7 +61,7 @@ namespace cpst{
    * @param dbUrl - this corresponds to the URL of the mongoDB server.
    */ 
   template<typename T, typename Ret, typename... Args>
-  PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(MemCacheType primaryCache,string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string dbURL);
+  PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(MemCacheType primaryCache,string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string dbURL, string (*hash)(string) = sha256);
 
   /**
    * Creates an object, of type T, that has persistent memoization applied 
@@ -80,7 +82,7 @@ namespace cpst{
    * typeid(T).name() is used instead.
    */ 
   template<typename T, typename Ret, typename... Args>
-  PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(MemCacheType primaryCache,string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string dbURL, string funcName);
+  PersistentMemoized<T,Ret,Args...> getMongoMemoizedObj(MemCacheType primaryCache,string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string dbURL, string funcName, string (*hash)(string) = sha256);
 
   /**@}*/
 }

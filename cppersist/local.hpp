@@ -2,6 +2,8 @@
 #define LOCAL_H_FILE
 
 #include "memoization/persister.hpp"
+#include "crypto/sha256.h"
+
 namespace cpst{
   /**
    * \defgroup PersistLocal Persist Local Filesystem
@@ -21,7 +23,7 @@ namespace cpst{
    * @param unpickle - this function is the inverse of pickle.
    */ 
   template<typename T, typename Ret, typename ...Args>
-  PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string));
+  PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string (*hash)(string) = sha256);
 
   /**
    * Creates an object, of type T, that has persistent memoization applied 
@@ -38,7 +40,7 @@ namespace cpst{
    * funcName is not specified typeid(T).name() is used instead.
    */ 
   template<typename T, typename Ret, typename... Args>
-  PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string funcName);
+  PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string funcName, string (*hash)(string) = sha256);
 
   /**
    * Creates an object, of type T, that has persistent memoization applied 
@@ -55,7 +57,7 @@ namespace cpst{
    * @param unpickle - this function is the inverse of pickle.
    */ 
   template<typename T, typename Ret, typename... Args>
-  PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(MemCacheType primaryCache,string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string));
+  PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(MemCacheType primaryCache,string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string (*hash)(string) = sha256);
 
   /**
    * Creates an object, of type T, that has persistent memoization applied 
@@ -74,7 +76,7 @@ namespace cpst{
    * funcName is not specified typeid(T).name() is used instead.
    */ 
   template<typename T, typename Ret, typename... Args>
-  PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(MemCacheType primaryCache,string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string funcName);
+  PersistentMemoized<T,Ret,Args...> getLocalMemoizedObj(MemCacheType primaryCache,string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string funcName, string (*hash)(string) = sha256);
 
   /**@}*/
 }

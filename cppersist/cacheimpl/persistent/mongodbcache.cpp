@@ -10,25 +10,27 @@ using std::string;
 namespace cpst{
   template <typename Ret, typename ...Args> 
   MongoDBCache<Ret,Args...>* MongoDBCache<Ret,Args...>::clone(){
-    return new MongoDBCache<Ret,Args...>(this->key,this->pickle,this->unpickle,this->base);
+    return new MongoDBCache<Ret,Args...>(this->key,this->pickle,this->unpickle,this->hash,this->base);
   }
 
+  //Constructor
   template <typename Ret, typename ...Args>
   MongoDBCache<Ret,Args...>::MongoDBCache(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string),
-  string base){
-    this->key = key;
-    this->pickle = pickle;
-    this->unpickle = unpickle;
+  string (*hash)(string), string base) : MongoDBCache(key,pickle,unpickle,hash)
+  {
     this->base = base;
   }
 
+  //Constructor
   template <typename Ret, typename ...Args>
   MongoDBCache<Ret,Args...>::MongoDBCache(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string),
-  string dbURL, string funcName) : MongoDBCache(key,pickle,unpickle,dbURL + "/" + funcName + "/") {}
+  string (*hash)(string), string dbURL, string funcName) 
+    : MongoDBCache(key,pickle,unpickle,hash,dbURL + "/" + funcName + "/") 
+  {}
 
   template <typename Ret, typename ...Args> 
   string MongoDBCache<Ret,Args...>::makeUrlForKey(const string& key) {
-    return this->base + key;
+    return this->base + this->hash(key);
   }
 
   template <typename Ret, typename ...Args> 

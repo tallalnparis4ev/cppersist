@@ -14,16 +14,16 @@ namespace cpst{
   
   template <typename Ret, typename ...Args> 
   DiskCache<Ret,Args...>* DiskCache<Ret,Args...>::clone(){
-    return new DiskCache<Ret,Args...>(this->key,this->pickle,this->unpickle,this->funcName);
+    return new DiskCache<Ret,Args...>(this->key,this->pickle,this->unpickle,this->hash,
+      this->funcName);
   }
 
   template <typename Ret, typename ...Args> 
   DiskCache<Ret,Args...>::DiskCache(string (*key)(Args...),
-    string (*pickle)(Ret),Ret (*unpickle)(string), string funcName)
+    string (*pickle)(Ret),Ret (*unpickle)(string), 
+    string (*hash)(string),string funcName) :
+    DiskCache(key,pickle,unpickle,hash)
   {
-    this->key = key;
-    this->pickle = pickle;
-    this->unpickle = unpickle;
     this->funcName = funcName;
     std::filesystem::create_directories(OUT_DIR+"/"+funcName);
     this->outputPath = "./"+OUT_DIR+"/"+funcName+"/";
@@ -31,7 +31,7 @@ namespace cpst{
 
   template <typename Ret, typename ...Args> 
   string DiskCache<Ret,Args...>::makePathForKey(const string& key) {
-    return this->outputPath + sha256(key) + ".txt";
+    return this->outputPath + this->hash(key) + ".out";
   }
 
   template <typename Ret, typename ...Args> 

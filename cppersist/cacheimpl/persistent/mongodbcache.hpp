@@ -13,9 +13,10 @@ namespace cpst{
   template <typename Ret, typename ...Args> 
   class MongoDBCache : public PerCache<Ret,Args...>{
     public:
+      using PerCache<Ret,Args...>::PerCache;
+      MongoDBCache(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string (*hash)(string), string, string);
+      MongoDBCache(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string (*hash)(string), string);
       MongoDBCache<Ret,Args...>* clone();
-      MongoDBCache(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string, string);
-      MongoDBCache(string (*key)(Args...),string (*pickle)(Ret),Ret (*unpickle)(string), string);
       std::optional<Ret> get(const Args&... args);
       void put(const Args&... args, const Ret& value);
     private:
