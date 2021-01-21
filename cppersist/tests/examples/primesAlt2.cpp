@@ -52,7 +52,7 @@ string listIntsToString(list<int> primes){
   return ret;
 }
 
-string keymaker(int n){
+string primeKey(int n){
   return std::to_string(n);
 }
 

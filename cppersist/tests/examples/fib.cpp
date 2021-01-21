@@ -1,6 +1,7 @@
 #include "../../mongo.hpp"
 #include "../../local.hpp"
 #include <iostream>
+using namespace cpst;
 //Fibonacci Sequence Example
 class FibonacciSolver: public PersistentMemoizable<int, int>{
   public:
@@ -19,7 +20,7 @@ string intostr(int x){
   return std::to_string(x);
 }
 
-string keymaker(int x){
+string fibKey(int x){
   return std::to_string(x);
 }
 
@@ -36,7 +37,7 @@ list<T*> makeGenericList(T* infer){
   return x;
 }
 
-int main(){
+// int main(){
   // PersistentMemoized memoizedFib = getLocalMemoizedObj<FibonacciSolver>(keymaker,intostr,strtoi);
   // PersistentMemoized memoizedFib = getLocalMemoizedObj<FibonacciSolver>(REGULAR,keymaker,intostr,strtoi);
   // PersistentMemoized memoizedFib = getLocalMemoizedObj<FibonacciSolver>(REGULAR,keymaker,intostr,strtoi,"fib");
@@ -65,46 +66,46 @@ int main(){
   // cout << memoizedFib4(2) << endl;
 
 
-  PersistentMemoized memoizedFib = getMongoMemoizedObj<FibonacciSolver>(LRU_CACHE,keymaker,intostr,strtoi,"localhost:5000");
-  std::this_thread::sleep_for (std::chrono::seconds(1));
-  memoizedFib = getMongoMemoizedObj<FibonacciSolver>(REGULAR,keymaker,intostr,strtoi,"localhost:5000","test1");
-  cout << memoizedFib(2) << endl;
+  // PersistentMemoized memoizedFib = getMongoMemoizedObj<FibonacciSolver>(LRU_CACHE,keymaker,intostr,strtoi,"localhost:5000");
+  // std::this_thread::sleep_for (std::chrono::seconds(1));
+  // memoizedFib = getMongoMemoizedObj<FibonacciSolver>(REGULAR,keymaker,intostr,strtoi,"localhost:5000","test1");
+  // cout << memoizedFib(2) << endl;
   
-    std::this_thread::sleep_for (std::chrono::seconds(1));
+  //   std::this_thread::sleep_for (std::chrono::seconds(1));
 
-   memoizedFib = getMongoMemoizedObj<FibonacciSolver>(keymaker,intostr,strtoi,"localhost:5000","test2");
-  cout << memoizedFib(2) << endl;
+  //  memoizedFib = getMongoMemoizedObj<FibonacciSolver>(keymaker,intostr,strtoi,"localhost:5000","test2");
+  // cout << memoizedFib(2) << endl;
   
-    std::this_thread::sleep_for (std::chrono::seconds(1));
+  //   std::this_thread::sleep_for (std::chrono::seconds(1));
 
-   memoizedFib = getMongoMemoizedObj<FibonacciSolver>(keymaker,intostr,strtoi,"localhost:5000");
-  cout << memoizedFib(2) << endl;
+  //  memoizedFib = getMongoMemoizedObj<FibonacciSolver>(keymaker,intostr,strtoi,"localhost:5000");
+  // cout << memoizedFib(2) << endl;
   
-    std::this_thread::sleep_for (std::chrono::seconds(1));
+  //   std::this_thread::sleep_for (std::chrono::seconds(1));
 
-  memoizedFib = getLocalMemoizedObj<FibonacciSolver>(REGULAR,keymaker,intostr,strtoi);
-  cout << memoizedFib(2) << endl;
+  // memoizedFib = getLocalMemoizedObj<FibonacciSolver>(REGULAR,keymaker,intostr,strtoi);
+  // cout << memoizedFib(2) << endl;
   
-    std::this_thread::sleep_for (std::chrono::seconds(1));
+  //   std::this_thread::sleep_for (std::chrono::seconds(1));
 
-  memoizedFib = getLocalMemoizedObj<FibonacciSolver>(LRU_CACHE,keymaker,intostr,strtoi,"test1");
-  cout << memoizedFib(2) << endl;
+  // memoizedFib = getLocalMemoizedObj<FibonacciSolver>(LRU_CACHE,keymaker,intostr,strtoi,"test1");
+  // cout << memoizedFib(2) << endl;
   
-    std::this_thread::sleep_for (std::chrono::seconds(1));
+  //   std::this_thread::sleep_for (std::chrono::seconds(1));
 
-  memoizedFib = getLocalMemoizedObj<FibonacciSolver>(keymaker,intostr,strtoi);
-  cout << memoizedFib(2) << endl;
+  // memoizedFib = getLocalMemoizedObj<FibonacciSolver>(keymaker,intostr,strtoi);
+  // cout << memoizedFib(2) << endl;
   
-    std::this_thread::sleep_for (std::chrono::seconds(1));
+  //   std::this_thread::sleep_for (std::chrono::seconds(1));
 
-  memoizedFib = getLocalMemoizedObj<FibonacciSolver>(keymaker,intostr,strtoi,"test2");
-  cout << memoizedFib(2) << endl;
+  // memoizedFib = getLocalMemoizedObj<FibonacciSolver>(keymaker,intostr,strtoi,"test2");
+  // cout << memoizedFib(2) << endl;
   
   // PersistentMemoized memoizedFib = getLocalMemoizedObj<FibonacciSolver>(keymaker,intostr,strtoi);
   // int z = memoizedFib(3);
   // std::cout << z << std::endl;
 
-}
+// }
 
 // template<typename T>
 // void swap(T& a, T& b)

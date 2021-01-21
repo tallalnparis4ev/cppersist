@@ -23,11 +23,11 @@ class StringGenerator : public ArgGenerator{
     };
 };
 
-class PrimeGenerator : public ArgGenerator{
+class NumberGenerator : public ArgGenerator{
   public:
     using ArgGenerator::ArgGenerator;
     int max;
     string getNext(){
-      return "hello";
+      return to_string((rand()%max)+1);
     };
 };
