@@ -176,7 +176,7 @@ namespace cpst{
       miss = false;
       logOne("CACHE HIT");
       return answer.value();
-    }g
+    }
     if(this->secondaryCache != NULL){
       //Check if entry exists in secondary cache
       answer = secondaryCache->get(args...);
