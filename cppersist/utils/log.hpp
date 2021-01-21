@@ -20,5 +20,10 @@ namespace cpst{
     print(firstValue,rest...);
     cout << endl;
   }
+
+  template <typename Single>
+  void logOne(Single singleValue){
+    cout << singleValue << endl;
+  }
 }
 #endif

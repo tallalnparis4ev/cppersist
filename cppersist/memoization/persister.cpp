@@ -21,6 +21,7 @@ namespace cpst{
     cacheMisses = 0;
   }
 
+  //Helper function to null fields 
   template<typename T, typename Ret, typename... Args>
   void PersistentMemoized<T,Ret,Args...>::nullFields(){
     this->primaryCache = NULL;
@@ -35,13 +36,17 @@ namespace cpst{
   template<typename T, typename Ret, typename... Args>
   void PersistentMemoized<T,Ret,Args...>::setMemoryCache(MemCacheType type, int size){
     if(this->secondaryCache == NULL){
+      //If there's no primary cache or secondary cache, then this method
+      //should do nothing.
       if(this->primaryCache == NULL) return;
+      
+      //Make the primary cache the secondary cache
       this->secondaryCache = this->primaryCache;
     }
-    else if(this->primaryCache != NULL) delete this->primaryCache;
+    //The primary cache is being updated, therefore delete the old one
+    else if(this->primaryCache != NULL) delete this->primaryCache; 
 
-    memCacheType = type;
-    
+    //Get the key, pickle and unpickle functions from the initial cache
     auto key = this->secondaryCache->getKey();
     auto pickle = this->secondaryCache->getPickle();
     auto unpickle = this->secondaryCache->getUnpickle();
@@ -79,11 +84,11 @@ namespace cpst{
     this->setMemoryCache(type);
   }
 
+  //A helper function that moves fields from another PersistentMemoized object
   template<typename T, typename Ret, typename ...Args>
   void PersistentMemoized<T,Ret,Args...>::move(PersistentMemoized<T,Ret,Args...>&& rvalue){
     this->primaryCache = rvalue.primaryCache;
     this->secondaryCache = rvalue.secondaryCache;
-    this->memCacheType = rvalue.memCacheType;
   }
 
   //Move Constructor
@@ -98,7 +103,7 @@ namespace cpst{
   template<typename T, typename Ret, typename ...Args>
   PersistentMemoized<T,Ret,Args...>& PersistentMemoized<T,Ret,Args...>::operator=(PersistentMemoized<T,Ret,Args...>&& rvalue){
     log("move assignment");
-    if(this != &rvalue){
+    if(this != &rvalue){ // no self-assignment
       deleteCaches();
       move(std::move(rvalue));
       rvalue.nullFields();
@@ -106,13 +111,13 @@ namespace cpst{
     return *this;
   }
 
+  //A helper function that copies from another PersistentMemoized object
   template<typename T, typename Ret, typename ...Args>
   void PersistentMemoized<T,Ret,Args...>::copy(const PersistentMemoized<T,Ret,Args...>& lvalue){
     this->primaryCache = lvalue.primaryCache->clone();
     this->secondaryCache = NULL;
     if(lvalue.secondaryCache != NULL){
       this->secondaryCache = lvalue.secondaryCache->clone();
-      this->memCacheType = lvalue.memCacheType;
     }
   }
 
@@ -135,6 +140,7 @@ namespace cpst{
     return *this;
   }
 
+  //Deletes pointers
   template<typename T, typename Ret, typename ...Args>
   void PersistentMemoized<T,Ret,Args...>::deleteCaches(){
     delete this->primaryCache;
@@ -161,28 +167,39 @@ namespace cpst{
     std::optional<Ret> answer = primaryCache->get(args...);
     auto start = high_resolution_clock::now();
     auto end = high_resolution_clock::now();
+    //Check if entry exists in primary cache
     if(answer){
+      //Entry exists in primary cache, return its value
       end = high_resolution_clock::now();
       hitTime = duration_cast<nanoseconds>(end-start).count();
       cacheHits++;
       miss = false;
-      std::cout << "CACHE HIT" << std::endl;
+      logOne("CACHE HIT");
       return answer.value();
-    }
+    }g
     if(this->secondaryCache != NULL){
+      //Check if entry exists in secondary cache
       answer = secondaryCache->get(args...);
       if(answer){
-        std::cout << "SECONDARY CACHE HIT" << std::endl;
+        logOne("SECONDARY CACHE HIT");
         return answer.value();
       }
     }
+
     end = high_resolution_clock::now();
     missTime = duration_cast<nanoseconds>(end-start).count();
     cacheMisses++;
     miss = true;
+
+    //Getting to this point means that the entry does not exist in any cache
+    //so the value for this entry must be calculated.
     Ret realAnswer = T::solve(args...);
+    
     if(this->secondaryCache != NULL){
+      //This lock ensures that the persistent cache will have the same contents
+      //regardless of using an in-memory cache or not.
       this->cacheConsistent.lock();
+      //Write this new entry to secondary cache in a seprate thread
       discard = std::async(&PersistentMemoized<T,Ret,Args...>::write,this,args..., realAnswer);
     }
 

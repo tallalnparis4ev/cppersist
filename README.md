@@ -2,45 +2,60 @@
 
 ## TLDR
 
-cppersist is a small library which allows user's to convert member functions to a memoized equivalent. cppersist allows member functions can be memoized via disk storage or mongo collections.
+cppersist is a small library which allows users' to apply persistent memoization to a member function. cppersist allows member functions to be memoized via disk storage or mongoDB.
 
-Here is how cppersist is used:
+Here is an example of how cppersist is used:
 
 ```c++
-#include <cppersist/disk.h>
-#include <cppersist/mongo.h>
+#include <cppersist/disk.h> //if you need to memoize with the local filesystem
+#include <cppersist/mongo.h> //if you need to memoize with MongoDB
+#include <iostream>
 
 //The class to be memoized - must implement a solve method
 class FibonacciSolver: public PersistentMemoizable<int, int>{
   public:
-    int solve(int n) override {...}
+    int solve(int n) override {
+      if(n<=1) return n;
+      return fib(n-1) + fib(n-2);
+    }
 };
 
-int strtoi(string x){...}
-string intostr(int x){...}
-string keymaker(int x){...}
+//Pickle/serialize function
+std::string intostr(int x){
+  return std::to_string(x);
+}
+//Unpickle/deserialize function
+int strtoi(std::string x){
+  return std::stoi(x);
+}
+//Key function
+std::string keymaker(int x){
+  return std::to_string(x);
+}
 
 int main(int argc, char** argv) {
   PersistentMemoized memoizedFib = getLocalMemoizedObj<DFSSolver>(keymaker,intostr,strtoi); //disk cache
-  PersistentMemoized memoizedFib = getMongoMemoizedObj<DFSSolver>(keymaker,intostr,strtoi); //mongo cache
-  int fib = memoizedFib(...);
+  std::cout << memoizedFib(2) << std::endl;
+  memoizedFib = getMongoMemoizedObj<DFSSolver>(keymaker,intostr,strtoi); //mongo cache
+  std::cout << memoizedFib(2) << std::endl;
 }
 ```
-## Usage
-To build your project, utilising cppersist, via CMake:
-```cmake
-include(FetchContent)
-FetchContent_Declare(test GIT_REPOSITORY https://github.com/tallalnparis4ev/dnt GIT_TAG 1.0)  
-FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/whoshuu/cpr.git GIT_TAG c8d33915dbd88ad6c92b258869b03aba06587ff9) 
-FetchContent_MakeAvailable(cppersist cpr)
-include_directories(${test_SOURCE_DIR})
-target_link_libraries(cppersist PRIVATE cpr::cpr)
-```
 
-However, if you're not using the mongo cache, the following CMake suffices (and it will be faster because no requests library is required):
+## Documentation
+
+[![Documentation](https://img.shields.io/badge/docs-online-informational?style=for-the-badge&link=https://tallalnparis4ev.github.io/)](https://tallalnparis4ev.github.io/)  
+The documentation of cppersist is found [here](https://tallalnparis4ev.github.io/). Navigate to the 'modules' tab for documentation on the user-visible parts of cppersist.
+
+## Usage
+To build your project, utilising cppersist, via CMake (version 3.0+ required):
 ```cmake
-include(FetchContent)
-FetchContent_Declare(test GIT_REPOSITORY https://github.com/tallalnparis4ev/dnt GIT_TAG 1.0)  
+include(FetchContent) 
+FetchContent_Declare(cppersist GIT_REPOSITORY https://github.com/tallalnparis4ev/cppersist GIT_TAG master) 
 FetchContent_MakeAvailable(cppersist)
-include_directories(${test_SOURCE_DIR})
+include_directories(${cppersist_SOURCE_DIR}) 
+#Remove the following 4 lines if the MongoDB cache is not used 
+FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/whoshuu/cpr.git GIT_TAG c8d33915dbd88ad6c92b258869b03aba06587ff9) 
+FetchContent_MakeAvailable(cpr) 
+find_package(OpenSSL REQUIRED) #Remove this if you're communicating with the MongoDB server via HTTP and HTTPS is not needed
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE cpr::cpr) 
 ```
