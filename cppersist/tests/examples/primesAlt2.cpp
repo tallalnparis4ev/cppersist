@@ -1,7 +1,9 @@
 #include "../../local.hpp"
 #include <iostream>
-#include <list> 
-#include <iterator> 
+#include <iterator>
+#include <list>
+
+#include "../local.hpp"
 using std::list;
 using namespace std;
 using namespace cpst;
@@ -22,31 +24,30 @@ class PrimeFactorizer: public PersistentMemoizable<list<int>, int>{
       }
     }
 
-    int smallestPrime(int n){
-      for(int i=2;i<=n;i++){
-        if(n%i==0) return i;
+    int smallestPrime(int n) {
+      for (int i = 2; i <= n; i++) {
+        if (n % i == 0) return i;
       }
       return -1;
-    } 
-};
-
-list<int> intListStrToList(string primeString){
-  list <int> primeFactors; 
-  string curPrime = "";
-  for(char& cur : primeString) {
-    if(cur != ' '){
-      curPrime += cur;
     }
-    else{
+  };
+
+list<int> intListStrToList(string primeString) {
+  list<int> primeFactors;
+  string curPrime = "";
+  for (char& cur : primeString) {
+    if (cur != ' ') {
+      curPrime += cur;
+    } else {
       primeFactors.push_back(std::stoi(curPrime));
       curPrime = "";
     }
   }
   return primeFactors;
 }
-string listIntsToString(list<int> primes){
+string listIntsToString(list<int> primes) {
   string ret = "";
-  for(int prime : primes){
+  for (int prime : primes) {
     ret += (std::to_string(prime) + " ");
   }
   return ret;

@@ -1,0 +1,4 @@
+rm cmake_install.cmake Makefile CMakeCache.txt
+rm -rf bin lib _deps CMakeFiles
+cmake -DCMAKE_BUILD_TYPE=Debug -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl ..
+make

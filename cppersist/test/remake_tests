@@ -1,0 +1,4 @@
+rm run_tests
+cd build
+make
+mv tests ../run_tests

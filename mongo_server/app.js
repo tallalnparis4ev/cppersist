@@ -1,54 +1,47 @@
+const NewManager = require('./dbmanagers/newManager.js')
+const ConsistentManager = require('./dbmanagers/consistentManager.js')
 const Express = require("express");
 const BodyParser = require("body-parser");
 const MongoClient = require("mongodb").MongoClient;
-const ObjectId = require("mongodb").ObjectID;
 const CONNECTION_URL = "mongodb://localhost:27017";
-const DATABASE_NAME = "cppersist";
-let curCollection = ""
+const DATABASE_NAME = "memoisation";
+const PORT = 5001; //Different to EVE
+
+//Maintains consistency with pypersist and GAP memoization
+const consistent = process.argv.includes("--consistent")
 
 var app = Express();
 app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({ extended: true }));
-var database, collection;
+var database, dbManager;
 
-app.listen(5000, () => {
+const log = (str) => {
+  console.log(str);
+}
+
+app.listen(PORT, () => {
+    log(`Listening on ${PORT}`)
     MongoClient.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true}, (error, client) => {
         if(error) {
             throw error;
         }
-	collection = "-1"
         database = client.db(DATABASE_NAME);
         console.log("Connected to `" + DATABASE_NAME + "`!");
+        if(consistent) dbManager = new ConsistentManager(database);
+        else dbManager = new NewManager(database);
+        log(consistent);
     });
 });
 
 app.get("/:function/:id", (request, response) => {
-  setCollection(request.params.function);
-  console.log("GET REQUEST:")
-  console.log(request.params.function + "," + request.params.id);
-  collection.findOne({ "_id": request.params.id }, (error, result) => {
-    if(error || (result == null)) 
-      response.sendStatus(500);
-    else
-      response.send(result.return);
-  });
+  log("GET REQUEST:")
+  log(request.params.function + "," + request.params.id);
+  dbManager.handleGet(request,response);
 });
 
 app.post("/:function/:id", (request, response) => {
-  setCollection(request.params.function);
-  console.log("POST REQUEST")
-  console.log(request.params.function + "," + request.params.id)  
-  console.log(request.body)
-  const insert = {_id:request.params.id, return:request.body.return}
-  collection.insertOne(insert, function(err, res) {
-    if (err) console.log("error putting");
-    response.sendStatus(200)
-  });
+  log("POST REQUEST")
+  log(request.params.function + "," + request.params.id)  
+  log(request.body)
+  dbManager.handlePost(request,response);
 });
-
-setCollection = (newCollection) => {
-  if (newCollection != curCollection){
-    collection = database.collection(newCollection);
-    curCollection = newCollection;
-  }
-}
