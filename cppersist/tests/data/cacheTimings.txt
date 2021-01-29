@@ -1,3 +1,0 @@
-Hit Time, Miss Time, Miss Penalty
-130, 198, 137301
-With 15642 cache hits and 14358 cache misses.

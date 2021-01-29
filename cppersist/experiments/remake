@@ -1,0 +1,4 @@
+cd ..
+cd build
+make
+mv cppersist ../experiments
