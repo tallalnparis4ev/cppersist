@@ -1,6 +1,6 @@
+#pragma once
 #include <vector>
 using std::string;
-
 class ArgGenerator{
   public: 
     ArgGenerator(int seed){
@@ -9,7 +9,7 @@ class ArgGenerator{
     ArgGenerator(){
       srand (time(NULL));
     };
-    string getNext();
+    virtual string getNext() = 0;
     bool hasNext();
 };
 
@@ -23,11 +23,17 @@ class StringGenerator : public ArgGenerator{
     };
 };
 
-class NumberGenerator : public ArgGenerator{
+class IntGenerator : public ArgGenerator{
   public:
     using ArgGenerator::ArgGenerator;
+    IntGenerator(int seed, int min, int max){
+      srand(seed);
+      this->min = min;
+      this->max = max;
+    }
+    int min;
     int max;
     string getNext(){
-      return to_string((rand()%max)+1);
+      return to_string((rand()%max)+min);
     };
 };

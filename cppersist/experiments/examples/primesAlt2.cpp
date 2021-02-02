@@ -8,7 +8,7 @@ using std::list;
 using namespace std;
 using namespace cpst;
 // Prime Factors Example
-class PrimeFactorizer: public PersistentMemoizable<list<int>, int>{
+class PrimeFactorizerAlt2: public PersistentMemoizable<list<int>, int>{
   public:
     list<int> solve(int n) override {
       int nextPrime = smallestPrime(n);
@@ -32,7 +32,7 @@ class PrimeFactorizer: public PersistentMemoizable<list<int>, int>{
     }
   };
 
-list<int> intListStrToList(string primeString) {
+list<int> primesAlt2Unpickle(string primeString) {
   list<int> primeFactors;
   string curPrime = "";
   for (char& cur : primeString) {
@@ -45,7 +45,7 @@ list<int> intListStrToList(string primeString) {
   }
   return primeFactors;
 }
-string listIntsToString(list<int> primes) {
+string primesAlt2Pickle(list<int> primes) {
   string ret = "";
   for (int prime : primes) {
     ret += (std::to_string(prime) + " ");
@@ -53,7 +53,7 @@ string listIntsToString(list<int> primes) {
   return ret;
 }
 
-string primeKey(int n){
+string primesAlt2Key(int n){
   return std::to_string(n);
 }
 

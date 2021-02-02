@@ -2,17 +2,21 @@
 #include "../../mongo.hpp"
 #include <iostream>
 #include <list>
+#include <algorithm>
 
 #include "../local.hpp"
 #define STOP "A "
 #define DELIMITER " "
+#define NODE "N "
 using namespace std;
 using namespace cpst;
 class Node {
  public:
   int label;
-  Node* left;
-  Node* right;
+  Node* left = NULL;
+  Node* right = NULL;
+  int height = 0;
+  Node(int label):label(label){}
 };
 
 class DFSSolver : public PersistentMemoizable<int, Node*, int> {
@@ -25,6 +29,49 @@ class DFSSolver : public PersistentMemoizable<int, Node*, int> {
   };
 };
 
+class DFSSolverIterative : public PersistentMemoizable<int, Node*, int> {
+ public:
+  int solve(Node* root, int find) override {
+    std::list<Node*> nodes;
+    nodes.push_back(root);
+    while (!nodes.empty())
+    {
+      Node* cur = nodes.front();
+      nodes.pop_front();
+      if(cur->label == find) return 1;
+      nodes.push_back(cur->left);
+      nodes.push_back(cur->right);
+    }
+    return 0;
+  };
+};
+
+
+class HeightSolver : public PersistentMemoizable<int, Node*> {
+  public:
+  int solve(Node* root) override {
+    std::list<Node*> nodes;
+    int max = 0;
+    nodes.push_back(root);
+    root->height = 0;
+    while (!nodes.empty())
+    {
+      Node* cur = nodes.front();
+      nodes.pop_front();
+      max = std::max(cur->height,max);
+      if(cur->left != NULL){
+        cur->left->height = cur->height+1;
+        nodes.push_back(cur->left);
+      }
+      if(cur->right != NULL){
+        cur->right->height = cur->height+1;
+        nodes.push_back(cur->right);
+      }
+    }
+    return max;
+  };
+};
+
 Node* newNode(int label) {
   Node* node = (Node*)malloc(sizeof(Node));
   node->label = label;
@@ -32,18 +79,28 @@ Node* newNode(int label) {
   return (node);
 }
 
-void serialize(Node* root, string& tree) {
+void treeSerialize(Node* root, string& tree) {
   if (root == NULL) {
     tree.append(STOP);
     return;
   }
 
   tree.append(to_string(root->label) + " ");
-  serialize(root->left, tree);
-  serialize(root->right, tree);
+  treeSerialize(root->left, tree);
+  treeSerialize(root->right, tree);
 }
 
-Node* deSerialize(string& tree) {
+void treeSerializeStructure(Node* root, string& tree) {
+  if (root == NULL) {
+    tree.append(STOP);
+    return;
+  }
+  tree.append(NODE);
+  treeSerializeStructure(root->left, tree);
+  treeSerializeStructure(root->right, tree);
+}
+
+Node* treeDeserialize(string& tree) {
   if (tree.compare("") == 0) {
     return NULL;
   }
@@ -55,29 +112,27 @@ Node* deSerialize(string& tree) {
   int label = stoi(tree.substr(0, indNumEnd));
   tree.erase(0, indNumEnd);
   Node* root = newNode(label);
-  root->left = deSerialize(tree);
-  root->right = deSerialize(tree);
+  root->left = treeDeserialize(tree);
+  root->right = treeDeserialize(tree);
   return root;
 }
 
-string keymaker(Node* root, int find) {
+string bfsKeyMaker(Node* root, int find) {
   string tree = "";
-  serialize(root, tree);
+  treeSerialize(root, tree);
   return tree + "/" + to_string(find);
 }
 
-int strtoi(string x) { return std::stoi(x); }
-string intostr(int x) { return std::to_string(x); }
+int bfsUnpickle(string x) { return std::stoi(x); }
+string bfsPickle(int x) { return std::to_string(x); }
 
-string keymaker2(int n) { return std::to_string(n); }
-
-int main() {
-  string tree = "1 2 A A 3 A A ";
-  Node* root = deSerialize(tree);
-  PersistentMemoized memoizedFib = getLocalMemoizedObj<DFSSolver>(LRU_CACHE,keymaker,intostr,strtoi);
-  int z = memoizedFib(root,3);
-  cout << z << endl;
-}
+// int main() {
+  // string tree = "1 2 A A 3 A A ";
+  // Node* root = deSerialize(tree);
+  // PersistentMemoized memoizedFib = getLocalMemoizedObj<DFSSolver>(LRU_CACHE,keymaker,intostr,strtoi);
+  // int z = memoizedFib(root,3);
+  // cout << z << endl;
+// }
 
 // #include <future>
 // #include <mutex>

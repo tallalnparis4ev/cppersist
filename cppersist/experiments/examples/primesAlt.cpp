@@ -3,15 +3,14 @@
 #include <iterator>
 #include <list>
 
-#include "../local.hpp"
 using std::list;
 using namespace std;
+using namespace cpst;
 // Prime Factors Example
 class PrimeFactorizer : public PersistentMemoizable<list<int>, int> {
  public:
   list<int> solve(int n) override {
     list<int> primeFactors;
-    std::cout << "Original " << n << std::endl;
     while (n > 1) {
       int nextPrime = smallestPrime(n);
       primeFactors.push_back(nextPrime);
@@ -19,16 +18,12 @@ class PrimeFactorizer : public PersistentMemoizable<list<int>, int> {
     }
     return primeFactors;
   }
-  int smallestPrime(int n) {
-    for (int i = 2; i <= n; i++) {
-      if (n % i == 0) return i;
+  int smallestPrime(int n){//memoize this instead
+    for(int i=2;i<=n;i++){
+      if(n%i==0) return i;
     }
-    int smallestPrime(int n){//memoize this instead
-      for(int i=2;i<=n;i++){
-        if(n%i==0) return i;
-      }
-      return -1;
-    } 
+    return -1;
+  } 
 };
 
 list<int> intListStrToList(string primeString) {
@@ -52,11 +47,5 @@ string listIntsToString(list<int> primes) {
   return ret;
 }
 
-string keymaker(int n) { return std::to_string(n); }
-
-int main() {
-  PersistentMemoized memoizedPrimes = getLocalMemoizedObj<PrimeFactorizer>(
-      keymaker, listIntsToString, intListStrToList, "primesAlt");
-  list<int> z = memoizedPrimes(1000);
-  std::cout << listIntsToString(z) << std::endl;
-}
+string primesAltKey(int n) { return std::to_string(n); }
+string primeHash(string key) { return key; }

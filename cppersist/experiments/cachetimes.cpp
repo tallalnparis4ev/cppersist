@@ -76,31 +76,30 @@ void getMongoMetrics(){
   dataFile.close();
 }
 
-
-
 int main(int argc, char const *argv[])
 {
-  StringGenerator sg(4);
-  int numberOfRuns = 30000;
-  vector<string> first;
-  for (size_t i = 0; i < numberOfRuns; i++)
-  {
-    string next = sg.getNext();
-    first.push_back(next);
-  }
-  StringGenerator sg2(4);
+  // StringGenerator sg(4);
+  // int numberOfRuns = 30000;
+  // vector<string> first;
+  // for (size_t i = 0; i < numberOfRuns; i++)
+  // {
+  //   string next = sg.getNext();
+  //   first.push_back(next);
+  // }
+  // StringGenerator sg2(4);
 
-  for (size_t i = 0; i < numberOfRuns; i++)
-  {
-    string snd = sg2.getNext();
-    if(first[i] != snd){
-      cout << first[i] << endl;
-      cout << snd << endl;
-      cout << "not equal" << endl;
-      break;
-    }
-  }
+  // for (size_t i = 0; i < numberOfRuns; i++)
+  // {
+  //   string snd = sg2.getNext();
+  //   if(first[i] != snd){
+  //     cout << first[i] << endl;
+  //     cout << snd << endl;
+  //     cout << "not equal" << endl;
+  //     break;
+  //   }
+  // }
   // getDiskMetrics();
-  getMongoMetrics();
+  // getMongoMetrics();
+
   return 0;
 }

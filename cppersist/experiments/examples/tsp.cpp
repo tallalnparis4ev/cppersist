@@ -1,8 +1,11 @@
 // CPP program to implement traveling salesman
 // problem using naive approach.
-using namespace std;
 #define V 4
- 
+#include <algorithm>
+#include <vector>
+#include <iostream>
+using namespace std;
+
 // implementation of traveling Salesman Problem
 int travllingSalesmanProblem(int graph[][V], int s)
 {
@@ -36,15 +39,3 @@ int travllingSalesmanProblem(int graph[][V], int s)
     return min_path;
 }
  
-// Driver Code
-int main()
-{
-    // matrix representation of graph
-    int graph[][V] = { { 0, 10, 15, 20 },
-                       { 10, 0, 35, 25 },
-                       { 15, 35, 0, 30 },
-                       { 20, 25, 30, 0 } };
-    int s = 0;
-    cout << travllingSalesmanProblem(graph, s) << endl;
-    return 0;
-}

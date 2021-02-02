@@ -3,25 +3,46 @@
 #include <iostream>
 using namespace cpst;
 //Fibonacci Sequence Example
-class FibonacciSolver: public PersistentMemoizable<int, int>{
+// class FibonacciSolver: public PersistentMemoizable<int, int>{
+//   public:
+//     int solve(int n) override {
+//       // std::cout << "Original" << std::endl;
+//       if(n==0) return 0;
+//       if(n==1) return 1;
+//       return solve(n-1) + solve(n-2);
+//     }
+// };
+typedef unsigned long long fibNumber;
+class FibonacciSolver : public PersistentMemoizable<fibNumber, fibNumber>{
   public:
-    int solve(int n) override {
-      // std::cout << "Original" << std::endl;
+    fibNumber solve(fibNumber n) override{
       if(n==0) return 0;
       if(n==1) return 1;
-      return solve(n-1) + solve(n-2);
+      fibNumber prev = 0;
+      fibNumber cur = 1;
+      while(n>=2){
+        fibNumber sum = prev + cur;
+        prev = cur;
+        cur = sum;
+        n--;
+      }
+      return cur;
     }
 };
 
-int strtoi(string x){
-  return std::stoi(x);
+fibNumber fibUnpickle(string x){
+  return std::stoull(x);
 }
-string intostr(int x){
+string fibPickle(fibNumber x){
   return std::to_string(x);
 }
 
-string fibKey(int x){
+string fibKey(fibNumber x){
   return std::to_string(x);
+}
+
+string fibHash(string key){
+  return key;
 }
 
 #include <iostream>       // std::cout, std::endl

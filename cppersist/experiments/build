@@ -1,4 +1,4 @@
 cd ..
 cd build
-./buildcppersist
+./buildcppersist $1
 mv cppersist ../experiments
