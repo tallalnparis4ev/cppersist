@@ -17,6 +17,6 @@ FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/whoshuu/cpr.git GIT_T
 FetchContent_MakeAvailable(cpr)
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 	target_link_libraries(cppersist stdc++fs PRIVATE cpr::cpr)
-else
+else()
 	target_link_libraries(cppersist PRIVATE cpr::cpr)
 endif()
