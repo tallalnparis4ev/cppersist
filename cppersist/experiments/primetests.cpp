@@ -12,7 +12,7 @@ typedef unsigned long long largestUnsigned;
 using namespace std::chrono;
 using namespace cpst;
 using namespace std;
-#define NUM_INPUT 100000
+#define PRIME_NUM_INPUT 300000
 
 int smallestPrime(int n){
   for(int i=2;i<=n;i++){
@@ -33,9 +33,8 @@ list<int> primeIterative(int n) {
 
 void runPrimesAlt2TestsSeq(){
   auto localMemo = getLocalMemoizedObj<PrimeFactorizerAlt2>(primesAlt2Key,primesAlt2Pickle,primesAlt2Unpickle,"primestest2",primeHash);
-  int numberInput = 100000;
   list<int> input;
-  for(int i=2;i<=numberInput+2;i++){
+  for(int i=2;i<=(PRIME_NUM_INPUT+2);i++){
     input.push_back(i);
   }
   largestUnsigned totalTimeUnmemoized = 0;
@@ -60,9 +59,9 @@ void runPrimesAlt2TestsSeq(){
 
 void runPrimesAlt2TestWRep(int seed){
   auto localMemo = getLocalMemoizedObj<PrimeFactorizerAlt2>(primesAlt2Key,primesAlt2Pickle,primesAlt2Unpickle,"primestest2",primeHash);
-  IntGenerator ig(seed,2,100002);
+  IntGenerator ig(seed,2,PRIME_NUM_INPUT+2);
   list<int> input;
-  for(int i=0;i<NUM_INPUT;i++){
+  for(int i=0;i<PRIME_NUM_INPUT;i++){
     int n = stoi(ig.getNext());
     input.push_back(n);
   }
@@ -90,7 +89,7 @@ void runPrimesAlt2TestWORep(int seed){
   srand (seed); 
   vector<int> temp_input;
   list<int> input;
-  for(int i=2;i<=(NUM_INPUT+2);i++){
+  for(int i=2;i<=(PRIME_NUM_INPUT+2);i++){
     temp_input.push_back(i);
   }
   while(!temp_input.empty()){

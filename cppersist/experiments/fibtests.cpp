@@ -11,7 +11,7 @@ typedef unsigned long long largestUnsigned;
 using namespace std::chrono;
 using namespace cpst;
 using namespace std;
-#define NUM_INPUT 100000
+#define FIB_NUM_INPUT 100000
 
 //can only calculate upto 93rd (0-index) fib number
 largestUnsigned fibIterative(largestUnsigned n){
@@ -30,7 +30,7 @@ largestUnsigned fibIterative(largestUnsigned n){
 
 void runFibTestWRep(int seed){
   IntGenerator ng(seed,0,93);
-  int numberInput = NUM_INPUT;
+  int numberInput = FIB_NUM_INPUT;
   list<int> input;
   for(int i=0;i<numberInput;i++){
     int next = stoi(ng.getNext());

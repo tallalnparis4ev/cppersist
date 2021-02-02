@@ -59,8 +59,8 @@ int main(int argc, char const *argv[])
   // cout << timeTaken << endl;
   int input = stoi(argv[1]);
   // runFibTests(input);
-  // runPrimesAlt2TestsSeq();
+  runPrimesAlt2TestsSeq();
   // runPrimesAlt2TestWORep(input);
-  runPrimesAlt2TestWRep(input);
+  // runPrimesAlt2TestWRep(input);
   return 0;
 }
