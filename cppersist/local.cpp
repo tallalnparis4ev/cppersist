@@ -18,8 +18,7 @@ PersistentMemoized<T, Ret, Args...> getLocalMemoizedObj(
   string funcName = typeid(T).name();
   logOne("ALERT: No function name passed, using " + funcName +
          " as the function name instead!");
-  return getLocalMemoizedObj<T, Ret, Args...>(key, pickle, unpickle, hash,
-                                              funcName);
+  return getLocalMemoizedObj<T, Ret, Args...>(key, pickle, unpickle, funcName, hash);
 }
 
 // Get a disk memoized function, using a user-specified name for the collection
