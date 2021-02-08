@@ -12,8 +12,9 @@ using namespace std::chrono;
 using namespace cpst;
 using namespace std;
 #define FIB_NUM_INPUT 100000
+//can only calculate upto, and including, 93rd (0-index) fib number
+#define MAX_FIB_INPUT 93
 
-//can only calculate upto 93rd (0-index) fib number
 largestUnsigned fibIterative(largestUnsigned n){
   if(n==0) return 0;
   if(n==1) return 1;
@@ -57,8 +58,8 @@ void runFibTestWRep(int seed){
     localMemo(n);
     totalTimeMemoized += localMemo.solveTime;
   }
-  string row = to_string(totalTimeUnmemoized) + "," + to_string(totalTimeMemoized);
-  appendRowToFile("./data/fibIterative",row);
+  string row = to_string(totalTimeUnmemoized) + ", " + to_string(totalTimeMemoized);
+  appendRowToFile("./data/fibIterativeWRep",row);
 }
 
 void runFibTestSeq(){
@@ -66,7 +67,7 @@ void runFibTestSeq(){
   int numberInput = 100000;
   list<int> input;
   for(int i=0;i<numberInput;i++){
-    int next = i%94;
+    int next = i%(MAX_FIB_INPUT+1);
     input.push_back(next);
   }
   largestUnsigned totalTimeUnmemoized = 0;
@@ -85,6 +86,42 @@ void runFibTestSeq(){
     localMemo(n);
     totalTimeMemoized += localMemo.solveTime;
   }
-  string row = to_string(totalTimeUnmemoized) + "," + to_string(totalTimeMemoized);
+  string row = to_string(totalTimeUnmemoized) + ", " + to_string(totalTimeMemoized);
   appendRowToFile("./data/fibIterativeSeq.csv",row);
+}
+
+void runFibTestWORep(int seed){
+  srand (seed); 
+  vector<int> temp_input;
+  list<int> input;
+  while(input.size() < FIB_NUM_INPUT){
+    if(temp_input.size() == 0){
+      for(int i=0;i<=MAX_FIB_INPUT;i++){
+        temp_input.push_back(i);
+      }
+    }
+    int randIndex = rand()%temp_input.size();
+    input.push_back(temp_input[randIndex]);
+    temp_input.erase(temp_input.begin()+randIndex);
+  }
+  
+  largestUnsigned totalTimeUnmemoized = 0;
+  std::list<int>::iterator it;
+  for (it = input.begin(); it != input.end(); it++)
+  {
+    auto start = high_resolution_clock::now();
+    fibIterative(*it);
+    auto timeTaken = duration_cast<nanoseconds>(high_resolution_clock::now()-start).count();
+    totalTimeUnmemoized += timeTaken;
+  }
+  largestUnsigned totalTimeMemoized = 0;
+  auto localMemo = getLocalMemoizedObj<FibonacciSolver>(fibKey,fibPickle,fibUnpickle,"fibtest",fibHash);
+  for (it = input.begin(); it != input.end(); it++)
+  {
+    int n = *it;
+    localMemo(n);
+    totalTimeMemoized += localMemo.solveTime;
+  }
+  string row = to_string(totalTimeUnmemoized) + ", " + to_string(totalTimeMemoized);
+  appendRowToFile("./data/fibIterativeWORep",row);
 }
