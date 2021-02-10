@@ -1,5 +1,7 @@
 // #include <bits/stdc++.h>
 #pragma once
+#include <list>
+#include <vector>
 using namespace std;
  
 typedef long long ll;
