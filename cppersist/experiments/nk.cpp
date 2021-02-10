@@ -80,33 +80,23 @@ string binHash(string key){return key;}
 
 void runBinSeq(list<pair<int, int>> NKs, string outputFile){
   unordered_map<pair<int,int>,bigint,pair_hash> memo;
-  // largestUnsigned totalTimeUnmemoized = 0;
-  double totalTimeUnmemoized = 0;
+  largestUnsigned totalTimeUnmemoized = 0;
   for (list<pair<int, int>>::iterator it = NKs.begin(); it != NKs.end(); it++){
     auto start = high_resolution_clock::now();
     bigint answer = binomialCoeff(it->first,it->second,memo);
-    // if(answer != 0){
-      // cout << it->first << "," << it->second << endl;
-      // cout << answer << endl;
-      // return;
-    // }
-    // if(it->first == 250 && it->second == 100){
-    //   cout << answer << endl;
-    // }
     auto timeTaken = duration_cast<nanoseconds>(high_resolution_clock::now()-start).count();
     totalTimeUnmemoized += timeTaken;
   }
-  cout << "time taken: " << totalTimeUnmemoized/nano << endl;
 
-  // largestUnsigned totalTimeMemoized = 0;
-  // auto localMemo = 
-  //   getLocalMemoizedObj<BinomialCoeff>(binKey,binPickle,binUnpickle,"binTest",binHash);
-  // for (list<pair<int, int>>::iterator it = NKs.begin(); it != NKs.end(); it++){
-  //   localMemo(it->first, it->second);
-  //   totalTimeMemoized += localMemo.solveTime;
-  // }
-  // string row = to_string(totalTimeUnmemoized) + ", " + to_string(totalTimeMemoized);
-  // appendRowToFile(outputFile,row);
+  largestUnsigned totalTimeMemoized = 0;
+  auto localMemo = 
+    getLocalMemoizedObj<BinomialCoeff>(binKey,binPickle,binUnpickle,"binTest",binHash);
+  for (list<pair<int, int>>::iterator it = NKs.begin(); it != NKs.end(); it++){
+    localMemo(it->first, it->second);
+    totalTimeMemoized += localMemo.solveTime;
+  }
+  string row = to_string(totalTimeUnmemoized) + ", " + to_string(totalTimeMemoized);
+  appendRowToFile(outputFile,row);
 }
 
 list<pair<int,int>> generatePairs(int n){
