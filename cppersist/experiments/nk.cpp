@@ -114,8 +114,8 @@ void runBinWORep(vector<pair<int, int>> NKs, int seed){
   // runBinSeq(input,"./data/binCoeffWORep.csv")
 }
 
-list<pair<int,int>> generatePairs(int n){
-  list<pair<int,int>> ret;
+vector<pair<int,int>> generatePairs(int n){
+  vector<pair<int,int>> ret;
   for(int i=0;i<=n;i++){
     for(int j=0;j<=i;j++){
       ret.push_back(pair(i,j));
@@ -127,7 +127,7 @@ list<pair<int,int>> generatePairs(int n){
 // Driver Code 
 int main(int argc, char const *argv[])
 { 
-  list<pair<int,int>> NKs = generatePairs(nMax);
+  vector<pair<int,int>> NKs = generatePairs(nMax);
   int input = stoi(argv[1]);
   cout << "starting" << endl;
   runBinWORep(NKs,input);
