@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include <functional>
 #include <vector>
+#include <algorithm>
+#include <random>
 
 #include "../local.hpp"
 #include "../utils/files.hpp"
@@ -13,7 +15,7 @@ using namespace std::chrono;
 using namespace std;
 using namespace cpst;
 #define nano 1000000000
-#define nMax 1000
+#define nMax 2000
 // #define size (nMax+1)
 // Return nCk 
 // bigint binomialCoeff(int n, int k, bool seen[size][size], bigint memo[size][size]) 
@@ -79,10 +81,10 @@ bigint binUnpickle(string result){
 string binHash(string key){return key;}
 
 
-void runBinSeq(list<pair<int, int>> NKs, string outputFile){
+void runBinSeq(vector<pair<int, int>>& NKs, string outputFile){
   unordered_map<pair<int,int>,bigint,pair_hash> memo;
   largestUnsigned totalTimeUnmemoized = 0;
-  for (list<pair<int, int>>::iterator it = NKs.begin(); it != NKs.end(); it++){
+  for (vector<pair<int, int>>::iterator it = NKs.begin(); it != NKs.end(); it++){
     auto start = high_resolution_clock::now();
     bigint answer = binomialCoeff(it->first,it->second,memo);
     auto timeTaken = duration_cast<nanoseconds>(high_resolution_clock::now()-start).count();
@@ -92,7 +94,7 @@ void runBinSeq(list<pair<int, int>> NKs, string outputFile){
   largestUnsigned totalTimeMemoized = 0;
   auto localMemo = 
     getLocalMemoizedObj<BinomialCoeff>(binKey,binPickle,binUnpickle,"binTest",binHash);
-  for (list<pair<int, int>>::iterator it = NKs.begin(); it != NKs.end(); it++){
+  for (vector<pair<int, int>>::iterator it = NKs.begin(); it != NKs.end(); it++){
     localMemo(it->first, it->second);
     totalTimeMemoized += localMemo.solveTime;
   }
@@ -101,17 +103,19 @@ void runBinSeq(list<pair<int, int>> NKs, string outputFile){
 }
 
 
-void runBinWORep(vector<pair<int, int>> NKs, int seed){
+void runBinWORep(vector<pair<int, int>>& NKs, int seed){
+  shuffle(NKs.begin(), NKs.end(), default_random_engine(seed));
+  runBinSeq(NKs,"./data/binCoeffWORep.csv");
+}
+
+void runBinWRep(vector<pair<int, int>>& NKs, int seed){
   srand(seed);
-  list<pair<int, int>> input;
-  cout << "started" << endl;
-  while(!NKs.empty()){
-    int randomIndex = rand() % NKs.size();
-    input.push_back(std::move(NKs[randomIndex]));
-    NKs.erase(NKs.begin() + randomIndex);
+  vector<pair<int,int>> newInp;
+  while(newInp.size() != NKs.size()){
+    pair<int,int> toAdd = NKs[rand()%NKs.size()];
+    newInp.push_back(toAdd);
   }
-  cout << "DONE" << endl;
-  // runBinSeq(input,"./data/binCoeffWORep.csv")
+  runBinSeq(NKs,"./data/binCoeffWRep.csv");
 }
 
 vector<pair<int,int>> generatePairs(int n){
@@ -128,11 +132,11 @@ vector<pair<int,int>> generatePairs(int n){
 int main(int argc, char const *argv[])
 { 
   vector<pair<int,int>> NKs = generatePairs(nMax);
-  int input = stoi(argv[1]);
-  cout << "starting" << endl;
-  runBinWORep(NKs,input);
+  int seed = stoi(argv[1]);
+  runBinWORep(NKs,seed);
+  // runBinWRep(NKs,seed);
   // runBinSeq(NKs,"./data/binCoeffSeq.csv");
-  // return 0; 
+  return 0; 
 } 
 
 
