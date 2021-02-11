@@ -3,6 +3,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <functional>
+#include <vector>
 
 #include "../local.hpp"
 #include "../utils/files.hpp"
@@ -12,8 +13,8 @@ using namespace std::chrono;
 using namespace std;
 using namespace cpst;
 #define nano 1000000000
-#define nMax 2000
-#define size (nMax+1)
+#define nMax 1000
+// #define size (nMax+1)
 // Return nCk 
 // bigint binomialCoeff(int n, int k, bool seen[size][size], bigint memo[size][size]) 
 // { 
@@ -99,6 +100,20 @@ void runBinSeq(list<pair<int, int>> NKs, string outputFile){
   appendRowToFile(outputFile,row);
 }
 
+
+void runBinWORep(vector<pair<int, int>> NKs, int seed){
+  srand(seed);
+  list<pair<int, int>> input;
+  cout << "started" << endl;
+  while(!NKs.empty()){
+    int randomIndex = rand() % NKs.size();
+    input.push_back(std::move(NKs[randomIndex]));
+    NKs.erase(NKs.begin() + randomIndex);
+  }
+  cout << "DONE" << endl;
+  // runBinSeq(input,"./data/binCoeffWORep.csv")
+}
+
 list<pair<int,int>> generatePairs(int n){
   list<pair<int,int>> ret;
   for(int i=0;i<=n;i++){
@@ -110,14 +125,42 @@ list<pair<int,int>> generatePairs(int n){
 }
 
 // Driver Code 
-int main() 
+int main(int argc, char const *argv[])
 { 
   list<pair<int,int>> NKs = generatePairs(nMax);
-  runBinSeq(NKs,"./data/binCoeffSeq.csv");
-  return 0; 
+  int input = stoi(argv[1]);
+  cout << "starting" << endl;
+  runBinWORep(NKs,input);
+  // runBinSeq(NKs,"./data/binCoeffSeq.csv");
+  // return 0; 
 } 
 
 
+// void runTTTWORep(Board boards[NUM_TTT_BOARDS], int seed){
+//   vector<int> remaining;
+//   srand(seed);
+//   for(int i=0;i<NUM_TTT_BOARDS;i++) remaining.push_back(i);
+//   int index = 0;
+//   Board newBoardsOrder[NUM_TTT_BOARDS];
+//   while(!remaining.empty()){
+//     int randomIndex = rand() % remaining.size();
+//     Board newBoard(boards[remaining[randomIndex]].board);
+//     newBoardsOrder[index++] = newBoard;
+//     remaining.erase(remaining.begin() + randomIndex);
+//   }
+//   runTTTSeq(newBoardsOrder,"./data/TTTWORep.csv");
+// }
+
+// void runTTTWRep(Board boards[NUM_TTT_BOARDS], int seed){
+//   srand(seed);
+//   int index = 0;
+//   Board newBoardsOrder[NUM_TTT_BOARDS];
+//   for(int i=0;i<NUM_TTT_BOARDS;i++){
+//     Board newBoard(boards[rand() % NUM_TTT_BOARDS].board);
+//     newBoardsOrder[index++] = newBoard;
+//   }
+//   runTTTSeq(newBoardsOrder,"./data/TTTWRep.csv");
+// }
 
 
 // Return the number of array that can be 
