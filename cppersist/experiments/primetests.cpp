@@ -8,11 +8,14 @@
 #include <string>
 #include <set>
 #include <iostream>
+#include <algorithm>
+#include <random>
+#include <vector>
 typedef unsigned long long largestUnsigned;
 using namespace std::chrono;
 using namespace cpst;
 using namespace std;
-#define PRIME_NUM_INPUT 100000
+#define PRIME_NUM_INPUT 1000000
 
 int smallestPrime(int n){
   for(int i=2;i<=n;i++){
@@ -34,7 +37,7 @@ list<int> primeIterative(int n) {
 void runPrimesAlt2TestsSeq(){
   auto localMemo = getLocalMemoizedObj<PrimeFactorizerAlt2>(primesAlt2Key,primesAlt2Pickle,primesAlt2Unpickle,"primestest2",primeHash);
   list<int> input;
-  for(int i=2;i<=(PRIME_NUM_INPUT+2);i++){
+  for(int i=2;i<=(PRIME_NUM_INPUT+1);i++){
     input.push_back(i);
   }
   largestUnsigned totalTimeUnmemoized = 0;
@@ -59,7 +62,7 @@ void runPrimesAlt2TestsSeq(){
 
 void runPrimesAlt2TestWRep(int seed){
   auto localMemo = getLocalMemoizedObj<PrimeFactorizerAlt2>(primesAlt2Key,primesAlt2Pickle,primesAlt2Unpickle,"primestest2",primeHash);
-  IntGenerator ig(seed,2,PRIME_NUM_INPUT+2);
+  IntGenerator ig(seed,2,PRIME_NUM_INPUT+1);
   list<int> input;
   for(int i=0;i<PRIME_NUM_INPUT;i++){
     int n = stoi(ig.getNext());
@@ -86,19 +89,13 @@ void runPrimesAlt2TestWRep(int seed){
 }
 
 void runPrimesAlt2TestWORep(int seed){
-  srand (seed); 
-  vector<int> temp_input;
-  list<int> input;
-  for(int i=2;i<=(PRIME_NUM_INPUT+2);i++){
-    temp_input.push_back(i);
+  vector<int> input;
+  for(int i=2;i<=(PRIME_NUM_INPUT+1);i++){
+    input.push_back(i);
   }
-  while(!temp_input.empty()){
-    int randIndex = rand()%temp_input.size();
-    input.push_back(temp_input[randIndex]);
-    temp_input.erase(temp_input.begin()+randIndex);
-  }
+  shuffle(input.begin(), input.end(), default_random_engine(seed));
   largestUnsigned totalTimeUnmemoized = 0;
-  std::list<int>::iterator it;
+  std::vector<int>::iterator it;
   for (it = input.begin(); it != input.end(); it++)
   {
     auto start = high_resolution_clock::now();
@@ -116,4 +113,10 @@ void runPrimesAlt2TestWORep(int seed){
   }
   string row = to_string(totalTimeUnmemoized) + ", " + to_string(totalTimeMemoized);
   appendRowToFile("./data/primesAlt2WORep.csv",row);
+}
+
+int main(int argc, char const *argv[])
+{
+  runPrimesAlt2TestsSeq();
+  return 0;
 }
