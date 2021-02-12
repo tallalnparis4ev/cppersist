@@ -7,12 +7,14 @@
 #include <string>
 #include <set>
 #include <iostream>
+#include <algorithm>
+#include <random>
+#include <vector>
 #include "helpers/bigint.cpp"
 typedef unsigned long long largestUnsigned;
 using namespace std::chrono;
 using namespace cpst;
 using namespace std;
-#define FIB_BIG_INT_NUM_INPUT 5000 
 #define MAX_FIB_BIG_INT_INPUT 5000
 
 
@@ -23,13 +25,6 @@ class FibBigIntSolver : public PersistentMemoizable<bigint, int>{
       if(n==1) return 1;
       return solve(n-1) + solve(n-2);
     };
-    string to_string(){
-      stringstream ss;
-      ss << *this;
-      string s;
-      ss >> s;
-      return s;
-	  };
 };
 
 bigint fibBIUnpickle(string x){
@@ -66,13 +61,13 @@ bigint fibBigInt(int n){
 
 void runFibBITestSeq(){
   auto localMemo = getLocalMemoizedObj<FibBigIntSolver>(fibBIKey,fibBIPickle,fibBIUnpickle,"fibbi",fibBIHash);
-  list<int> input;
-  for(int i=0;i<FIB_BIG_INT_NUM_INPUT;i++){
-    int next = i%(MAX_FIB_BIG_INT_INPUT+1);
-    input.push_back(next);
+  vector<int> input;
+  for(int i=0;i<=MAX_FIB_BIG_INT_INPUT;i++){
+    input.push_back(i);
   }
+
   largestUnsigned totalTimeUnmemoized = 0;
-  std::list<int>::iterator it;
+  std::vector<int>::iterator it;
   for (it = input.begin(); it != input.end(); it++)
   {
     auto start = high_resolution_clock::now();
@@ -93,9 +88,9 @@ void runFibBITestSeq(){
 
 void runFibBITestWRep(int seed){
   IntGenerator ng(seed,0,MAX_FIB_BIG_INT_INPUT);
-  int numberInput = FIB_BIG_INT_NUM_INPUT;
-  list<int> input;
-  for(int i=0;i<numberInput;i++){
+  int numberInput = MAX_FIB_BIG_INT_INPUT;
+  vector<int> input;
+  for(int i=0;i<=numberInput;i++){
     int next = stoi(ng.getNext());
     if(next>ng.max || next < ng.min){
       cout << next << endl;
@@ -104,7 +99,7 @@ void runFibBITestWRep(int seed){
     input.push_back(next);
   }
   largestUnsigned totalTimeUnmemoized = 0;
-  std::list<int>::iterator it;
+  std::vector<int>::iterator it;
   for (it = input.begin(); it != input.end(); it++)
   {
     auto start = high_resolution_clock::now();
@@ -125,22 +120,14 @@ void runFibBITestWRep(int seed){
 }
 
 void runFibBITestWORep(int seed){
-  srand (seed); 
-  vector<int> temp_input;
-  list<int> input;
-  while(input.size() < FIB_BIG_INT_NUM_INPUT){
-    if(temp_input.size() == 0){
-      for(int i=0;i<=MAX_FIB_BIG_INT_INPUT;i++){
-        temp_input.push_back(i);
-      }
-    }
-    int randIndex = rand()%temp_input.size();
-    input.push_back(temp_input[randIndex]);
-    temp_input.erase(temp_input.begin()+randIndex);
+  vector<int> input;
+  for(int i=0;i<=MAX_FIB_BIG_INT_INPUT;i++){
+    input.push_back(i);
   }
+  shuffle(input.begin(), input.end(), default_random_engine(seed));
   
   largestUnsigned totalTimeUnmemoized = 0;
-  std::list<int>::iterator it;
+  std::vector<int>::iterator it;
   for (it = input.begin(); it != input.end(); it++)
   {
     auto start = high_resolution_clock::now();
@@ -158,4 +145,13 @@ void runFibBITestWORep(int seed){
   }
   string row = to_string(totalTimeUnmemoized) + ", " + to_string(totalTimeMemoized);
   appendRowToFile("./data/fibBIWORep",row);
+}
+
+int main(int argc, char const *argv[])
+{
+  int seed = stoi(argv[1]);
+  runFibBITestSeq();
+  // runFibBITestWRep(seed);
+  // runFibBITestWORep(seed);
+  return 0;
 }
