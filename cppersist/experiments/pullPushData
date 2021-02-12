@@ -1,0 +1,4 @@
+git pull
+git add $1
+git ci -m "d"
+git push
