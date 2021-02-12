@@ -1,0 +1,7 @@
+# !/bin/bash
+for i in $(seq "$1")
+do
+  ./cppersist $i
+  rm -rf persist
+  echo "done $i"
+done
