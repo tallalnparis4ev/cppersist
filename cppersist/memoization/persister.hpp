@@ -10,6 +10,7 @@
 #include "./memcachetypes.hpp"
 using std::string;
 namespace cpst {
+typedef unsigned long long largestUnsigned;
 /**
  * An object of this class will have its function call operator () to perform
  * some computation, and this function has persistent memoization applied.
@@ -51,12 +52,12 @@ class PersistentMemoized: public T{
      * The size will determine the maximum number of entries in the LRU_CACHE.
      */
     void setMemoryCache(MemCacheType, int);
-    size_t solveTime = 0; //wall clock time in ms
-    size_t cacheHits = 0;
-    size_t cacheMisses = 0;
-    size_t hitTime = 0; //wall clock time in ms
-    size_t missTime = 0; //wall clock time in ms
-    size_t missPenalty = 0; //wall clock time in ms
+    largestUnsigned solveTime = 0; //wall clock time in ns
+    largestUnsigned cacheHits = 0;
+    largestUnsigned cacheMisses = 0;
+    largestUnsigned hitTime = 0; //wall clock time in ms
+    largestUnsigned missTime = 0; //wall clock time in ms
+    largestUnsigned missPenalty = 0; //wall clock time in ms
     bool miss = false;
     void resetTimes();
   private:
