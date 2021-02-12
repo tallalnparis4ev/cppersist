@@ -115,8 +115,11 @@ void runPrimesAlt2TestWORep(int seed){
   appendRowToFile("./data/primesAlt2WORep.csv",row);
 }
 
+
 int main(int argc, char const *argv[])
-{
-  runPrimesAlt2TestsSeq();
-  return 0;
-}
+{ 
+  int seed = stoi(argv[1]);
+  runPrimesAlt2TestWORep(seed);
+  // runPrimesAlt2TestWRep(seed);
+  return 0; 
+} 
