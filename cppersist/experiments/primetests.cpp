@@ -17,11 +17,20 @@ using namespace cpst;
 using namespace std;
 #define PRIME_NUM_INPUT 1000000
 
-int smallestPrime(int n){
-  for(int i=2;i<=n;i++){
-    if(n%i==0) return i;
-  }
-  return 0;
+
+int smallestPrime(int n) 
+{ 
+  // if divisible by 2 
+  if (n % 2 == 0) 
+      return 2; 
+
+  // iterate from 3 to sqrt(n) 
+  for (int i = 3; i * i <= n; i += 2) { 
+      if (n % i == 0) 
+          return i; 
+  } 
+
+  return n; 
 } 
 
 list<int> primeIterative(int n) {
@@ -118,8 +127,13 @@ void runPrimesAlt2TestWORep(int seed){
 
 int main(int argc, char const *argv[])
 { 
-  int seed = stoi(argv[1]);
-  runPrimesAlt2TestWORep(seed);
+  // int seed = stoi(argv[1]);
+  // runPrimesAlt2TestWORep(seed);
   // runPrimesAlt2TestWRep(seed);
+  PrimeFactorizerAlt2 solver;
+  for (auto const& i : solver.solve(2)) {
+    std::cout << i << ",";
+  }
+  cout << endl;
   return 0; 
 } 
