@@ -130,10 +130,5 @@ int main(int argc, char const *argv[])
   // int seed = stoi(argv[1]);
   // runPrimesAlt2TestWORep(seed);
   // runPrimesAlt2TestWRep(seed);
-  PrimeFactorizerAlt2 solver;
-  for (auto const& i : solver.solve(2)) {
-    std::cout << i << ",";
-  }
-  cout << endl;
   return 0; 
 } 
