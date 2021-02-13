@@ -1,7 +1,10 @@
 #!/bin/bash
+rm -rf persist
 for i in $(seq "$1")
 do
-   ./cppersist $i
-   echo "done $i"
+
+  ./cppersist $i 1
+  ./cppersist $i 0
+  echo "done $i"
 done
 rm -rf persist
