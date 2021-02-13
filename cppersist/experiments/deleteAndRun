@@ -3,6 +3,5 @@ for i in $(seq "$1")
 do
   rm -rf persist
   ./cppersist $i 1
-  ./cppersist $i 0
-  echo "done $i"
+  echo "done $i 1"
 done

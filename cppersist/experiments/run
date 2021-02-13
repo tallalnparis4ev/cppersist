@@ -1,3 +1,10 @@
 #!/bin/bash
+
+for i in $(seq "$1")
+do
+  ./cppersist $i 0
+  echo "done $i 0"
+done
+
 ./deleteAndRun $1
 ./runNoDelete $1
