@@ -1,9 +1,6 @@
 #include "../local.hpp"
-#include "../mongo.hpp"
 #include "../utils/log.hpp"
 #include "data-generation/generators.cpp"
-#include "examples/primesAlt.cpp"
-#include "examples/primesAlt2.cpp"
 #include "../utils/files.hpp"
 #include <string>
 #include <set>
@@ -15,120 +12,184 @@ typedef unsigned long long largestUnsigned;
 using namespace std::chrono;
 using namespace cpst;
 using namespace std;
-#define PRIME_NUM_INPUT 1000000
 
+class PrimeSolver{
+  public: 
+    virtual list<int> solve(int n) = 0;
+};
 
-int smallestPrime(int n) 
-{ 
-  // if divisible by 2 
-  if (n % 2 == 0) 
-      return 2; 
+class PrimeRec: public PersistentMemoizable<list<int>, int>, public PrimeSolver{
+  public:
+    list<int> solve(int n) override {
+      int nextPrime = smallestPrime(n);
+      if(n/nextPrime == 1){
+        list<int> primeFactors;
+        primeFactors.push_front(nextPrime);
+        return primeFactors;
+      }
+      else{
+        list<int> primeFactors = solve(n/nextPrime);
+        primeFactors.push_front(nextPrime);
+        return primeFactors;
+      }
+    }
 
-  // iterate from 3 to sqrt(n) 
-  for (int i = 3; i * i <= n; i += 2) { 
-      if (n % i == 0) 
-          return i; 
-  } 
+    int smallestPrime(int n) {
+      if (n % 2 == 0) 
+          return 2; 
+      for (int i = 3; i * i <= n; i += 2) { 
+          if (n % i == 0) 
+              return i; 
+      } 
+      return n; 
+    }
+  };
 
-  return n; 
-} 
+class PrimeIter: public PersistentMemoizable<list<int>, int>, public PrimeSolver{
+  public:
+    list<int> solve(int n) override
+    {  
+      list<int> primes;
+      // Print the number of 2s that divide n  
+      while (n % 2 == 0)  
+      {  
+        primes.push_back(2);
+        n = n/2;  
+      }  
+    
+      for (int i = 3; i <= sqrt(n); i = i + 2)  
+      {  
+          while (n % i == 0)  
+          {  
+            primes.push_back(i);
+            n = n/i;  
+          }  
+      }  
+      if (n > 2)  
+          primes.push_back(n);
 
-list<int> primeIterative(int n) {
+      return primes;
+    }  
+  };
+
+list<int> primesUnpickle(string primeString) {
   list<int> primeFactors;
-  while (n > 1) {
-    int nextPrime = smallestPrime(n);
-    primeFactors.push_back(nextPrime);
-    n /= nextPrime;
+  string curPrime = "";
+  for (char& cur : primeString) {
+    if (cur != ' ') {
+      curPrime += cur;
+    } else {
+      primeFactors.push_back(std::stoi(curPrime));
+      curPrime = "";
+    }
   }
   return primeFactors;
 }
-
-void runPrimesAlt2TestsSeq(){
-  auto localMemo = getLocalMemoizedObj<PrimeFactorizerAlt2>(primesAlt2Key,primesAlt2Pickle,primesAlt2Unpickle,"primestest2",primeHash);
-  list<int> input;
-  for(int i=2;i<=(PRIME_NUM_INPUT+1);i++){
-    input.push_back(i);
+string primesPickle(list<int> primes) {
+  string ret = "";
+  for (int prime : primes) {
+    ret += (std::to_string(prime) + " ");
   }
-  largestUnsigned totalTimeUnmemoized = 0;
-  std::list<int>::iterator it;
-  for (it = input.begin(); it != input.end(); it++)
-  {
-    auto start = high_resolution_clock::now();
-    primeIterative(*it);
-    auto timeTaken = duration_cast<nanoseconds>(high_resolution_clock::now()-start).count();
-    totalTimeUnmemoized += timeTaken;
-  }
-  largestUnsigned totalTimeMemoized = 0;
-  for (it = input.begin(); it != input.end(); it++)
-  {
-    int n = *it;
-    localMemo(n);
-    totalTimeMemoized += localMemo.solveTime;
-  }
-  string row = to_string(totalTimeUnmemoized) + ", " + to_string(totalTimeMemoized);
-  appendRowToFile("./data/primesAlt2Seq.csv",row);
+  return ret;
 }
 
-void runPrimesAlt2TestWRep(int seed){
-  auto localMemo = getLocalMemoizedObj<PrimeFactorizerAlt2>(primesAlt2Key,primesAlt2Pickle,primesAlt2Unpickle,"primestest2",primeHash);
-  IntGenerator ig(seed,2,PRIME_NUM_INPUT+1);
-  list<int> input;
-  for(int i=0;i<PRIME_NUM_INPUT;i++){
-    int n = stoi(ig.getNext());
-    input.push_back(n);
-  }
-  largestUnsigned totalTimeUnmemoized = 0;
-  std::list<int>::iterator it;
-  for (it = input.begin(); it != input.end(); it++)
-  {
-    auto start = high_resolution_clock::now();
-    primeIterative(*it);
-    auto timeTaken = duration_cast<nanoseconds>(high_resolution_clock::now()-start).count();
-    totalTimeUnmemoized += timeTaken;
-  }
-  largestUnsigned totalTimeMemoized = 0;
-  for (it = input.begin(); it != input.end(); it++)
-  {
-    int n = *it;
-    localMemo(n);
-    totalTimeMemoized += localMemo.solveTime;
-  }
-  string row = to_string(totalTimeUnmemoized) + ", " + to_string(totalTimeMemoized);
-  appendRowToFile("./data/primesAlt2WRep.csv",row);
+string primesKey(int n){
+  return std::to_string(n);
 }
 
-void runPrimesAlt2TestWORep(int seed){
-  vector<int> input;
-  for(int i=2;i<=(PRIME_NUM_INPUT+1);i++){
-    input.push_back(i);
+
+void runPrime(PrimeSolver& solver, vector<int>& input, string path, bool cppersist){
+  largestUnsigned time = 0;
+  for (vector<int>::iterator it = input.begin(); it != input.end(); it++){
+    // auto start = high_resolution_clock::now();
+    list<int> answer = solver.solve(*it);
+    // auto timeTaken = duration_cast<nanoseconds>(high_resolution_clock::now()-start).count();
+    // time += timeTaken;
   }
+  // appendRowToFile(path,to_string(time));
+}
+
+
+void runPrime(vector<int>& input, string type, bool cppersist, bool recursive, bool keepCache){
+  // string path = getOutPath("Primes",type,cppersist,recursive,keepCache);
+  if(recursive){
+    PrimeRec rec;
+    auto localMemo = 
+      getLocalMemoizedObj<PrimeRec>(primesKey,primesPickle,primesUnpickle,"primesTest",noHash);
+    if(!cppersist){
+      runPrime(rec,input,path,cppersist);
+    }
+    else{
+      runPrime(localMemo,input,path,cppersist);
+    }
+  }
+  else{
+    PrimeIter iter;
+    auto localMemo = 
+      getLocalMemoizedObj<PrimeIter>(primesKey,primesPickle,primesUnpickle,"primesTest",noHash);
+    if(!cppersist){
+      runPrime(iter,input,path,cppersist);
+    }
+    else{
+      runPrime(localMemo,input,path,cppersist);
+    }
+  }
+}
+
+void runPrimeSeq(vector<int>& input, bool cppersist, bool recursive, bool keepCache){
+  runPrime(input,"Seq",cppersist,recursive,keepCache);
+}
+
+void runPrimeWORep(vector<int>& input, bool cppersist, bool recursive, bool keepCache, int seed){
   shuffle(input.begin(), input.end(), default_random_engine(seed));
-  largestUnsigned totalTimeUnmemoized = 0;
-  std::vector<int>::iterator it;
-  for (it = input.begin(); it != input.end(); it++)
-  {
-    auto start = high_resolution_clock::now();
-    primeIterative(*it);
-    auto timeTaken = duration_cast<nanoseconds>(high_resolution_clock::now()-start).count();
-    totalTimeUnmemoized += timeTaken;
-  }
-  largestUnsigned totalTimeMemoized = 0;
-  auto localMemo = getLocalMemoizedObj<PrimeFactorizerAlt2>(primesAlt2Key,primesAlt2Pickle,primesAlt2Unpickle,"primestest2",primeHash);
-  for (it = input.begin(); it != input.end(); it++)
-  {
-    int n = *it;
-    localMemo(n);
-    totalTimeMemoized += localMemo.solveTime;
-  }
-  string row = to_string(totalTimeUnmemoized) + ", " + to_string(totalTimeMemoized);
-  appendRowToFile("./data/primesAlt2WORep.csv",row);
+  runPrime(input,"WORep",cppersist,recursive,keepCache);
 }
 
+void runPrimeWRep(vector<int>& input, bool cppersist, bool recursive, bool keepCache, int seed){
+  srand(seed);
+  vector<int> newInp;
+  while(newInp.size() != input.size()){
+    int toAdd = input[rand()%input.size()];
+    newInp.push_back(toAdd);
+  }
+  runPrime(newInp,"WRep",cppersist,recursive,keepCache);
+}
+
+vector<int> generateInput(int n){
+  vector<int> ret;
+  for(int i=2;i<=n;i++){
+    ret.push_back(i);
+  }
+  // for(int x : ret){
+    // cout << x << endl;
+  // }
+  return ret;
+}
 
 int main(int argc, char const *argv[])
-{ 
-  // int seed = stoi(argv[1]);
-  // runPrimesAlt2TestWORep(seed);
-  // runPrimesAlt2TestWRep(seed);
-  return 0; 
-} 
+{
+  int numInput = stoi(argv[1]);
+  vector<int> input = generateInput(numInput);
+  bool cppersist = stoi(argv[2]);
+  bool recursive = stoi(argv[3]);
+  bool keepCache = stoi(argv[4]);
+  int seed = stoi(argv[5]);
+  const char* version = argv[6];
+
+  if (std::strcmp(version, "seq") == 0)
+  {
+    runPrimeSeq(input,cppersist,recursive,keepCache);
+  }
+
+  if (std::strcmp(version, "worep") == 0)
+  {
+    runPrimeWORep(input,cppersist,recursive,keepCache,seed);
+  }
+
+  if (std::strcmp(version, "wrep") == 0)
+  {
+    runPrimeWRep(input,cppersist,recursive,keepCache,seed);
+  }
+
+  return 0;
+}

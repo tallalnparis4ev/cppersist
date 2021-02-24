@@ -9,13 +9,15 @@
 #Recursive
 for i in $(seq "$1")
 do
-  ./cppersist $2 0 1 1 $i $4
+  /usr/bin/time -p -o Rec.out ./cppersist $2 0 1 1 $i $4
 done
 #Iterative
 for i in $(seq "$1")
 do
-  ./cppersist $3 0 0 1 $i $4
+  /usr/bin/time -p -o Iter.out ./cppersist $3 0 0 1 $i $4
 done
 
 ./deleteAndRun $1 $2 $3 $4
 ./runNoDelete $1 $2 $3 $4 
+mkdir -p ./data/$5
+mv Rec.out Iter.out RecWCache.out IterWCache.out RecDelCache.out IterDelCache.out ./data/$5

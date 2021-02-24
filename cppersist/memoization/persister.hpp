@@ -10,6 +10,9 @@
 #include "./memcachetypes.hpp"
 using std::string;
 namespace cpst {
+
+string noHash(string key){return key;}
+
 typedef unsigned long long largestUnsigned;
 /**
  * An object of this class will have its function call operator () to perform
