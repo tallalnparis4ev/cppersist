@@ -11,12 +11,12 @@
 rm -rf persist
 for i in $(seq "$1")
 do
-  /usr/bin/time -p -o RecWCache.out ./cppersist $2 1 1 1 $i $4
+  /usr/bin/time -p -o RecWCache.out -a ./cppersist $2 1 1 1 $i $4
 done
 
 # Iterative
 rm -rf persist
 for i in $(seq "$1")
 do
-  /usr/bin/time -p -o IterWCache.out ./cppersist $3 1 0 1 $i $4
+  /usr/bin/time -p -o IterWCache.out -a ./cppersist $3 1 0 1 $i $4
 done
