@@ -1,4 +1,4 @@
 git pull
-git add $1
+git add "$@"
 git ci -m "d"
 git push
