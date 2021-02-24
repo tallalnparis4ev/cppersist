@@ -67,7 +67,6 @@ string fibBIHash(string key){
 void runFib(FibSolver& solver, vector<int>& input, string path, bool cppersist){
   largestUnsigned time = 0;
   for (vector<int>::iterator it = input.begin(); it != input.end(); it++){
-    cout << *it << endl;
     auto start = high_resolution_clock::now();
     bigint answer = solver.solve(*it);
     auto timeTaken = duration_cast<nanoseconds>(high_resolution_clock::now()-start).count();
