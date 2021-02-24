@@ -154,11 +154,7 @@ PersistentMemoized<T, Ret, Args...>::operator=(
 
   template<typename T, typename Ret, typename ...Args>
   Ret PersistentMemoized<T,Ret,Args...>::operator()(Args const&... args) {
-    auto start = high_resolution_clock::now();
-    Ret answer = solve(args...);
-    auto end = high_resolution_clock::now();
-    solveTime = duration_cast<nanoseconds>(end-start).count();
-    return answer;
+    return solve(args...);
   }
 
   template<typename T, typename Ret, typename ...Args>
@@ -170,31 +166,18 @@ PersistentMemoized<T, Ret, Args...>::operator=(
   template<typename T, typename Ret, typename ...Args>
   Ret PersistentMemoized<T,Ret,Args...>::solve(Args... args){
     std::optional<Ret> answer = primaryCache->get(args...);
-    auto start = high_resolution_clock::now();
-    auto end = high_resolution_clock::now();
     //Check if entry exists in primary cache
     if(answer){
       //Entry exists in primary cache, return its value
-      end = high_resolution_clock::now();
-      hitTime = duration_cast<nanoseconds>(end-start).count();
-      cacheHits++;
-      miss = false;
-      logOne("CACHE HIT");
       return answer.value();
     }
     if(this->secondaryCache != NULL){
       //Check if entry exists in secondary cache
       answer = secondaryCache->get(args...);
       if(answer){
-        logOne("SECONDARY CACHE HIT");
         return answer.value();
       }
     }
-
-    end = high_resolution_clock::now();
-    missTime = duration_cast<nanoseconds>(end-start).count();
-    cacheMisses++;
-    miss = true;
 
     //Getting to this point means that the entry does not exist in any cache
     //so the value for this entry must be calculated.
@@ -208,10 +191,7 @@ PersistentMemoized<T, Ret, Args...>::operator=(
       discard = std::async(&PersistentMemoized<T,Ret,Args...>::write,this,args..., realAnswer);
     }
 
-    start = high_resolution_clock::now(); 
     primaryCache->put(args..., realAnswer);
-    end = high_resolution_clock::now();
-    missPenalty = duration_cast<nanoseconds>(end-start).count();
     return realAnswer;  
   }
 

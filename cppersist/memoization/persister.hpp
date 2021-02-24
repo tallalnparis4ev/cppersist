@@ -60,6 +60,7 @@ class PersistentMemoized: public T{
     largestUnsigned missPenalty = 0; //wall clock time in ms
     bool miss = false;
     void resetTimes();
+    virtual Ret solve(Args... args);
   private:
     void nullFields();
     void copy(const PersistentMemoized& lvalue);
@@ -78,7 +79,6 @@ class PersistentMemoized: public T{
      * can only be a persistent cache.
      */
     Cache<Ret,Args...>* secondaryCache;
-    virtual Ret solve(Args... args);
 };
 
 /**
