@@ -112,6 +112,7 @@ void runPrime(PrimeSolver& solver, vector<int>& input, string path, bool cppersi
 
 void runPrime(vector<int>& input, string type, bool cppersist, bool recursive, bool keepCache){
   // string path = getOutPath("Primes",type,cppersist,recursive,keepCache);
+  string path = "";
   if(recursive){
     PrimeRec rec;
     auto localMemo = 
