@@ -32,37 +32,38 @@ MongoDBCache<Ret, Args...>::MongoDBCache(string (*key)(Args...),
                                          Ret (*unpickle)(string),
                                          string (*hash)(string), string dbURL,
                                          string funcName)
-    : MongoDBCache(key, pickle, unpickle, hash, dbURL + "/persist/" + funcName + "/") {}
+    : MongoDBCache(key, pickle, unpickle, hash,
+                   dbURL + "/persist/" + funcName + "/") {}
 
 template <typename Ret, typename... Args>
 string MongoDBCache<Ret, Args...>::makeUrlForKey(const string& key) {
   return this->base + this->hash(key);
 }
 
-std::string parseJson(std::string s){
+std::string parseJson(std::string s) {
   for (std::string::size_type i = 0; i < s.size(); i++) {
-    if(s[i] == '\"'){
+    if (s[i] == '\"') {
       bool isResult = false;
       string resultStr = "result";
       int index = 0;
-      for (std::string::size_type j = i+1; j < s.size(); j++) {
-        if(isResult && (s[j] == '\"') && (s[j+1] == ':')){
-          int startIndex = j+1;
-          while(startIndex < s.size()){
-            if(s[startIndex] == '\"') break;
+      for (std::string::size_type j = i + 1; j < s.size(); j++) {
+        if (isResult && (s[j] == '\"') && (s[j + 1] == ':')) {
+          int startIndex = j + 1;
+          while (startIndex < s.size()) {
+            if (s[startIndex] == '\"') break;
             startIndex++;
           }
           startIndex++;
           int endIndex = startIndex;
-          while(endIndex < s.size()){
-            if(s[endIndex] == '\"' && s[endIndex] != '\\') break;
+          while (endIndex < s.size()) {
+            if (s[endIndex] == '\"' && s[endIndex] != '\\') break;
             endIndex++;
           }
-          return s.substr(startIndex,endIndex-startIndex);
+          return s.substr(startIndex, endIndex - startIndex);
         }
-        if(isResult) break;
-        if(s[j] !=  resultStr[index++]) break;
-        if(s[j] == 't') isResult = true;
+        if (isResult) break;
+        if (s[j] != resultStr[index++]) break;
+        if (s[j] == 't') isResult = true;
       }
     }
   }
@@ -86,17 +87,18 @@ void MongoDBCache<Ret, Args...>::put(const Args&... args, const Ret& value) {
   string url = this->base;
   string valueStr = this->pickle(value);
   string funcName = "{\"funcname\": \"test\",";
-  string hashLine = "\"hash\": \""+ key +"\",";
+  string hashLine = "\"hash\": \"" + key + "\",";
   string nameSpace = "\"namespace\": \"cppersist\",";
-  string result = "\"result\": \""+valueStr+"\"""}";
+  string result = "\"result\": \"" + valueStr +
+                  "\""
+                  "}";
   string jsonPost = funcName + hashLine + nameSpace + result;
   // string jsonPost = std::format(jsonPostTemplate, key, valueStr);
   // cpr::Response response =
-      // cpr::Post(cpr::Url{url}, cpr::Body{"{\"return\": \"" + valueStr + "\"}"},
-                // cpr::Header{{"Content-Type", "application/json"}});
+  // cpr::Post(cpr::Url{url}, cpr::Body{"{\"return\": \"" + valueStr + "\"}"},
+  // cpr::Header{{"Content-Type", "application/json"}});
   cpr::Response response =
-      cpr::Post(cpr::Url{url}, 
-      cpr::Body{jsonPost},
-                cpr::Header{{"Content-Type", "application/json"}});                
+      cpr::Post(cpr::Url{url}, cpr::Body{jsonPost},
+                cpr::Header{{"Content-Type", "application/json"}});
 }
 }  // namespace cpst

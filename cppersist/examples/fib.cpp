@@ -18,17 +18,35 @@ int strtoi(string x) { return std::stoi(x); }
 string intostr(int x) { return std::to_string(x); }
 
 string keymaker(int x) { return std::to_string(x); }
+string hasher(string x) { return ""; }
 using namespace std;
+
+template <typename T>
+char test2(const T& hello) {
+  return hello[0];
+}
+
+template <typename T>
+char test(T hello) {
+  return test2(hello);
+  // return hello[0];
+}
+
 int main() {
-  FibonacciSolver fibonacciSolver;
+  char x[2];
+  x[0] = '6';
+  cout << test<char[2]>(x) << endl;
+
+  // FibonacciSolver fibonacciSolver;
   // PersistentMemoized memoizedFib =
   // getLocalMemoizedObj<FibonacciSolver>(keymaker,intostr,strtoi);
   // PersistentMemoized memoizedFib2 =
   // getLocalMemoizedObj<FibonacciSolver>(keymaker,intostr,strtoi,"fib");
-  PersistentMemoized memoizedFibDb1 = getMongoMemoizedObj<FibonacciSolver>(
-      keymaker, intostr, strtoi, "http://localhost:5000");
-  // int z = memoizedFib(3);
-  // int z = memoizedFib2(3);
-  int z = memoizedFibDb1(3);
-  std::cout << z << std::endl;
+  // PersistentMemoized memoizedFibDb1 = getMongoMemoizedObj<FibonacciSolver>(
+  // keymaker, intostr, strtoi, "http://localhost:5000");
+  // memoizedFibDb1 = getMongoMemoizedObj<FibonacciSolver>(
+  // keymaker, intostr, strtoi, "http://localhost:5000", hasher);
+  // auto memoizedFibDb1 = getLocalMemoizedObj<FibonacciSolver>(keymaker,
+  // intostr, strtoi); int z = memoizedFib(3); int z = memoizedFib2(3); int z =
+  // memoizedFibDb1(3); std::cout << z << std::endl;
 }

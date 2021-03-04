@@ -1,39 +1,36 @@
-#include "../../local.hpp"
 #include <iostream>
 #include <iterator>
 #include <list>
 
+#include "../../local.hpp"
 #include "../local.hpp"
 using std::list;
 using namespace std;
 using namespace cpst;
 // Prime Factors Example
-class PrimeFactorizerAlt2: public PersistentMemoizable<list<int>, int>{
-  public:
-    list<int> solve(int n) override {
-      int nextPrime = smallestPrime(n);
-      if(n/nextPrime == 1){
-        list<int> primeFactors;
-        primeFactors.push_front(nextPrime);
-        return primeFactors;
-      }
-      else{
-        list<int> primeFactors = solve(n/nextPrime);
-        primeFactors.push_front(nextPrime);
-        return primeFactors;
-      }
+class PrimeFactorizerAlt2 : public PersistentMemoizable<list<int>, int> {
+ public:
+  list<int> solve(int n) override {
+    int nextPrime = smallestPrime(n);
+    if (n / nextPrime == 1) {
+      list<int> primeFactors;
+      primeFactors.push_front(nextPrime);
+      return primeFactors;
+    } else {
+      list<int> primeFactors = solve(n / nextPrime);
+      primeFactors.push_front(nextPrime);
+      return primeFactors;
     }
+  }
 
-    int smallestPrime(int n) {
-      if (n % 2 == 0) 
-          return 2; 
-      for (int i = 3; i * i <= n; i += 2) { 
-          if (n % i == 0) 
-              return i; 
-      } 
-      return n; 
+  int smallestPrime(int n) {
+    if (n % 2 == 0) return 2;
+    for (int i = 3; i * i <= n; i += 2) {
+      if (n % i == 0) return i;
     }
-  };
+    return n;
+  }
+};
 
 list<int> primesAlt2Unpickle(string primeString) {
   list<int> primeFactors;
@@ -56,13 +53,4 @@ string primesAlt2Pickle(list<int> primes) {
   return ret;
 }
 
-string primesAlt2Key(int n){
-  return std::to_string(n);
-}
-
-// int main(){
-//   PrimeFactorizer primeFactorizer;
-//   PersistentMemoized memoizedPrimes = getLocalMemoizedObj<PrimeFactorizer>(keymaker,listIntsToString,intListStrToList,"primesAlt");
-//   list<int> z = memoizedPrimes(25);
-//   std::cout << listIntsToString(z) << std::endl;
-// }
+string primesAlt2Key(int n) { return std::to_string(n); }

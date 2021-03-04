@@ -1,5 +1,7 @@
 bin/
 .vscode/
+*dSYM*
+libs/
 
 # General
 .DS_Store

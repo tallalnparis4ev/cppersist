@@ -1,8 +1,8 @@
-#include "../../local.hpp"
 #include <iostream>
 #include <iterator>
 #include <list>
 
+#include "../../local.hpp"
 #include "../local.hpp"
 using std::list;
 using namespace std;

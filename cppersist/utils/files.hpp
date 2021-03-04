@@ -3,12 +3,13 @@
 
 #include <fstream>
 using namespace std;
-void appendRowToFile(const string& fileName, const string& row){
+void appendRowToFile(const string& fileName, const string& row) {
   std::ofstream dataFile(fileName, std::ios_base::app);
   dataFile << row << endl;
 }
 
-string getOutPath(string algo, string type, bool cppersist, bool recursive, bool keepCache){
+string getOutPath(string algo, string type, bool cppersist, bool recursive,
+                  bool keepCache) {
   string delCache = !keepCache ? "DelCache" : "";
   string rec = (recursive ? "Rec" : "Iter");
   string affix = rec + (cppersist ? "Cpst" : "NoCpst") + delCache;

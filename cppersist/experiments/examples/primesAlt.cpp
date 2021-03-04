@@ -1,7 +1,8 @@
-#include "../../local.hpp"
 #include <iostream>
 #include <iterator>
 #include <list>
+
+#include "../../local.hpp"
 
 using std::list;
 using namespace std;
@@ -18,12 +19,12 @@ class PrimeFactorizer : public PersistentMemoizable<list<int>, int> {
     }
     return primeFactors;
   }
-  int smallestPrime(int n){//memoize this instead
-    for(int i=2;i<=n;i++){
-      if(n%i==0) return i;
+  int smallestPrime(int n) {  // memoize this instead
+    for (int i = 2; i <= n; i++) {
+      if (n % i == 0) return i;
     }
     return -1;
-  } 
+  }
 };
 
 list<int> intListStrToList(string primeString) {

@@ -1,8 +1,9 @@
+#include <chrono>
 #include <functional>
 #include <future>
 #include <iostream>
 #include <mutex>
-#include <chrono>
+
 #include "../cacheimpl/memory/lrucache.hpp"
 #include "../cacheimpl/memory/onecache.hpp"
 #include "../cacheimpl/memory/regcache.hpp"
@@ -10,19 +11,19 @@
 using std::function;
 using std::string;
 using namespace std::chrono;
-namespace cpst{
-  template<typename T, typename Ret, typename ...Args>
-  void PersistentMemoized<T,Ret,Args...>::resetMetrics(){
-    cacheHits = 0;
-    cacheMisses = 0;
-  }
+namespace cpst {
+template <typename T, typename Ret, typename... Args>
+void PersistentMemoized<T, Ret, Args...>::resetMetrics() {
+  cacheHits = 0;
+  cacheMisses = 0;
+}
 
-  //Helper function to null fields 
-  template<typename T, typename Ret, typename... Args>
-  void PersistentMemoized<T,Ret,Args...>::nullFields(){
-    this->primaryCache = NULL;
-    this->secondaryCache = NULL;
-  }
+// Helper function to null fields
+template <typename T, typename Ret, typename... Args>
+void PersistentMemoized<T, Ret, Args...>::nullFields() {
+  this->primaryCache = NULL;
+  this->secondaryCache = NULL;
+}
 
 template <typename T, typename Ret, typename... Args>
 void PersistentMemoized<T, Ret, Args...>::setMemoryCache(MemCacheType type) {
@@ -152,56 +153,57 @@ PersistentMemoized<T, Ret, Args...>::operator=(
   }
 }
 
-  template<typename T, typename Ret, typename ...Args>
-  Ret PersistentMemoized<T,Ret,Args...>::operator()(Args const&... args) {
-    return solve(args...);
-  }
+template <typename T, typename Ret, typename... Args>
+Ret PersistentMemoized<T, Ret, Args...>::operator()(Args const&... args) {
+  return solve(args...);
+}
 
-  template<typename T, typename Ret, typename ...Args>
-  void PersistentMemoized<T,Ret,Args...>::write(Args const&... args, Ret const& realAnswer){
-    secondaryCache->put(args...,realAnswer);
-    cacheConsistent.unlock();
-  }
+template <typename T, typename Ret, typename... Args>
+void PersistentMemoized<T, Ret, Args...>::write(Args const&... args,
+                                                Ret const& realAnswer) {
+  secondaryCache->put(args..., realAnswer);
+  cacheConsistent.unlock();
+}
 
-  template<typename T, typename Ret, typename ...Args>
-  Ret PersistentMemoized<T,Ret,Args...>::solve(Args... args){
-    std::optional<Ret> answer = primaryCache->get(args...);
-    //Check if entry exists in primary cache
-    if(answer){
-      //Entry exists in primary cache, return its value
+template <typename T, typename Ret, typename... Args>
+Ret PersistentMemoized<T, Ret, Args...>::solve(Args... args) {
+  std::optional<Ret> answer = primaryCache->get(args...);
+  // Check if entry exists in primary cache
+  if (answer) {
+    // Entry exists in primary cache, return its value
+    return answer.value();
+  }
+  if (this->secondaryCache != NULL) {
+    // Check if entry exists in secondary cache
+    answer = secondaryCache->get(args...);
+    if (answer) {
       return answer.value();
     }
-    if(this->secondaryCache != NULL){
-      //Check if entry exists in secondary cache
-      answer = secondaryCache->get(args...);
-      if(answer){
-        return answer.value();
-      }
-    }
-
-    //Getting to this point means that the entry does not exist in any cache
-    //so the value for this entry must be calculated.
-    Ret realAnswer = T::solve(args...);
-    
-    if(this->secondaryCache != NULL){
-      //This lock ensures that the persistent cache will have the same contents
-      //regardless of using an in-memory cache or not.
-      this->cacheConsistent.lock();
-      //Write this new entry to secondary cache in a seprate thread
-      discard = std::async(&PersistentMemoized<T,Ret,Args...>::write,this,args..., realAnswer);
-    }
-
-    primaryCache->put(args..., realAnswer);
-    return realAnswer;  
   }
 
-  template<typename T, typename Ret, typename ...Args>
-  void PersistentMemoized<T,Ret,Args...>::resetTimes(){
-    hitTime = 0;
-    missTime = 0;
-    missPenalty = 0;
-  } 
+  // Getting to this point means that the entry does not exist in any cache
+  // so the value for this entry must be calculated.
+  Ret realAnswer = T::solve(args...);
 
+  if (this->secondaryCache != NULL) {
+    // This lock ensures that the persistent cache will have the same contents
+    // regardless of using an in-memory cache or not.
+    this->cacheConsistent.lock();
+    // Write this new entry to secondary cache in a seprate thread
+    discard = std::async(&PersistentMemoized<T, Ret, Args...>::write, this,
+                         args..., realAnswer);
+  }
+
+  primaryCache->put(args..., realAnswer);
+  return realAnswer;
+}
+
+template <typename T, typename Ret, typename... Args>
+void PersistentMemoized<T, Ret, Args...>::resetTimes() {
+  hitTime = 0;
+  missTime = 0;
+  missPenalty = 0;
+}
 
 // Deletes pointers
 template <typename T, typename Ret, typename... Args>

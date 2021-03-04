@@ -11,12 +11,13 @@ add_executable(cppersist ${sources} ${main})
 ###############################################################################
 ## CPR HTTP Request Setup #####################################################
 ###############################################################################
-find_package(OpenSSL REQUIRED)
-include(FetchContent)
-FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/whoshuu/cpr.git GIT_TAG c8d33915dbd88ad6c92b258869b03aba06587ff9) # the commit hash for 1.5.0
-FetchContent_MakeAvailable(cpr)
+# find_package(OpenSSL REQUIRED)
+# include(FetchContent)
+# FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/whoshuu/cpr.git GIT_TAG c8d33915dbd88ad6c92b258869b03aba06587ff9) # the commit hash for 1.5.0
+# FetchContent_MakeAvailable(cpr)
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 	target_link_libraries(cppersist PRIVATE stdc++fs cpr::cpr)
 else()
-	target_link_libraries(cppersist PRIVATE cpr::cpr)
+  target_link_libraries(cppersist)
+	# target_link_libraries(cppersist PRIVATE cpr::cpr)
 endif()

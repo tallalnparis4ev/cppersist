@@ -1,9 +1,9 @@
-#include "../../local.hpp"
-#include "../../mongo.hpp"
+#include <algorithm>
 #include <iostream>
 #include <list>
-#include <algorithm>
 
+#include "../../local.hpp"
+#include "../../mongo.hpp"
 #include "../local.hpp"
 #define STOP "A "
 #define DELIMITER " "
@@ -16,7 +16,7 @@ class Node {
   Node* left = NULL;
   Node* right = NULL;
   int height = 0;
-  Node(int label):label(label){}
+  Node(int label) : label(label) {}
 };
 
 class DFSSolver : public PersistentMemoizable<int, Node*, int> {
@@ -34,11 +34,10 @@ class DFSSolverIterative : public PersistentMemoizable<int, Node*, int> {
   int solve(Node* root, int find) override {
     std::list<Node*> nodes;
     nodes.push_back(root);
-    while (!nodes.empty())
-    {
+    while (!nodes.empty()) {
       Node* cur = nodes.front();
       nodes.pop_front();
-      if(cur->label == find) return 1;
+      if (cur->label == find) return 1;
       nodes.push_back(cur->left);
       nodes.push_back(cur->right);
     }
@@ -46,25 +45,23 @@ class DFSSolverIterative : public PersistentMemoizable<int, Node*, int> {
   };
 };
 
-
 class HeightSolver : public PersistentMemoizable<int, Node*> {
-  public:
+ public:
   int solve(Node* root) override {
     std::list<Node*> nodes;
     int max = 0;
     nodes.push_back(root);
     root->height = 0;
-    while (!nodes.empty())
-    {
+    while (!nodes.empty()) {
       Node* cur = nodes.front();
       nodes.pop_front();
-      max = std::max(cur->height,max);
-      if(cur->left != NULL){
-        cur->left->height = cur->height+1;
+      max = std::max(cur->height, max);
+      if (cur->left != NULL) {
+        cur->left->height = cur->height + 1;
         nodes.push_back(cur->left);
       }
-      if(cur->right != NULL){
-        cur->right->height = cur->height+1;
+      if (cur->right != NULL) {
+        cur->right->height = cur->height + 1;
         nodes.push_back(cur->right);
       }
     }
@@ -127,11 +124,11 @@ int bfsUnpickle(string x) { return std::stoi(x); }
 string bfsPickle(int x) { return std::to_string(x); }
 
 // int main() {
-  // string tree = "1 2 A A 3 A A ";
-  // Node* root = deSerialize(tree);
-  // PersistentMemoized memoizedFib = getLocalMemoizedObj<DFSSolver>(LRU_CACHE,keymaker,intostr,strtoi);
-  // int z = memoizedFib(root,3);
-  // cout << z << endl;
+// string tree = "1 2 A A 3 A A ";
+// Node* root = deSerialize(tree);
+// PersistentMemoized memoizedFib =
+// getLocalMemoizedObj<DFSSolver>(LRU_CACHE,keymaker,intostr,strtoi); int z =
+// memoizedFib(root,3); cout << z << endl;
 // }
 
 // #include <future>
@@ -157,8 +154,9 @@ string bfsPickle(int x) { return std::to_string(x); }
 // int main(int argc, char const *argv[])
 // {
 //   external();
-//   // std::future<void> writeRes = std::async(std::launch::async,&PersistentMemoized<T,Ret,Args...>::write,this,args..., realAnswer);
-//   cout << "DONE" << endl;
+//   // std::future<void> writeRes =
+//   std::async(std::launch::async,&PersistentMemoized<T,Ret,Args...>::write,this,args...,
+//   realAnswer); cout << "DONE" << endl;
 //   /* code */
 //   return 0;
 // }

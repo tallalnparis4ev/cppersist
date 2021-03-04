@@ -19,5 +19,4 @@ done
 
 ./deleteAndRun $1 $2 $3 $4
 ./runNoDelete $1 $2 $3 $4 
-mkdir -p ./data/$5
-mv Rec.out Iter.out RecWCache.out IterWCache.out RecDelCache.out IterDelCache.out ./data/$5
+
