@@ -4,6 +4,7 @@
 #include <iostream>
 #include <queue>
 #include <string>
+#include <stack>
 class TrieNode {
  public:
   std::string prefix = "";
