@@ -4,6 +4,9 @@ project(cppersist)
 set(CMAKE_CXX_STANDARD 17)
 set(main ${TEST})
 
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
+SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS} -pthread")
+
 include_directories(crypto)
 
 add_executable(cppersist ${sources} ${main})
