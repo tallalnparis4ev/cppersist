@@ -189,7 +189,6 @@ int main(int argc, char const* argv[]) {
   TrieNode* head = new TrieNode(false);
   completeTrie(head);
   vector<string> validPref = validPrefixes(head);
-  std::cout << validPref.size() << std::endl;
   if (std::strcmp(version, "worep") == 0) {
     runGhostWORep(validPref, head, cppersist, recursive, keepCache, seed);
   }
