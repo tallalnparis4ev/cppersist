@@ -33,7 +33,7 @@ std::ostream& operator<< (std::ostream& out, const Time& time)
   return out; 
 }
 
-class PrettyFormater{
+class PrettyFormatter{
   public:
     void formatAllFiles(std::string& dir){
       for(auto& file: fs::directory_iterator(dir)){
@@ -70,7 +70,7 @@ class PrettyFormater{
 
 int main(int argc, char const *argv[])
 {
-  PrettyFormater pretty;
+  PrettyFormatter pretty;
   std::string dir = argv[1];
   pretty.formatAllFiles(dir);
   return 0;
