@@ -9,12 +9,12 @@
 #Recursive
 for i in $(seq "$1")
 do
-  /usr/bin/time -p -o Rec.out -a ./cppersist $2 0 1 1 $i $4
+  ./cppersist $2 0 1 1 $i $4
 done
 #Iterative
 for i in $(seq "$1")
 do
-  /usr/bin/time -p -o Iter.out -a ./cppersist $3 0 0 1 $i $4
+  ./cppersist $3 0 0 1 $i $4
 done
 
 ./deleteAndRun $1 $2 $3 $4

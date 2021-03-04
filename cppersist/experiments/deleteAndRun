@@ -11,14 +11,14 @@
 for i in $(seq "$1")
 do
   rm -rf persist
-  /usr/bin/time -p -o RecDelCache.out -a ./cppersist $2 1 1 0 $i $4
+  ./cppersist $2 1 1 0 $i $4
 done
 
 #Iterative
 for i in $(seq "$1")
 do
   rm -rf persist
-  /usr/bin/time -p -o IterDelCache.out -a ./cppersist $3 1 0 0 $i $4
+  ./cppersist $3 1 0 0 $i $4
 done
 
 

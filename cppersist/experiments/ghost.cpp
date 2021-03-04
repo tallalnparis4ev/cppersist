@@ -159,15 +159,6 @@ void runGhost(vector<string>& input, TrieNode* dict, string type,
   }
 }
 
-void runGhostWORep(vector<string>& prefixes, TrieNode* head) {
-  GhostRec lol;
-  // auto lol =
-  // getLocalMemoizedObj<GhostRec>(ghostKey,identity<string>,identity<string>,identity<string>);
-  for (string& prefix : prefixes) {
-    string res = lol.solve(prefix, head);
-  }
-}
-
 void runGhostWORep(vector<string>& input, TrieNode* dict, bool cppersist,
                    bool recursive, bool keepCache, int seed) {
   shuffle(input.begin(), input.end(), default_random_engine(seed));
@@ -184,10 +175,28 @@ void runGhostWRep(vector<string>& input, TrieNode* dict, bool cppersist,
   runGhost(newInp, dict, "WRep", cppersist, recursive, keepCache);
 }
 
+
 int main(int argc, char const* argv[]) {
+
+
+  int numInput = stoi(argv[1]);
+  bool cppersist = stoi(argv[2]);
+  bool recursive = stoi(argv[3]);
+  bool keepCache = stoi(argv[4]);
+  int seed = stoi(argv[5]);
+  const char* version = argv[6];
+
   TrieNode* head = new TrieNode(false);
   completeTrie(head);
   vector<string> validPref = validPrefixes(head);
-  // runGhostWORep(validPref,head);
+  std::cout << validPref.size() << std::endl;
+  if (std::strcmp(version, "worep") == 0) {
+    runGhostWORep(validPref, head, cppersist, recursive, keepCache, seed);
+  }
+
+  if (std::strcmp(version, "wrep") == 0) {
+    runGhostWRep(validPref, head, cppersist, recursive, keepCache, seed);
+  }
+
   return 0;
 }
