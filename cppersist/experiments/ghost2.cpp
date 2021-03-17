@@ -198,7 +198,7 @@ void runGhost(string& dictPath, vector<string>& input, string type,
     } 
     else {
       auto localMemo = getLocalMemoizedObj<GhostRec>(
-        ghostKey, Result::toString, Result::fromString, identity<string>);
+        ghostKey, Result::toString, Result::fromString, sha256);  
       runGhost(dictPath, localMemo, input, outPath, cppersist);
     }
   }
