@@ -1,4 +1,5 @@
 #define ALPHABET_SIZE 26
+#define ALPHABET 'A'
 #include <algorithm>
 #include <array>
 #include <iostream>
@@ -7,16 +8,79 @@
 #include <stack>
 class TrieNode {
  public:
+  static string pickle(TrieNode* root) {
+    if (root == nullptr)
+        return "";
+
+    string answer = "<";
+    for (int i=0;i<ALPHABET_SIZE;i++) {
+      TrieNode*& child = root->children[i];
+      if (child == nullptr) continue;
+      char letter = i + ALPHABET;
+      if(child->isWord) answer += '-';
+      answer += letter;
+      answer += pickle(child);
+    }
+    answer += ">";
+    return answer;
+  }
+
+  static TrieNode* unpickle(string data) {
+      if (data.length() == 0)
+          return nullptr;
+
+      TrieNode* root = new TrieNode(false);
+      TrieNode* current = root;
+      bool isWord = false;
+      std::stack<TrieNode*> path;
+      for (char &c: data) {
+          switch (c) {
+          case '<':
+              path.push(current);
+              break;
+          case '>':
+              path.pop();
+              break;
+          case '-':
+              isWord = true;
+              break;
+          default:
+              TrieNode* pathTop = path.top();
+              current = new TrieNode(pathTop->prefix+c);
+              current->isWord = isWord;
+              isWord = false;
+              pathTop->setChild(c, current);
+          }
+      }
+      return root;
+  }
+  
   std::string prefix = "";
   TrieNode(string prefix) { this->prefix = prefix; }
   TrieNode(bool isWord) { this->isWord = isWord; }
   std::array<TrieNode*, ALPHABET_SIZE> children = {};
   bool isWord;
-  TrieNode* getChild(char& child) { return children[child - 'A']; }
+  TrieNode* getChild(char& child) { return children[child - ALPHABET]; }
   void setChild(char& child, TrieNode* childNode) {
-    children[child - 'A'] = childNode;
+    children[child - ALPHABET] = childNode;
   }
   void print() {
+    std::stack<TrieNode*> stack;
+    stack.push(this);
+    while (!stack.empty()) {
+      TrieNode* curNode = stack.top();
+      stack.pop();
+      if (curNode->isWord) {
+        cout << curNode->prefix << endl;
+      }
+      for (int i = 0; i < ALPHABET_SIZE; i++) {
+        if (curNode->children[i] != nullptr) {
+          stack.push(curNode->children[i]);
+        }
+      }
+    }
+  }
+  void printPaths() {
     std::stack<TrieNode*> stack;
     stack.push(this);
     while (!stack.empty()) {

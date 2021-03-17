@@ -10,17 +10,19 @@ class Time{
     Time(){}
     Time(bool isLast){this->isLast = isLast;}
     void addTime(std::string& time){
-      total += std::stoull(time);
+      total += std::stod(time);
       count++;
     }
-    unsigned long long getAverageInSeconds() const {
-      return (total/count)/(Time::nano);
+    double getAverageInSeconds() const {
+      double average = (total/count);
+      return average/(Time::milli);
     }
     friend std::ostream& operator<< (std::ostream& out, const Time& time);
     bool isLast = false;
   private:
-    const static unsigned long long nano = 1000000000;
-    unsigned long long total = 0;
+    constexpr static double nano = 1000000000;
+    constexpr static double milli = 1000;
+    double total = 0;
     int count = 0;
 };
 
@@ -37,11 +39,13 @@ class PrettyFormatter{
   public:
     void formatAllFiles(std::string& dir){
       for(auto& file: fs::directory_iterator(dir)){
-        std::string path = file.path();
-        formatSingleFile(path);
+        fs::path path = file.path();
+        std::string pathStr = path;
+        std::string name = path.filename();
+        formatSingleFile(pathStr, name);
       }
     }
-    void formatSingleFile(std::string& file){
+    void formatSingleFile(std::string& file, std::string& name){
       std::ifstream curFile(file);
       std::string line;
       Time times[3] = {Time(), Time(), Time(true)};
@@ -56,13 +60,16 @@ class PrettyFormatter{
             times[ind++].addTime(col);
         }
       }
+      std::cout << name << std::endl;
       std::ofstream outFile;
       outFile.open(file, std::ios_base::app);
       outFile << std::endl 
               << std::endl 
+              << name
+              << std:: endl
               << "System (ms),User (ms),Real (ms)" 
-              << std::endl << times[0] << times[1] 
-              << times[2];
+              << std::endl
+              << times[0] << times[1] << times[2];
     }
     
 };
