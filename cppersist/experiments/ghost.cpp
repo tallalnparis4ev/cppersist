@@ -182,7 +182,6 @@ void runGhostWRep(vector<string>& input, TrieNode* dict, bool cppersist,
 
 int main(int argc, char const* argv[]) {
 
-  cout << "STARTING" << endl;
   int numInput = stoi(argv[1]);
   bool cppersist = stoi(argv[2]);
   bool recursive = stoi(argv[3]);
@@ -195,12 +194,10 @@ int main(int argc, char const* argv[]) {
   vector<string> validPref = validPrefixes(head);
 
   if (std::strcmp(version, "worep") == 0) {
-    cout << "WOREP" << endl;
     runGhostWORep(validPref, head, cppersist, recursive, keepCache, seed);
   }
 
   if (std::strcmp(version, "wrep") == 0) {
-    cout << "WREP" << endl;
     runGhostWRep(validPref, head, cppersist, recursive, keepCache, seed);
   }
 
