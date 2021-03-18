@@ -101,8 +101,9 @@ class GhostRec : public PersistentMemoizable<Result, string, string>,
     bool p1 = (partial.length() % 2) == 0;
     TrieNode* cur = dict->getNode(partial);
     if (cur->isWord){
+      string prefix = cur->prefix;
       TrieNode::freeAll(dict);
-      return Result{cur->prefix, p1};
+      return Result{prefix, p1};
     }
     Result aLosingRes;
     for (TrieNode*& child : cur->children) {
@@ -174,6 +175,10 @@ void runGhost(string& dictPath, GhostSolver& solver, vector<string>& input,
   Timer timer;
   timer.start();
   for (vector<string>::iterator it = input.begin(); it != input.end(); it++) {
+    cout << *it << endl;
+    if(*it == "SPHEROCYT"){
+      int x = 2;
+    }
     Result answer = solver.solve(*it, dictPath);
   }
   timer.end();
