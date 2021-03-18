@@ -47,35 +47,24 @@ void completeTrie(TrieNode* head, string path) {
 bool isP2Win(TrieNode* cur) { return (cur->length() % 2) == 1; }
 
 struct Result {
-  TrieNode* lastNode;
+  string word;
   bool p1Win;
-  string getWord() { return lastNode->prefix; }
+  string getWord() { 
+    return word;
+  }
   void print() {
     string winner = p1Win ? "player one " : "player two ";
-    string line = winner + "will win by playing towards " + lastNode->prefix;
+    string line = winner + "will win by playing towards " + word;
     cout << line << endl;
   }
-};
-
-Result tryToWin(bool p1, TrieNode* cur) {
-  if (cur->isWord) return Result{cur, p1};
-
-  Result aLosingRes;
-
-  for (TrieNode*& child : cur->children) {
-    if (child != nullptr) {
-      Result res = tryToWin(!p1, child);
-      if (res.p1Win && p1) {
-        return res;
-      }
-      if (!res.p1Win && !p1) {
-        return res;
-      }
-      aLosingRes = res;
-    }
+  static string toString(Result res){
+    string oneOrZero = res.p1Win ? "1" : "0";
+    return oneOrZero + " " + res.getWord();
   }
-  return aLosingRes;
-}
+  static Result fromString(string resStr){
+    return Result{resStr.substr(2), resStr.at(0) == '1'};
+  }
+};
 
 bool isValidPartial(string partial, TrieNode* head) {
   TrieNode* cur = head;
@@ -97,20 +86,30 @@ bool isValidPartial(string partial, TrieNode* head) {
 
 class GhostSolver {
  public:
-  virtual string solve(string partial, TrieNode* head) = 0;
+  virtual Result solve(string partial, TrieNode* head) = 0;
 };
 
-class GhostRec : public PersistentMemoizable<string, string, TrieNode*>,
+class GhostRec : public PersistentMemoizable<Result, string, TrieNode*>,
                  public GhostSolver {
  public:
-  string solve(string partial, TrieNode* head) override {
+  Result solve(string partial, TrieNode* dict) override {
     bool p1 = (partial.length() % 2) == 0;
-    TrieNode* searchStart = head->getNode(partial);
-    Result result = tryToWin(p1, searchStart);
-    if (result.p1Win != p1) {
-      return "You can't win";
+    TrieNode* cur = dict->getNode(partial);
+    if (cur->isWord) return Result{cur->prefix, p1};
+    Result aLosingRes;
+    for (TrieNode*& child : cur->children) {
+      if (child != nullptr) {
+        Result res = solve(child->prefix, dict);
+        if (res.p1Win && p1) {
+          return res;
+        }
+        if (!res.p1Win && !p1) {
+          return res;
+        }
+        aLosingRes = res;
+      }
     }
-    return "Play for: " + result.getWord();
+    return aLosingRes;
   }
 };
 
@@ -143,7 +142,7 @@ void runGhost(GhostSolver& solver, vector<string>& input, TrieNode* dict,
   Timer timer;
   timer.start();
   for (vector<string>::iterator it = input.begin(); it != input.end(); it++) {
-    string answer = solver.solve(*it, dict);
+    Result answer = solver.solve(*it, dict);
   }
   timer.end();
   appendRowToFile(path, timer.getRow());
@@ -155,7 +154,7 @@ void runGhost(vector<string>& input, TrieNode* dict, string type,
   if (recursive) {
     GhostRec rec;
     auto localMemo = getLocalMemoizedObj<GhostRec>(
-        ghostKey, identity<string>, identity<string>, identity<string>);
+        ghostKey, Result::toString, Result::fromString, identity<string>);
     if (!cppersist) {
       runGhost(rec, input, dict, path, cppersist);
     } else {
@@ -183,7 +182,7 @@ void runGhostWRep(vector<string>& input, TrieNode* dict, bool cppersist,
 
 int main(int argc, char const* argv[]) {
 
-
+  cout << "STARTING" << endl;
   int numInput = stoi(argv[1]);
   bool cppersist = stoi(argv[2]);
   bool recursive = stoi(argv[3]);
@@ -192,15 +191,19 @@ int main(int argc, char const* argv[]) {
   const char* version = argv[6];
 
   TrieNode* head = new TrieNode(false);
-  completeTrie(head);
+  completeTrie(head,"./words.txt");
   vector<string> validPref = validPrefixes(head);
+
   if (std::strcmp(version, "worep") == 0) {
+    cout << "WOREP" << endl;
     runGhostWORep(validPref, head, cppersist, recursive, keepCache, seed);
   }
 
   if (std::strcmp(version, "wrep") == 0) {
+    cout << "WREP" << endl;
     runGhostWRep(validPref, head, cppersist, recursive, keepCache, seed);
   }
 
+  TrieNode::freeAll(head);
   return 0;
 }
