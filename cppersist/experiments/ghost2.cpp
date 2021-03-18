@@ -100,15 +100,20 @@ class GhostRec : public PersistentMemoizable<Result, string, string>,
     completeTrie(dict,dictPath);
     bool p1 = (partial.length() % 2) == 0;
     TrieNode* cur = dict->getNode(partial);
-    if (cur->isWord) return Result{cur->prefix, p1};
+    if (cur->isWord){
+      TrieNode::freeAll(dict);
+      return Result{cur->prefix, p1};
+    }
     Result aLosingRes;
     for (TrieNode*& child : cur->children) {
       if (child != nullptr) {
         Result res = solve(child->prefix, dictPath);
         if (res.p1Win && p1) {
+          TrieNode::freeAll(dict);
           return res;
         }
         if (!res.p1Win && !p1) {
+          TrieNode::freeAll(dict);
           return res;
         }
         aLosingRes = res;

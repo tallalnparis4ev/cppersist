@@ -67,7 +67,7 @@ class PrettyFormatter{
               << std::endl 
               << name
               << std:: endl
-              << "System (ms),User (ms),Real (ms)" 
+              << "System (s),User (s),Real (s)" 
               << std::endl
               << times[0] << times[1] << times[2];
     }
