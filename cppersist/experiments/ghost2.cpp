@@ -175,10 +175,6 @@ void runGhost(string& dictPath, GhostSolver& solver, vector<string>& input,
   Timer timer;
   timer.start();
   for (vector<string>::iterator it = input.begin(); it != input.end(); it++) {
-    cout << *it << endl;
-    if(*it == "SPHEROCYT"){
-      int x = 2;
-    }
     Result answer = solver.solve(*it, dictPath);
   }
   timer.end();
