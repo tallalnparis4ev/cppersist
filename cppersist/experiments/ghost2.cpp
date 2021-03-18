@@ -114,6 +114,7 @@ class GhostRec : public PersistentMemoizable<Result, string, string>,
         aLosingRes = res;
       }
     }
+    TrieNode::freeAll(dict);
     return aLosingRes;
   }
 };
@@ -135,20 +136,6 @@ class GhostRec : public PersistentMemoizable<Result, string, string>,
 //     return "Play for: " + result.getWord();
 //   }
 // };
-
-class TrieGen {
- public:
-  virtual TrieNode* solve(string dictPath) = 0;
-};
-
-class TrieGenerator : public PersistentMemoizable<TrieNode*,string>, public TrieGen{
-  public:
-    TrieNode* solve(string dictPath){
-      TrieNode* ret;
-      completeTrie(ret,dictPath);
-      return ret;
-    }
-};
 
 namespace fs = std::filesystem;
 using namespace std::chrono_literals;
@@ -234,14 +221,15 @@ int main(int argc, char const* argv[]) {
   TrieNode* head = new TrieNode(false);
   completeTrie(head,dictPath);
   vector<string> validPref = validPrefixes(head);
-  delete head;
-  // if (std::strcmp(version, "worep") == 0) {
-  //   runGhostWORep(dictPath,validPref, cppersist, recursive, keepCache, seed);
-  // }
+  if (std::strcmp(version, "worep") == 0) {
+    runGhostWORep(dictPath,validPref, cppersist, recursive, keepCache, seed);
+  }
 
-  // if (std::strcmp(version, "wrep") == 0) {
-  //   runGhostWRep(dictPath,validPref, cppersist, recursive, keepCache, seed);
-  // }
+  if (std::strcmp(version, "wrep") == 0) {
+    runGhostWRep(dictPath,validPref, cppersist, recursive, keepCache, seed);
+  }
+
+  TrieNode::freeAll(head);
 
   return 0;
 }

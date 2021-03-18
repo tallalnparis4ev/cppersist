@@ -142,7 +142,7 @@ class TrieGen {
 class TrieGenerator : public PersistentMemoizable<TrieNode*,string>, public TrieGen{
   public:
     TrieNode* solve(string dictPath){
-      TrieNode* ret;
+      TrieNode* ret = new TrieNode(false);
       completeTrie(ret,dictPath);
       return ret;
     }
@@ -181,19 +181,18 @@ void runGhost(TrieGen& generator, string& dictPath, GhostSolver& solver, vector<
               string outPath, bool cppersist) {
   Timer timer;
   timer.start();
-  cout << "HERE " << endl;
   TrieNode* newDict = generator.solve(dictPath);
-  cout << "HERE " << endl;
   for (vector<string>::iterator it = input.begin(); it != input.end(); it++) {
     Result answer = solver.solve(*it, newDict);
   }
   timer.end();
+  TrieNode::freeAll(newDict);
   appendRowToFile(outPath, timer.getRow());
 }
 
 void runGhost(string& dictPath, vector<string>& input, string type,
               bool cppersist, bool recursive, bool keepCache) {
-  string outPath = getOutPath("Ghost", type, cppersist, recursive, keepCache);
+  string outPath = getOutPath("Ghost3", type, cppersist, recursive, keepCache);
   if (recursive) {
     if (!cppersist) {
       GhostRec rec;
@@ -239,15 +238,13 @@ int main(int argc, char const* argv[]) {
   string dictPath = "./words.txt";
   TrieNode* head = new TrieNode(false);
   completeTrie(head,dictPath);
-  // vector<string> validPref = validPrefixes(head);
-  // if (std::strcmp(version, "worep") == 0) {
-  //   runGhostWORep(dictPath,validPref, cppersist, recursive, keepCache, seed);
-  // }
-
-  // if (std::strcmp(version, "wrep") == 0) {
-  //   runGhostWRep(dictPath,validPref, cppersist, recursive, keepCache, seed);
-  // }
-
+  vector<string> validPref = validPrefixes(head);
+  if (std::strcmp(version, "worep") == 0) {
+    runGhostWORep(dictPath,validPref, cppersist, recursive, keepCache, seed);
+  }
+  if (std::strcmp(version, "wrep") == 0) {
+    runGhostWRep(dictPath,validPref, cppersist, recursive, keepCache, seed);
+  }
   TrieNode::freeAll(head);
   return 0;
 }
