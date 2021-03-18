@@ -116,4 +116,18 @@ class TrieNode {
     }
     return std::max(max, height);
   }
+
+  static void freeAll(TrieNode* cur){
+    list<TrieNode*> toDelete;
+    toDelete.push_back(cur);
+    while(!toDelete.empty()){
+      TrieNode* enumerate = toDelete.front();
+      toDelete.pop_front();
+      for (TrieNode*& child : enumerate->children) {
+        if(child != nullptr)
+          toDelete.push_back(child);
+      }
+      delete enumerate;
+    }
+  }
 };

@@ -234,13 +234,14 @@ int main(int argc, char const* argv[]) {
   TrieNode* head = new TrieNode(false);
   completeTrie(head,dictPath);
   vector<string> validPref = validPrefixes(head);
-  if (std::strcmp(version, "worep") == 0) {
-    runGhostWORep(dictPath,validPref, cppersist, recursive, keepCache, seed);
-  }
+  delete head;
+  // if (std::strcmp(version, "worep") == 0) {
+  //   runGhostWORep(dictPath,validPref, cppersist, recursive, keepCache, seed);
+  // }
 
-  if (std::strcmp(version, "wrep") == 0) {
-    runGhostWRep(dictPath,validPref, cppersist, recursive, keepCache, seed);
-  }
+  // if (std::strcmp(version, "wrep") == 0) {
+  //   runGhostWRep(dictPath,validPref, cppersist, recursive, keepCache, seed);
+  // }
 
   return 0;
 }
