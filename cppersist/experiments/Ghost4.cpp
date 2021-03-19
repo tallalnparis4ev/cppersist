@@ -160,12 +160,12 @@ void runGhost(TrieGen& generator, string& dictPath, GhostSolver& solver, vector<
               string outPath, bool cppersist) {
   Timer timer;
   timer.start();
-  TrieNode* newDict = generator.solve(dictPath);
   for (vector<string>::iterator it = input.begin(); it != input.end(); it++) {
+    TrieNode* newDict = generator.solve(dictPath);
     Result answer = solver.solve(*it, newDict);
+    TrieNode::freeAll(newDict);
   }
   timer.end();
-  TrieNode::freeAll(newDict);
   appendRowToFile(outPath, timer.getRow());
 }
 
