@@ -173,7 +173,7 @@ void runGhost(TrieGen& generator, string& dictPath, GhostSolver& solver, vector<
 
 void runGhost(string& dictPath, vector<string>& input, string type,
               bool cppersist, bool recursive, bool keepCache) {
-  string outPath = getOutPath("Ghost4", type, cppersist, recursive, keepCache);
+  string outPath = getOutPath("Ghost5", type, cppersist, recursive, keepCache);
   if (recursive) {
     if(cppersist){
       auto ghostMemo = getLocalMemoizedObj<GhostRec>(
