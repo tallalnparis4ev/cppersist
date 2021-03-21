@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <filesystem>
+#include <chrono>
 
 #include "../local.hpp"
 #include "../utils/files.hpp"
@@ -33,8 +34,8 @@ void addWordToTrie(std::string& word, TrieNode* head) {
   }
   cur->isWord = true;
 }
-void completeTrie(TrieNode* head, string path) {
-  std::ifstream infile(path);
+void completeTrie(TrieNode* head, string& dictPath) {
+  std::ifstream infile(dictPath);
   std::string line;
   while (std::getline(infile, line)) {
     std::istringstream iss(line);
@@ -86,7 +87,7 @@ bool isValidPartial(string partial, TrieNode* head) {
 
 class GhostSolver {
  public:
-  virtual Result solve(string partial, TrieNode* head) = 0;
+  virtual Result solve(string partial, TrieNode* dict) = 0;
 };
 
 class GhostRec : public PersistentMemoizable<Result, string, TrieNode*>,
@@ -113,11 +114,29 @@ class GhostRec : public PersistentMemoizable<Result, string, TrieNode*>,
   }
 };
 
-//Explore smaller words, maybe make the dictionairy bigger?
-//Change the computational problem to calculate the Trie each time
-//While generating prefixes give higher weighting to smaller length words
+class TrieGen {
+ public:
+  virtual TrieNode* solve(string dictPath) = 0;
+};
 
-string ghostKey(string partial, TrieNode* ignored) { return partial; }
+class TrieGenerator : public PersistentMemoizable<TrieNode*,string>, public TrieGen{
+  public:
+    TrieNode* solve(string dictPath){
+      TrieNode* ret = new TrieNode(false);
+      completeTrie(ret,dictPath);
+      return ret;
+    }
+};
+
+namespace fs = std::filesystem;
+using namespace std::chrono_literals;
+string genKey(string path){
+  fs::path p = path;
+  auto ftime = fs::last_write_time(p);
+  std::time_t cftime = decltype(ftime)::clock::to_time_t(ftime); 
+  return path + std::asctime(std::localtime(&cftime));
+}
+
 
 vector<string> validPrefixes(TrieNode* head) {
   vector<string> prefixes;
@@ -137,50 +156,55 @@ vector<string> validPrefixes(TrieNode* head) {
   return prefixes;
 }
 
-void runGhost(GhostSolver& solver, vector<string>& input, TrieNode* dict,
-              string path, bool cppersist) {
+void runGhost(TrieGen& generator, string& dictPath, GhostSolver& solver, vector<string>& input,
+              string outPath, bool cppersist) {
   Timer timer;
   timer.start();
   for (vector<string>::iterator it = input.begin(); it != input.end(); it++) {
-    Result answer = solver.solve(*it, dict);
+    TrieNode* newDict = generator.solve(dictPath);
+    Result answer = solver.solve(*it, newDict);
+    TrieNode::freeAll(newDict);
   }
   timer.end();
-  appendRowToFile(path, timer.getRow());
+  appendRowToFile(outPath, timer.getRow());
 }
 
-void runGhost(vector<string>& input, TrieNode* dict, string type,
+void runGhost(string& dictPath, vector<string>& input, string type,
               bool cppersist, bool recursive, bool keepCache) {
-  string path = getOutPath("Ghost", type, cppersist, recursive, keepCache);
+  string outPath = getOutPath("Ghost4", type, cppersist, recursive, keepCache);
   if (recursive) {
     GhostRec rec;
-    auto localMemo = getLocalMemoizedObj<GhostRec>(
-        ghostKey, Result::toString, Result::fromString, identity<string>);
     if (!cppersist) {
-      runGhost(rec, input, dict, path, cppersist);
-    } else {
-      runGhost(localMemo, input, dict, path, cppersist);
+      TrieGenerator gen;
+      runGhost(gen, dictPath, rec, input, outPath, cppersist);
+    } 
+    else {
+      auto genMemo = getLocalMemoizedObj<TrieGenerator>(genKey, TrieNode::pickle, 
+        TrieNode::unpickle, sha256);
+      runGhost(genMemo, dictPath, rec, input, outPath, cppersist);
     }
   }
 }
 
-void runGhostWORep(vector<string>& input, TrieNode* dict, bool cppersist,
+void runGhostWORep(string& dictPath, vector<string>& input, bool cppersist,
                    bool recursive, bool keepCache, int seed) {
   shuffle(input.begin(), input.end(), default_random_engine(seed));
-  runGhost(input, dict, "WORep", cppersist, recursive, keepCache);
+  runGhost(dictPath, input, "WORep", cppersist, recursive, keepCache);
 }
 
-void runGhostWRep(vector<string>& input, TrieNode* dict, bool cppersist,
+void runGhostWRep(string& dictPath, vector<string>& input, bool cppersist,
                   bool recursive, bool keepCache, int seed) {
   srand(seed);
   vector<string> newInp;
   while (newInp.size() != input.size()) {
     newInp.push_back(input[rand() % input.size()]);
   }
-  runGhost(newInp, dict, "WRep", cppersist, recursive, keepCache);
+  runGhost(dictPath, newInp, "WRep", cppersist, recursive, keepCache);
 }
 
 
 int main(int argc, char const* argv[]) {
+
 
   int numInput = stoi(argv[1]);
   bool cppersist = stoi(argv[2]);
@@ -188,19 +212,16 @@ int main(int argc, char const* argv[]) {
   bool keepCache = stoi(argv[4]);
   int seed = stoi(argv[5]);
   const char* version = argv[6];
-
+  string dictPath = "./words.txt";
   TrieNode* head = new TrieNode(false);
-  completeTrie(head,"./words.txt");
+  completeTrie(head,dictPath);
   vector<string> validPref = validPrefixes(head);
-
   if (std::strcmp(version, "worep") == 0) {
-    runGhostWORep(validPref, head, cppersist, recursive, keepCache, seed);
+    runGhostWORep(dictPath,validPref, cppersist, recursive, keepCache, seed);
   }
-
   if (std::strcmp(version, "wrep") == 0) {
-    runGhostWRep(validPref, head, cppersist, recursive, keepCache, seed);
+    runGhostWRep(dictPath,validPref, cppersist, recursive, keepCache, seed);
   }
-
   TrieNode::freeAll(head);
   return 0;
 }

@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "../local.hpp"
+#include "./helpers/Timer.cpp"
 #include "../utils/files.hpp"
 #include "../utils/log.hpp"
 #include "data-generation/generators.cpp"
@@ -90,40 +91,37 @@ string primesPickle(list<int> primes) {
 
 string primesKey(int n) { return std::to_string(n); }
 
-void runPrime(PrimeSolver& solver, vector<int>& input, string path,
+void runPrime(PrimeSolver& solver, vector<int>& input, string outPath,
               bool cppersist) {
-  largestUnsigned time = 0;
+  Timer timer;
+  timer.start();
   for (vector<int>::iterator it = input.begin(); it != input.end(); it++) {
-    // auto start = high_resolution_clock::now();
     list<int> answer = solver.solve(*it);
-    // auto timeTaken =
-    // duration_cast<nanoseconds>(high_resolution_clock::now()-start).count();
-    // time += timeTaken;
   }
-  // appendRowToFile(path,to_string(time));
+  timer.end();
+  appendRowToFile(outPath, timer.getRow());
 }
 
 void runPrime(vector<int>& input, string type, bool cppersist, bool recursive,
               bool keepCache) {
-  // string path = getOutPath("Primes",type,cppersist,recursive,keepCache);
-  string path = "";
+  string outPath = getOutPath("Primes", type, cppersist, recursive, keepCache);
   if (recursive) {
     PrimeRec rec;
     auto localMemo = getLocalMemoizedObj<PrimeRec>(
-        primesKey, primesPickle, primesUnpickle, "primesTest", noHash);
+        primesKey, primesPickle, primesUnpickle, "primesTest", identity<string>);
     if (!cppersist) {
-      runPrime(rec, input, path, cppersist);
+      runPrime(rec, input, outPath, cppersist);
     } else {
-      runPrime(localMemo, input, path, cppersist);
+      runPrime(localMemo, input, outPath, cppersist);
     }
   } else {
     PrimeIter iter;
     auto localMemo = getLocalMemoizedObj<PrimeIter>(
-        primesKey, primesPickle, primesUnpickle, "primesTest", noHash);
+        primesKey, primesPickle, primesUnpickle, "primesTest", identity<string>);
     if (!cppersist) {
-      runPrime(iter, input, path, cppersist);
+      runPrime(iter, input, outPath, cppersist);
     } else {
-      runPrime(localMemo, input, path, cppersist);
+      runPrime(localMemo, input, outPath, cppersist);
     }
   }
 }
@@ -155,9 +153,6 @@ vector<int> generateInput(int n) {
   for (int i = 2; i <= n; i++) {
     ret.push_back(i);
   }
-  // for(int x : ret){
-  // cout << x << endl;
-  // }
   return ret;
 }
 
