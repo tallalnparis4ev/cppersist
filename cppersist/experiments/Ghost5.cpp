@@ -175,12 +175,7 @@ void runGhost(string& dictPath, vector<string>& input, string type,
               bool cppersist, bool recursive, bool keepCache) {
   string outPath = getOutPath("Ghost4", type, cppersist, recursive, keepCache);
   if (recursive) {
-    if (!cppersist) {
-      GhostRec rec;
-      TrieGenerator gen;
-      runGhost(gen, dictPath, rec, input, outPath, cppersist);
-    } 
-    else {
+    if(cppersist){
       auto ghostMemo = getLocalMemoizedObj<GhostRec>(
         ghostKey, Result::toString, Result::fromString, identity<string>);
       auto genMemo = getLocalMemoizedObj<TrieGenerator>(genKey, TrieNode::pickle, 
