@@ -85,54 +85,60 @@ bool isValidPartial(string partial, TrieNode* head) {
   return true;
 }
 
-
 class GhostSolver {
  public:
-  virtual Result solve(string partial, string dictPath) = 0;
+  virtual Result solve(string partial, TrieNode* dict) = 0;
 };
 
-
-class GhostRec : public PersistentMemoizable<Result, string, string>,
+class GhostRec : public PersistentMemoizable<Result, string, TrieNode*>,
                  public GhostSolver {
  public:
-  Result solve(string partial, string dictPath) override {
-    TrieNode* dict = new TrieNode(false);
-    completeTrie(dict,dictPath);
+  Result solve(string partial, TrieNode* dict) override {
     bool p1 = (partial.length() % 2) == 0;
     TrieNode* cur = dict->getNode(partial);
-    if (cur->isWord){
-      string prefix = cur->prefix;
-      TrieNode::freeAll(dict);
-      return Result{prefix, p1};
-    }
+    if (cur->isWord) return Result{cur->prefix, p1};
     Result aLosingRes;
     for (TrieNode*& child : cur->children) {
       if (child != nullptr) {
-        Result res = solve(child->prefix, dictPath);
+        Result res = solve(child->prefix, dict);
         if (res.p1Win && p1) {
-          TrieNode::freeAll(dict);
           return res;
         }
         if (!res.p1Win && !p1) {
-          TrieNode::freeAll(dict);
           return res;
         }
         aLosingRes = res;
       }
     }
-    TrieNode::freeAll(dict);
     return aLosingRes;
   }
 };
 
+class TrieGen {
+ public:
+  virtual TrieNode* solve(string dictPath) = 0;
+};
+
+class TrieGenerator : public PersistentMemoizable<TrieNode*,string>, public TrieGen{
+  public:
+    TrieNode* solve(string dictPath){
+      TrieNode* ret = new TrieNode(false);
+      completeTrie(ret,dictPath);
+      return ret;
+    }
+};
+
 namespace fs = std::filesystem;
 using namespace std::chrono_literals;
-string ghostKey(string partial, string path){
+string genKey(string path){
   fs::path p = path;
   auto ftime = fs::last_write_time(p);
   std::time_t cftime = decltype(ftime)::clock::to_time_t(ftime); 
-  return partial + path + std::asctime(std::localtime(&cftime));
+  return path + std::asctime(std::localtime(&cftime));
 }
+
+string ghostKey(string partial, TrieNode* ignored) { return partial; }
+
 
 vector<string> validPrefixes(TrieNode* head) {
   vector<string> prefixes;
@@ -152,12 +158,14 @@ vector<string> validPrefixes(TrieNode* head) {
   return prefixes;
 }
 
-void runGhost(string& dictPath, GhostSolver& solver, vector<string>& input, 
+void runGhost(TrieGen& generator, string& dictPath, GhostSolver& solver, vector<string>& input,
               string outPath, bool cppersist) {
   Timer timer;
   timer.start();
   for (vector<string>::iterator it = input.begin(); it != input.end(); it++) {
-    Result answer = solver.solve(*it, dictPath);
+    TrieNode* newDict = generator.solve(dictPath);
+    Result answer = solver.solve(*it, newDict);
+    TrieNode::freeAll(newDict);
   }
   timer.end();
   appendRowToFile(outPath, timer.getRow());
@@ -165,16 +173,14 @@ void runGhost(string& dictPath, GhostSolver& solver, vector<string>& input,
 
 void runGhost(string& dictPath, vector<string>& input, string type,
               bool cppersist, bool recursive, bool keepCache) {
-  string outPath = getOutPath("Ghost2", type, cppersist, recursive, keepCache);
+  string outPath = getOutPath("Ghost5", type, cppersist, recursive, keepCache);
   if (recursive) {
-    if (!cppersist) {
-      GhostRec rec;
-      runGhost(dictPath, rec, input, outPath, cppersist);
-    } 
-    else {
-      auto localMemo = getLocalMemoizedObj<GhostRec>(
-        ghostKey, Result::toString, Result::fromString, sha256);  
-      runGhost(dictPath, localMemo, input, outPath, cppersist);
+    if(cppersist){
+      auto ghostMemo = getLocalMemoizedObj<GhostRec>(
+        ghostKey, Result::toString, Result::fromString, identity<string>);
+      auto genMemo = getLocalMemoizedObj<TrieGenerator>(genKey, TrieNode::pickle, 
+        TrieNode::unpickle, sha256);
+      runGhost(genMemo, dictPath, ghostMemo, input, outPath, cppersist);
     }
   }
 }
@@ -212,12 +218,9 @@ int main(int argc, char const* argv[]) {
   if (std::strcmp(version, "worep") == 0) {
     runGhostWORep(dictPath,validPref, cppersist, recursive, keepCache, seed);
   }
-
   if (std::strcmp(version, "wrep") == 0) {
     runGhostWRep(dictPath,validPref, cppersist, recursive, keepCache, seed);
   }
-
   TrieNode::freeAll(head);
-
   return 0;
 }
