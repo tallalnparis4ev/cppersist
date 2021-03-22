@@ -1,26 +1,41 @@
-// C++ program to find the next optimal move for
-// a player
 #include <algorithm>
 #include <chrono>
 #include <iostream>
+#include <array>
+#include <vector>
+#include <random>
 
 #include "../local.hpp"
 #include "../utils/files.hpp"
+#include "./helpers/Timer.cpp"
+#include <sstream>
 typedef unsigned long long largestUnsigned;
 using namespace std::chrono;
 using namespace std;
 using namespace cpst;
-#define NUM_TTT_BOARDS 2423
+// #define NUM_TTT_BOARDS 2423
+#define NUM_TTT_BOARDS 100000
 struct Move {
-  int row, col;
-  void printMove() { cout << "(" << row << "," << col << ")" << endl; }
+  int row, col = 0;
+  int score;
+  static string toString(Move move){
+    std::ostringstream oss;
+    oss << move.row << move.col << move.score;
+    return oss.str();
+  }
+  static Move fromString(string moveStr){
+    return Move{moveStr.at(0) - '0', moveStr.at(1) - '0', std::stoi(moveStr.substr(2))};
+  }
+  bool isOtherBetter(const Move& other, bool isX){
+    if(isX){
+      return other.score > this->score;
+    }
+    return other.score < this->score;
+  }
 };
 
 char player = 'x', opponent = 'o';
 
-// This function returns true if there are moves
-// remaining on the board. It returns false if
-// there are no moves left to play.
 bool isMovesLeft(char board[3][3]) {
   for (int i = 0; i < 3; i++)
     for (int j = 0; j < 3; j++)
@@ -28,8 +43,6 @@ bool isMovesLeft(char board[3][3]) {
   return false;
 }
 
-// This is the evaluation function as discussed
-// in the previous article ( http://goo.gl/sJgv68 )
 int evaluate(char b[3][3]) {
   // Checking for Rows for X or O victory.
   for (int row = 0; row < 3; row++) {
@@ -71,110 +84,8 @@ int evaluate(char b[3][3]) {
   return 0;
 }
 
-// This is the minimax function. It considers all
-// the possible ways the game can go and returns
-// the value of the board
-int minimax(char board[3][3], int depth, bool isMax) {
-  int score = evaluate(board);
 
-  // If Maximizer has won the game return his/her
-  // evaluated score
-  if (score == 10) return score;
 
-  // If Minimizer has won the game return his/her
-  // evaluated score
-  if (score == -10) return score;
-
-  // If there are no more moves and no winner then
-  // it is a tie
-  if (isMovesLeft(board) == false) return 0;
-
-  // If this maximizer's move
-  if (isMax) {
-    int best = -1000;
-
-    // Traverse all cells
-    for (int i = 0; i < 3; i++) {
-      for (int j = 0; j < 3; j++) {
-        // Check if cell is empty
-        if (board[i][j] == '_') {
-          // Make the move
-          board[i][j] = player;
-
-          // Call minimax recursively and choose
-          // the maximum value
-          best = max(best, minimax(board, depth + 1, !isMax));
-
-          // Undo the move
-          board[i][j] = '_';
-        }
-      }
-    }
-    return best;
-  }
-
-  // If this minimizer's move
-  else {
-    int best = 1000;
-
-    // Traverse all cells
-    for (int i = 0; i < 3; i++) {
-      for (int j = 0; j < 3; j++) {
-        // Check if cell is empty
-        if (board[i][j] == '_') {
-          // Make the move
-          board[i][j] = opponent;
-
-          // Call minimax recursively and choose
-          // the minimum value
-          best = min(best, minimax(board, depth + 1, !isMax));
-
-          // Undo the move
-          board[i][j] = '_';
-        }
-      }
-    }
-    return best;
-  }
-}
-
-// This will return the best possible move for the player
-Move findBestMove(char board[3][3]) {
-  int bestVal = -1000;
-  Move bestMove;
-  bestMove.row = -1;
-  bestMove.col = -1;
-
-  // Traverse all cells, evaluate minimax function for
-  // all empty cells. And return the cell with optimal
-  // value.
-  for (int i = 0; i < 3; i++) {
-    for (int j = 0; j < 3; j++) {
-      // Check if cell is empty
-      if (board[i][j] == '_') {
-        // Make the move
-        board[i][j] = player;
-
-        // compute evaluation function for this
-        // move.
-        int moveVal = minimax(board, 0, false);
-
-        // Undo the move
-        board[i][j] = '_';
-
-        // If the value of the current move is
-        // more than the best value, then update
-        // best/
-        if (moveVal > bestVal) {
-          bestMove.row = i;
-          bestMove.col = j;
-          bestVal = moveVal;
-        }
-      }
-    }
-  }
-  return bestMove;
-}
 
 int count(char curBoard[3][3], bool xs) {
   int xCount = 0;
@@ -191,7 +102,8 @@ int count(char curBoard[3][3], bool xs) {
 bool isValidTTTBoard(char curBoard[3][3]) {
   int xCount = count(curBoard, true);
   int oCount = count(curBoard, false);
-  return xCount == oCount && (evaluate(curBoard) == 0);
+  return ( (xCount == oCount) || (oCount == (xCount-1)) ) 
+            && (evaluate(curBoard) == 0) && (xCount != 5);
 }
 void copyBoardTo(char from[3][3], char to[3][3]) {
   for (int i = 0; i < 3; i++)
@@ -203,23 +115,44 @@ class Board {
   char board[3][3];
   Board(char board[3][3]) { copyBoardTo(board, this->board); }
   Board() {}
+  void assign(int i, int j, char c){
+    board[i][j] = c;
+  }
+  const char& get(int i, int j) const{
+    return board[i][j];
+  }
 };
+
+bool isXTurn(const Board& board){
+  int xCount = 0;
+  int oCount = 0;
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 3; j++) {
+      const char& ref = board.get(i,j);
+      if (ref == 'x') xCount++;
+      if (ref == 'o') oCount++;
+    }
+  }
+  return xCount == oCount;
+}
+
 int numStates = 0;
 void createBoards(int square_num, char curBoard[3][3],
-                  Board boards[NUM_TTT_BOARDS], int& index) {
+                  std::vector<Board>& boards, int& index) {
   if (square_num == 9) {
     if (isValidTTTBoard(curBoard)) {
       Board toAdd(curBoard);
-      boards[index] = toAdd;
-      index++;
+      boards.push_back(toAdd);
+      // boards[index] = toAdd;
+      // index++;
       numStates++;
     }
     return;
   }
 
+  int row = square_num / 3;
+  int col = square_num % 3;
   for (int i = 0; i <= 2; i++) {
-    int row = square_num / 3;
-    int col = square_num % 3;
     if (i == 0) curBoard[row][col] = '_';
     if (i == 1) curBoard[row][col] = 'x';
     if (i == 2) curBoard[row][col] = 'o';
@@ -229,8 +162,32 @@ void createBoards(int square_num, char curBoard[3][3],
 
 class TTTSolver : public PersistentMemoizable<Move, Board> {
  public:
-  Move solve(Board board) override { 
-    return findBestMove(board.board); 
+  Move solve(Board board) override {
+    bool xTurn = isXTurn(board);
+
+    int score = evaluate(board.board);
+    if (score == 10) return Move{0,0,1};
+    if (score == -10) return Move{0,0,-1};
+    if (isMovesLeft(board.board) == false) return Move{0,0,0};
+    
+    Move best;
+    bool firstAssign = true;
+    char play = xTurn ? 'x' : 'o';
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+        if (board.get(i,j) == '_') {
+          board.assign(i,j,play);
+          Move attempt = solve(board);
+          if(firstAssign){
+            best = attempt;
+            firstAssign = false;
+          }
+          else if(best.isOtherBetter(attempt,xTurn)) best = attempt;
+          board.assign(i,j,'_');
+        }
+      }
+    }
+    return best;
   }
 };
 
@@ -238,85 +195,76 @@ string tttKey(Board board) {
   return string(&board.board[0][0], &board.board[2][2] + 1);
 }
 
-string tttPickle(Move move) {
-  return to_string(move.row) + to_string(move.col);
-}
-
-Move tttUnpickle(string move) {
-  Move ret;
-  ret.row = move[0] - 'a';
-  ret.col = move[1] - 'a';
-  return ret;
-}
-
-string tttHash(string key) { return key; }
-
-// char board[3][3] =
-// {
-//     { 'o', 'o', 'x' },
-//     { 'x', '_', 'x' },
-//     { 'x', 'o', 'o' }
-// };
-
-void runTTTSeq(Board boards[NUM_TTT_BOARDS], string outputFile) {
-  largestUnsigned totalTimeUnmemoized = 0;
-  TTTSolver unmemo;
-  for (int i = 0; i < NUM_TTT_BOARDS; i++) {
-    auto start = high_resolution_clock::now();
-    unmemo.solve(boards[i]);
-    auto timeTaken =
-        duration_cast<nanoseconds>(high_resolution_clock::now() - start)
-            .count();
-    totalTimeUnmemoized += timeTaken;
+void runTTT(TTTSolver& solver, std::vector<Board>& input,
+              string path, bool cppersist) {
+  Timer timer;
+  timer.start();
+  for (std::vector<Board>::iterator it = input.begin(); it != input.end(); it++) {
+    Move answer = solver.solve(*it);
   }
-
-  auto localMemo = getLocalMemoizedObj<TTTSolver>(
-      tttKey, tttPickle, tttUnpickle, "tttTest", tttHash);
-  largestUnsigned totalTimeMemoized = 0;
-  for (int i = 0; i < NUM_TTT_BOARDS; i++) {
-    localMemo(boards[i]);
-    totalTimeMemoized += localMemo.solveTime;
-  }
-
-  string row =
-      to_string(totalTimeUnmemoized) + ", " + to_string(totalTimeMemoized);
-  appendRowToFile(outputFile, row);
-  // appendRowToFile("./data/TTTSeq.csv",row);
+  timer.end();
+  appendRowToFile(path, timer.getRow());
 }
 
-#include <vector>
+void runTTT(std::vector<Board>& input, string type,
+              bool cppersist, bool recursive, bool keepCache) {
+  string path = getOutPath("TTT", type, cppersist, recursive, keepCache);
+  if (recursive) {
+    TTTSolver rec;
+    auto localMemo = getLocalMemoizedObj<TTTSolver>(
+        tttKey, Move::toString, Move::fromString, identity<string>);
+    if (!cppersist) {
+      runTTT(rec, input, path, cppersist);
+    } else {
+      runTTT(localMemo, input, path, cppersist);
+    }
+  }
+}
 
-void runTTTWORep(Board boards[NUM_TTT_BOARDS], int seed) {
-  vector<int> remaining;
+void runTTTWORep(std::vector<Board>& input, bool cppersist,
+                   bool recursive, bool keepCache, int seed) {
+  shuffle(input.begin(), input.end(), default_random_engine(seed));
+  runTTT(input, "WORep", cppersist, recursive, keepCache);
+}
+
+void runTTTWRep(std::vector<Board>& input, bool cppersist,
+                  bool recursive, bool keepCache, int seed) {
   srand(seed);
-  for (int i = 0; i < NUM_TTT_BOARDS; i++) remaining.push_back(i);
-  int index = 0;
-  Board newBoardsOrder[NUM_TTT_BOARDS];
-  while (!remaining.empty()) {
-    int randomIndex = rand() % remaining.size();
-    Board newBoard(boards[remaining[randomIndex]].board);
-    newBoardsOrder[index++] = newBoard;
-    remaining.erase(remaining.begin() + randomIndex);
+  // std::array<Board,NUM_TTT_BOARDS> newInp;
+  // int ind = 0;
+  // while (newInp.size() != input.size()) {
+  //   newInp[ind++] = input[rand() % input.size()];
+  // }
+  std::vector<Board> newInp;
+  int ind = 0;
+  while (newInp.size() != input.size()) {
+    newInp.push_back(input[rand() % input.size()]);
+    // newInp[ind++] = 
   }
-  runTTTSeq(newBoardsOrder, "./data/TTTWORep.csv");
+  runTTT(newInp, "WRep", cppersist, recursive, keepCache);
 }
 
-void runTTTWRep(Board boards[NUM_TTT_BOARDS], int seed) {
-  srand(seed);
-  int index = 0;
-  Board newBoardsOrder[NUM_TTT_BOARDS];
-  for (int i = 0; i < NUM_TTT_BOARDS; i++) {
-    Board newBoard(boards[rand() % NUM_TTT_BOARDS].board);
-    newBoardsOrder[index++] = newBoard;
-  }
-  runTTTSeq(newBoardsOrder, "./data/TTTWRep.csv");
-}
 
 int main(int argc, char const* argv[]) {
+
+  int numInput = stoi(argv[1]);
+  bool cppersist = stoi(argv[2]);
+  bool recursive = stoi(argv[3]);
+  bool keepCache = stoi(argv[4]);
+  int seed = stoi(argv[5]);
+  const char* version = argv[6];
+
   char empty[3][3] = {{'_', '_', '_'}, {'_', '_', '_'}, {'_', '_', '_'}};
-  Board boards[NUM_TTT_BOARDS];
+  std::vector<Board> input;
   int index = 0;
-  createBoards(0, empty, boards, index);
-  int input = stoi(argv[1]);
-  runTTTWRep(boards, input);
+  createBoards(0, empty, input, index);
+  std::cout << numStates << endl;
+  if (std::strcmp(version, "worep") == 0) {
+    runTTTWORep(input, cppersist, recursive, keepCache, seed);
+  }
+
+  if (std::strcmp(version, "wrep") == 0) {
+    runTTTWRep(input, cppersist, recursive, keepCache, seed);
+  }
+  return 0;
 }
