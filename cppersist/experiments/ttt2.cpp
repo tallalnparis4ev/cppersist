@@ -13,8 +13,6 @@ typedef unsigned long long largestUnsigned;
 using namespace std::chrono;
 using namespace std;
 using namespace cpst;
-// #define NUM_TTT_BOARDS 2423
-#define NUM_TTT_BOARDS 100000
 struct Move {
   int row, col = 0;
   int score;
@@ -230,16 +228,10 @@ void runTTTWORep(std::vector<Board>& input, bool cppersist,
 void runTTTWRep(std::vector<Board>& input, bool cppersist,
                   bool recursive, bool keepCache, int seed) {
   srand(seed);
-  // std::array<Board,NUM_TTT_BOARDS> newInp;
-  // int ind = 0;
-  // while (newInp.size() != input.size()) {
-  //   newInp[ind++] = input[rand() % input.size()];
-  // }
   std::vector<Board> newInp;
   int ind = 0;
   while (newInp.size() != input.size()) {
     newInp.push_back(input[rand() % input.size()]);
-    // newInp[ind++] = 
   }
   runTTT(newInp, "WRep", cppersist, recursive, keepCache);
 }
@@ -258,7 +250,6 @@ int main(int argc, char const* argv[]) {
   std::vector<Board> input;
   int index = 0;
   createBoards(0, empty, input, index);
-  std::cout << numStates << endl;
   if (std::strcmp(version, "worep") == 0) {
     runTTTWORep(input, cppersist, recursive, keepCache, seed);
   }
