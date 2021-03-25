@@ -7,14 +7,9 @@
 
 #include "../interfaces/cache.hpp"
 #include "../interfaces/memcache.hpp"
-#include "./memcachetypes.hpp"
+#include "../memcachetypes.hpp"
 using std::string;
 namespace cpst {
-
-template <typename T>
-T identity(T obj) {
-  return obj;
-}
 /**
  * An object of this class will have its function call operator () to perform
  * some computation, and this function has persistent memoization applied.
@@ -57,6 +52,8 @@ class PersistentMemoized : public T {
    */
   void setMemoryCache(MemCacheType, int);
 
+  virtual Ret solve(Args... args);
+
  private:
   void nullFields();
   void copy(const PersistentMemoized& lvalue);
@@ -75,24 +72,7 @@ class PersistentMemoized : public T {
    * can only be a persistent cache.
    */
   Cache<Ret, Args...>* secondaryCache;
-  virtual Ret solve(Args... args);
-};
-
-/**
- * This is an abstract class, and a class which a user wants to memoize
- * must inherit from this class.
- */
-template <typename Ret, typename... Args>
-class PersistentMemoizable {
- public:
-  /**
-   * This is a user-defined solve function, which the user wants to
-   * memoize. It can be recursive (i.e. call solve()), and these
-   * recursive calls will also be memoized. For the memoization to be
-   * accurate, this function must be pure.
-   */
-  virtual Ret solve(Args... args) = {};
 };
 }  // namespace cpst
-#include "persister.cpp"
+#include "memoizer.cpp"
 #endif

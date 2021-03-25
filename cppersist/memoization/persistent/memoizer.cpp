@@ -9,7 +9,6 @@
 #include "../cacheimpl/memory/onecache.hpp"
 #include "../cacheimpl/memory/regcache.hpp"
 #include "../utils/log.hpp"
-using std::function;
 using std::string;
 namespace cpst {
 // Helper function to null fields
@@ -45,13 +44,13 @@ void PersistentMemoized<T, Ret, Args...>::setMemoryCache(MemCacheType type,
   auto unpickle = this->secondaryCache->getUnpickle();
 
   switch (type) {
-    case LRU_CACHE:
+    case MemCacheType::LRU_CACHE:
       primaryCache = new LRUCache<Ret, Args...>(size, key, pickle, unpickle);
       break;
-    case REGULAR:
+    case MemCacheType::REGULAR:
       primaryCache = new RegCache<Ret, Args...>(key, pickle, unpickle);
       break;
-    case ONE:
+    case MemCacheType::ONE:
       primaryCache = new OneCache<Ret, Args...>(key, pickle, unpickle);
       break;
     default:
