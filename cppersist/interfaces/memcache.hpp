@@ -18,6 +18,7 @@ class MemCache : public Cache<Ret, Args...> {
     this->pickle = pickle;
     this->unpickle = unpickle;
   }
+  virtual MemCache* clone() = 0;
  protected:
   virtual std::optional<std::string> getFromCache(const std::string&) = 0;
 };
