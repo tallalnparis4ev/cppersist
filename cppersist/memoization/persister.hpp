@@ -102,7 +102,7 @@ class PersistentMemoizable {
    * recursive calls will also be memoized. For the memoization to be
    * accurate, this function must be pure.
    */
-  virtual Ret solve(Args... args) = 0;
+  virtual Ret solve(Args... args) {};
 };
 }  // namespace cpst
 #include "persister.cpp"
