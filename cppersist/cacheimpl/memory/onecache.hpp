@@ -13,14 +13,13 @@ namespace cpst {
 template <typename Ret, typename... Args>
 class OneCache : public MemCache<Ret, Args...> {
  public:
-  OneCache(string (*key)(Args...), string (*pickle)(Ret),
-           Ret (*unpickle)(string));
+  using MemCache<Ret, Args...>::MemCache;
   OneCache* clone();
   std::optional<Ret> get(const Args&... args);
   void put(const Args&... args, const Ret& value);
 
  private:
-  std::optional<string> getFromCache(const string&);
+  std::optional<std::string> getFromCache(const std::string&);
   std::string lastKey;
   std::string lastValue;
 };

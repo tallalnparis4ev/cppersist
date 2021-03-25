@@ -19,11 +19,8 @@ LRUCache<Ret, Args...>* LRUCache<Ret, Args...>::clone() {
 template <typename Ret, typename... Args>
 LRUCache<Ret, Args...>::LRUCache(int cacheSize, string (*key)(Args...),
                                  string (*pickle)(Ret),
-                                 Ret (*unpickle)(string)) {
+                                 Ret (*unpickle)(string)) : MemCache<Ret,Args...>(key,pickle,unpickle) {
   this->cacheSize = cacheSize;
-  this->key = key;
-  this->pickle = pickle;
-  this->unpickle = unpickle;
 }
 
 template <typename Ret, typename... Args>

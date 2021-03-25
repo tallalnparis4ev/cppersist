@@ -14,8 +14,7 @@ namespace cpst {
 template <typename Ret, typename... Args>
 class RegCache : public MemCache<Ret, Args...> {
  public:
-  RegCache(string (*key)(Args...), string (*pickle)(Ret),
-           Ret (*unpickle)(string));
+  using MemCache<Ret, Args...>::MemCache;
   RegCache* clone();
   std::optional<Ret> get(const Args&... args);
   void put(const Args&... args, const Ret& value);
