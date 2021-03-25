@@ -10,6 +10,11 @@
 #include "./memcachetypes.hpp"
 using std::string;
 namespace cpst {
+
+template <typename T>
+T identity(T obj) {
+  return obj;
+}
 /**
  * An object of this class will have its function call operator () to perform
  * some computation, and this function has persistent memoization applied.
