@@ -2,7 +2,7 @@
 #define MONGO_H_FILE
 
 #include "crypto/sha256.h"
-#include "memoization/persister.hpp"
+#include "memoization/persistent/memoizer.hpp"
 
 namespace cpst {
 /**
