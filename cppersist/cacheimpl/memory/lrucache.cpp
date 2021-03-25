@@ -4,7 +4,6 @@
 #include <unordered_map>
 
 #include "../../utils/log.hpp"
-using std::function;
 using std::nullopt;
 using std::optional;
 using std::string;
