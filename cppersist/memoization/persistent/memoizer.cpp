@@ -5,10 +5,10 @@
 #include <optional>
 #include <unordered_map>
 
-#include "../cacheimpl/memory/lrucache.hpp"
-#include "../cacheimpl/memory/onecache.hpp"
-#include "../cacheimpl/memory/regcache.hpp"
-#include "../utils/log.hpp"
+#include "../../cacheimpl/memory/lrucache.hpp"
+#include "../../cacheimpl/memory/onecache.hpp"
+#include "../../cacheimpl/memory/regcache.hpp"
+#include "../../utils/log.hpp"
 using std::string;
 namespace cpst {
 // Helper function to null fields
