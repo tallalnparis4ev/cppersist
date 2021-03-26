@@ -2,7 +2,7 @@
 #include "cppersist/mongo.hpp"
 using namespace cpst;
 using namespace std;
-class FibSolver : PersistentMemoizable<int, int>{
+class FibSolver : Memoizable<int, int>{
   public:
     int solve(int n) override {
       std::cout << "Original" << std::endl;
@@ -33,7 +33,7 @@ int main(int argc, char const *argv[])
   );
 
   auto mongoFib = getMongoMemoizedObj<FibSolver>(
-    fibKeyMaker,intostr,strtoi,"localhost:5001","fib",hashKey
+    fibKeyMaker,intostr,strtoi,"localhost:5000","fib",hashKey
   );
   localFib(6);
   mongoFib(6);
