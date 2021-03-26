@@ -3,7 +3,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 project (demo)
 
-add_executable(${CMAKE_PROJECT_NAME} ${TEST})
+add_executable(${CMAKE_PROJECT_NAME} fib.cpp)
 
 include(FetchContent) 
 FetchContent_Declare(cppersist GIT_REPOSITORY https://github.com/tallalnparis4ev/cppersist GIT_TAG master) 

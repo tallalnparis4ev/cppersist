@@ -1,6 +1,9 @@
 build/
 bin/
+persist/
 .vscode/
+demo
+
 
 # General
 .DS_Store
