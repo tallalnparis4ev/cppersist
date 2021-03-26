@@ -5,8 +5,8 @@
 #include <mutex>
 #include <string>
 
-#include "../interfaces/cache.hpp"
-#include "../interfaces/memcache.hpp"
+#include "../../interfaces/cache.hpp"
+#include "../../interfaces/memcache.hpp"
 #include "../memcachetypes.hpp"
 using std::string;
 namespace cpst {
