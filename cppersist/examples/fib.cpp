@@ -23,10 +23,11 @@ using namespace std;
 int main() {
   FibonacciSolver fibonacciSolver;
   PersistentMemoized memoizedFib =
-    getLocalMemoizedObj<FibonacciSolver>(keymaker,intostr,strtoi,"fib");
-  Memoized memoized = getMemoizedObj<FibonacciSolver>(keymaker,intostr,strtoi, MemCacheType::LRU_CACHE, 10);
+      getLocalMemoizedObj<FibonacciSolver>(keymaker, intostr, strtoi, "fib");
+  Memoized memoized = getMemoizedObj<FibonacciSolver>(
+      keymaker, intostr, strtoi, MemCacheType::LRU_CACHE, 10);
   // PersistentMemoized memoizedFibDb1 = getMongoMemoizedObj<FibonacciSolver>(
-      // keymaker, intostr, strtoi, "http://localhost:5000");
+  // keymaker, intostr, strtoi, "http://localhost:5000");
   int x = memoized(3);
   // int y = memoizedFibDb1(3);
   int z = memoizedFib(3);

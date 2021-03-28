@@ -2,8 +2,8 @@
 #include <string>
 
 #include "cacheimpl/persistent/diskcache.hpp"
-#include "memoization/memoizable.hpp"
 #include "crypto/sha256.h"
+#include "memoization/memoizable.hpp"
 #include "utils/log.hpp"
 
 using std::string;

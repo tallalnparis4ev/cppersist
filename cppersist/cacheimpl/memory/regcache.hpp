@@ -15,7 +15,8 @@ template <typename Ret, typename... Args>
 class RegCache : public MemCache<Ret, Args...> {
  public:
   RegCache(int size, std::string (*key)(Args...), std::string (*pickle)(Ret),
-          Ret (*unpickle)(std::string)) : MemCache<Ret,Args...>(size,key,pickle,unpickle) {}
+           Ret (*unpickle)(std::string))
+      : MemCache<Ret, Args...>(size, key, pickle, unpickle) {}
   RegCache* clone();
   std::optional<Ret> get(const Args&... args);
   void put(const Args&... args, const Ret& value);

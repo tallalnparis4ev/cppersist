@@ -20,7 +20,8 @@ template <typename Ret, typename... Args>
 class LRUCache : public MemCache<Ret, Args...> {
  public:
   LRUCache(int size, std::string (*key)(Args...), std::string (*pickle)(Ret),
-           Ret (*unpickle)(std::string)) : MemCache<Ret,Args...>(size,key,pickle,unpickle) {}
+           Ret (*unpickle)(std::string))
+      : MemCache<Ret, Args...>(size, key, pickle, unpickle) {}
   LRUCache* clone();
   std::optional<Ret> get(const Args&... args);
   void put(const Args&... args, const Ret& value);

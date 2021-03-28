@@ -16,4 +16,4 @@ enum class MemCacheType {
   /** A memory cache of maximum size = one */
   ONE
 };
-#endif // MEM_CACHE_TYPES
+#endif  // MEM_CACHE_TYPES

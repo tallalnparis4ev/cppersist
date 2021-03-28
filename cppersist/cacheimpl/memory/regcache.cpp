@@ -8,7 +8,8 @@ namespace cpst {
 
 template <typename Ret, typename... Args>
 RegCache<Ret, Args...>* RegCache<Ret, Args...>::clone() {
-  return new RegCache<Ret, Args...>(this->cacheSize,this->key, this->pickle, this->unpickle);
+  return new RegCache<Ret, Args...>(this->cacheSize, this->key, this->pickle,
+                                    this->unpickle);
 }
 
 template <typename Ret, typename... Args>
@@ -34,9 +35,10 @@ std::optional<Ret> RegCache<Ret, Args...>::get(const Args&... args) {
 
 template <typename Ret, typename... Args>
 void RegCache<Ret, Args...>::put(const Args&... args, const Ret& value) {
-  //Remove a random element if cache is full
-  if(this->cache.size() == this->cacheSize) this->cache.erase(this->cache.begin());
-  
+  // Remove a random element if cache is full
+  if (this->cache.size() == this->cacheSize)
+    this->cache.erase(this->cache.begin());
+
   string key = this->key(args...);
   // The underlying cache is an unordered_map<string,string>, so we can
   // add the entry (key(args...), pickle(value))

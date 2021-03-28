@@ -1,6 +1,6 @@
 #if !defined(MEMOIZABLE_H_FILE)
 #define MEMOIZABLE_H_FILE
-namespace cpst{
+namespace cpst {
 template <typename T>
 T identity(T obj) {
   return obj;
@@ -21,6 +21,6 @@ class Memoizable {
   virtual Ret solve(Args... args) {
     throw std::invalid_argument("Memoizable::solve should never be called");
   };
-}; 
-}
-#endif // MEMOIZABLE_H_FILE
+};
+}  // namespace cpst
+#endif  // MEMOIZABLE_H_FILE
