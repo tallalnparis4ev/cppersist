@@ -51,11 +51,13 @@ namespace cpst {
 
       Memoized& operator=(const Memoized& other) // copy assignment
       {
+          if (this == &other) return *this;
           return *this = Memoized(other);
       }
 
       Memoized& operator=(Memoized&& other) noexcept // move assignment
       {
+          if (this == &other) return *this;
           std::swap(cache, other.cache);
           return *this;
       } 
