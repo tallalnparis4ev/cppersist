@@ -6,9 +6,6 @@
 #include <unordered_map>
 
 #include "../../interfaces/memcache.hpp"
-#include "../../cacheimpl/memory/lrucache.hpp"
-#include "../../cacheimpl/memory/onecache.hpp"
-#include "../../cacheimpl/memory/regcache.hpp"
 #include "../../utils/log.hpp"
 using std::string;
 namespace cpst {
