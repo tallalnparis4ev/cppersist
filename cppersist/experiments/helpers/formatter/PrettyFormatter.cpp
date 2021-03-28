@@ -3,6 +3,8 @@
 #include <filesystem>
 #include <string>
 #include <sstream>
+#include <ostream>
+#include <vector>
 namespace fs = std::filesystem;
 
 class Time{
@@ -19,6 +21,7 @@ class Time{
     }
     friend std::ostream& operator<< (std::ostream& out, const Time& time);
     bool isLast = false;
+    std::string fileName;
   private:
     constexpr static double nano = 1000000000;
     constexpr static double milli = 1000;
@@ -38,14 +41,43 @@ std::ostream& operator<< (std::ostream& out, const Time& time)
 class PrettyFormatter{
   public:
     void formatAllFiles(std::string& dir){
+      std::vector<std::string> files;
       for(auto& file: fs::directory_iterator(dir)){
         fs::path path = file.path();
         std::string pathStr = path;
         std::string name = path.filename();
-        formatSingleFile(pathStr, name);
+        if(name == "googleSheet.out") continue;
+        files.push_back(name);
+      }
+      std::vector<Time> realTimes;
+      std::vector<std::string> output;
+      std::sort(files.begin(),files.end());
+      for(auto& name : files){
+        std::string path = dir+"/"+name;
+        formatSingleFile(name, path, realTimes, output);
+      }
+
+      int i = realTimes.size() == 6 ? 1 : 0;
+      int vectorInd = 0;
+      std::string names[3] = { "Seq", "WORep", "WRep" };
+      std::ofstream outFile;
+      outFile.open(dir+"/googleSheet.out", std::ios_base::app);
+      for(;i<3;i++){
+        outFile << names[i] << std::endl
+                << "Method, Average Time Taken (10 runs) (s)" << std::endl 
+                << "With Cppersist (persistent cache kept between runs), " << realTimes[vectorInd]
+                << "With Cppersist, " << realTimes[vectorInd+1]
+                << "Without Cppersist, " << realTimes[vectorInd+2] << std::endl;
+        vectorInd += 3;
+      }
+      outFile << std::endl;
+      for(const std::string& out : output){
+        outFile << out;
+        outFile << std::endl;
       }
     }
-    void formatSingleFile(std::string& file, std::string& name){
+
+    void formatSingleFile(std::string& name, std::string& file, std::vector<Time>& realTimes, std::vector<std::string>& output){
       std::ifstream curFile(file);
       std::string line;
       Time times[3] = {Time(), Time(), Time(true)};
@@ -60,16 +92,14 @@ class PrettyFormatter{
             times[ind++].addTime(col);
         }
       }
-      std::cout << name << std::endl;
-      std::ofstream outFile;
-      outFile.open(file, std::ios_base::app);
-      outFile << std::endl 
-              << std::endl 
-              << name
+      realTimes.push_back(times[2]);
+      std::stringstream outStr;
+      outStr  << name
               << std:: endl
               << "System (s),User (s),Real (s)" 
               << std::endl
               << times[0] << times[1] << times[2];
+      output.push_back(outStr.str());
     }
     
 };
