@@ -19,8 +19,8 @@ namespace cpst {
 template <typename Ret, typename... Args>
 class LRUCache : public MemCache<Ret, Args...> {
  public:
-  LRUCache(int, string (*key)(Args...), string (*pickle)(Ret),
-           Ret (*unpickle)(string));
+  LRUCache(int size, std::string (*key)(Args...), std::string (*pickle)(Ret),
+           Ret (*unpickle)(std::string)) : MemCache<Ret,Args...>(size,key,pickle,unpickle) {}
   LRUCache* clone();
   std::optional<Ret> get(const Args&... args);
   void put(const Args&... args, const Ret& value);
@@ -29,7 +29,6 @@ class LRUCache : public MemCache<Ret, Args...> {
   list<string> recentlyUsed;
   unordered_map<string, list<string>::iterator> positionCache;
   unordered_map<string, string> cache;
-  int cacheSize;
   std::optional<string> getFromCache(const string&);
 };
 }  // namespace cpst

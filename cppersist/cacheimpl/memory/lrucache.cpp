@@ -14,14 +14,6 @@ LRUCache<Ret, Args...>* LRUCache<Ret, Args...>::clone() {
                                     this->unpickle);
 }
 
-// Constructor
-template <typename Ret, typename... Args>
-LRUCache<Ret, Args...>::LRUCache(int cacheSize, string (*key)(Args...),
-                                 string (*pickle)(Ret),
-                                 Ret (*unpickle)(string)) : MemCache<Ret,Args...>(key,pickle,unpickle) {
-  this->cacheSize = cacheSize;
-}
-
 template <typename Ret, typename... Args>
 std::optional<string> LRUCache<Ret, Args...>::getFromCache(const string& key) {
   std::unordered_map<string, string>::iterator iter = cache.find(key);
@@ -54,7 +46,7 @@ void LRUCache<Ret, Args...>::put(const Args&... args, const Ret& value) {
   // Create a string key from the arguments
   string key = this->key(args...);
 
-  if (recentlyUsed.size() == cacheSize) {  // The LRU is at maximum size
+  if (recentlyUsed.size() == this->cacheSize) {  // The LRU is at maximum size
     // Find the least recently used key
     string oldestKey = recentlyUsed.back();
     recentlyUsed.pop_back();         // Remove least recently used key
