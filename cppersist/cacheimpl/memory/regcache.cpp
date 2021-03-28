@@ -8,7 +8,7 @@ namespace cpst {
 
 template <typename Ret, typename... Args>
 RegCache<Ret, Args...>* RegCache<Ret, Args...>::clone() {
-  return new RegCache<Ret, Args...>(this->key, this->pickle, this->unpickle);
+  return new RegCache<Ret, Args...>(this->cacheSize,this->key, this->pickle, this->unpickle);
 }
 
 template <typename Ret, typename... Args>
