@@ -48,7 +48,7 @@ void PersistentMemoized<T, Ret, Args...>::setMemoryCache(MemCacheType type,
       primaryCache = new LRUCache<Ret, Args...>(size, key, pickle, unpickle);
       break;
     case MemCacheType::REGULAR:
-      primaryCache = new RegCache<Ret, Args...>(key, pickle, unpickle);
+      primaryCache = new RegCache<Ret, Args...>(size, key, pickle, unpickle);
       break;
     case MemCacheType::ONE:
       primaryCache = new OneCache<Ret, Args...>(key, pickle, unpickle);
