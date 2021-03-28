@@ -2,7 +2,7 @@
 #include "cppersist/mongo.hpp"
 #include "gtest/gtest.h"
 using namespace cpst;
-class FibonacciSolver : public PersistentMemoizable<int, int> {
+class FibonacciSolver : public Memoizable<int, int> {
  public:
   int solve(int n) override {
     std::cout << "Original" << std::endl;
