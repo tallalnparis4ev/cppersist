@@ -2,21 +2,22 @@
 
 ## TLDR
 
-cppersist is a small library which allows users' to apply persistent memoization to a member function. cppersist allows member functions to be memoized via disk storage or mongoDB.
+cppersist is a small framework which allows users to apply persistent memoization to a member function. cppersist allows member functions to be memoized via the local filesystem, MongoDB, or in-memory.
 
 Here is an example of how cppersist is used:
 
 ```c++
-#include <cppersist/disk.h> //if you need to memoize with the local filesystem
-#include <cppersist/mongo.h> //if you need to memoize with MongoDB
+#include <cppersist/local.hpp> //if you need to memoize with the local filesystem
+#include <cppersist/mongo.hpp> //if you need to memoize with MongoDB
+#include <cppersist/memory.hpp> //if you need to memoize in-memory
 #include <iostream>
 
 //The class to be memoized - must implement a solve method
-class FibonacciSolver: public PersistentMemoizable<int, int>{
+class FibonacciSolver: public cpst::Memoizable<int, int>{
   public:
     int solve(int n) override {
       if(n<=1) return n;
-      return fib(n-1) + fib(n-2);
+      return solve(n-1) + solve(n-2);
     }
 };
 
@@ -34,10 +35,12 @@ std::string keymaker(int x){
 }
 
 int main(int argc, char** argv) {
-  PersistentMemoized memoizedFib = getLocalMemoizedObj<DFSSolver>(keymaker,intostr,strtoi); //disk cache
+  cpst::PersistentMemoized memoizedFib = cpst::getLocalMemoizedObj<FibonacciSolver>(keymaker,intostr,strtoi); //disk cache
   std::cout << memoizedFib(2) << std::endl;
-  memoizedFib = getMongoMemoizedObj<DFSSolver>(keymaker,intostr,strtoi); //mongo cache
+  memoizedFib = cpst::getMongoMemoizedObj<FibonacciSolver>(keymaker,intostr,strtoi,"localhost:5000"); //mongo cache
   std::cout << memoizedFib(2) << std::endl;
+  cpst::Memoized memoizedInMemoryFib = cpst::getMemoizedObj<FibonacciSolver>(keymaker,intostr,strtoi); //in-memory cache
+  std::cout << memoizedInMemoryFib(2) << std::endl;
 }
 ```
 
@@ -47,15 +50,41 @@ int main(int argc, char** argv) {
 The documentation of cppersist is found [here](https://tallalnparis4ev.github.io/). Navigate to the 'modules' tab for documentation on the user-visible parts of cppersist.
 
 ## Usage
-To build your project, utilising cppersist, via CMake (version 3.0+ required):
+To build your project, utilising cppersist, via CMake (version 3.15.2+ required):
 ```cmake
-include(FetchContent) 
-FetchContent_Declare(cppersist GIT_REPOSITORY https://github.com/tallalnparis4ev/cppersist GIT_TAG master) 
+cmake_minimum_required(VERSION 3.15.2)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+#========= Change these lines for your project
+project(demo)
+add_executable(${CMAKE_PROJECT_NAME} fib.cpp)
+#=============================================
+
+#Get cppersist 
+include(FetchContent)
+FetchContent_Declare(cppersist GIT_REPOSITORY https://github.com/tallalnparis4ev/cppersist GIT_TAG master)
 FetchContent_MakeAvailable(cppersist)
-include_directories(${cppersist_SOURCE_DIR}) 
-#Remove the following 4 lines if the MongoDB cache is not used 
-FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/whoshuu/cpr.git GIT_TAG c8d33915dbd88ad6c92b258869b03aba06587ff9) 
-FetchContent_MakeAvailable(cpr) 
-find_package(OpenSSL REQUIRED) #Remove this if you're communicating with the MongoDB server via HTTP and HTTPS is not needed
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE cpr::cpr) 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${cppersist_SOURCE_DIR}/cppersist/cmake)
+
+#Link threading and filesystem libraries
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+find_package(Filesystem REQUIRED)
+
+include_directories(${cppersist_SOURCE_DIR})
+
+#Get cpr if needed
+if(HTTPS OR HTTP)
+  FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/tallalnparis4ev/cpr.git GIT_TAG experiment)
+  FetchContent_MakeAvailable(cpr)
+  set(CPR "cpr::cpr")
+endif()
+
+#Get OpenSSL if needed
+if(HTTPS)
+  find_package(OpenSSL REQUIRED)
+endif()
+
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Threads::Threads std::filesystem ${CPR})
 ```
