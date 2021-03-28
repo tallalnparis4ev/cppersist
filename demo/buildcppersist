@@ -1,6 +1,12 @@
 cd build
 rm cmake_install.cmake Makefile CMakeCache.txt
 rm -rf bin lib _deps CMakeFiles
-cmake -DCMAKE_BUILD_TYPE=Debug -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl ..
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        echo "Building for Linux Lab Machines"
+	~/Documents/ctest/cmake-3.15.2/bin/cmake $1 -DCMAKE_BUILD_TYPE=Debug ..
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+	echo "Building for Mac PC"
+	cmake -DCMAKE_BUILD_TYPE=Debug $1 -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl ..
+fi
 make
-mv ./cppersist ..
+mv demo ..
