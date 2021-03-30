@@ -165,36 +165,42 @@ void PersistentMemoized<T, Ret, Args...>::write(Args const&... args,
   cacheConsistent.unlock();
 }
 
-template <typename T, typename Ret, typename... Args>
-Ret PersistentMemoized<T, Ret, Args...>::solve(Args... args) {
-  std::optional<Ret> answer = primaryCache->get(args...);
-  // Check if entry exists in primary cache
-  if (answer) {
-    // Entry exists in primary cache, return its value
-    return answer.value();
-  }
-  if (this->secondaryCache != NULL) {
-    // Check if entry exists in secondary cache
-    answer = secondaryCache->get(args...);
-    if (answer) {
+  template<typename T, typename Ret, typename ...Args>
+  Ret PersistentMemoized<T,Ret,Args...>::solve(Args... args){
+    std::optional<Ret> answer = primaryCache->get(args...);
+    auto start = high_resolution_clock::now();
+    auto end = high_resolution_clock::now();
+    if(answer){
+      end = high_resolution_clock::now();
+      hitTime = duration_cast<nanoseconds>(end-start).count();
+      cacheHits++;
+      miss = false;
+      // std::cout << "CACHE HIT" << std::endl;
       return answer.value();
     }
-  }
-  // Getting to this point means that the entry does not exist in any cache
-  // so the value for this entry must be calculated.
-  Ret realAnswer = T::solve(args...);
+    if(this->secondaryCache != NULL){
+      answer = secondaryCache->get(args...);
+      if(answer){
+        // std::cout << "SECONDARY CACHE HIT" << std::endl;
+        return answer.value();
+      }
+    }
+    end = high_resolution_clock::now();
+    missTime = duration_cast<nanoseconds>(end-start).count();
+    cacheMisses++;
+    miss = true;
+    Ret realAnswer = T::solve(args...);
+    if(this->secondaryCache != NULL){
+      this->cacheConsistent.lock();
+      discard = std::async(&PersistentMemoized<T,Ret,Args...>::write,this,args..., realAnswer);
+    }
 
-  if (this->secondaryCache != NULL) {
-    // This lock ensures that the persistent cache will have the same contents
-    // regardless of using an in-memory cache or not.
-    this->cacheConsistent.lock();
-    // Write this new entry to secondary cache in a seprate thread
-    discard = std::async(&PersistentMemoized<T, Ret, Args...>::write, this,
-                         args..., realAnswer);
+    start = high_resolution_clock::now(); 
+    primaryCache->put(args..., realAnswer);
+    end = high_resolution_clock::now();
+    missPenalty = duration_cast<nanoseconds>(end-start).count();
+    return realAnswer;  
   }
-  primaryCache->put(args..., realAnswer);
-  return realAnswer;
-}
 
 template <typename T, typename Ret, typename... Args>
 void PersistentMemoized<T, Ret, Args...>::resetTimes() {
