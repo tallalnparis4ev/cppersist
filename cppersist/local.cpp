@@ -3,6 +3,7 @@
 
 #include "cacheimpl/persistent/diskcache.hpp"
 #include "crypto/sha256.h"
+#include "memoization/memoizable.hpp"
 #include "utils/log.hpp"
 
 using std::string;
@@ -12,8 +13,8 @@ template <typename T, typename Ret, typename... Args>
 PersistentMemoized<T, Ret, Args...> getLocalMemoizedObj(
     string (*key)(Args...), string (*pickle)(Ret), Ret (*unpickle)(string),
     string (*hash)(string)) {
-  static_assert(std::is_base_of<PersistentMemoizable<Ret, Args...>, T>::value,
-                "Must Memoize a class that inherits from PersistentMemoizable");
+  static_assert(std::is_base_of<Memoizable<Ret, Args...>, T>::value,
+                "Must Memoize a class that inherits from Memoizable");
 
   string funcName = typeid(T).name();
   logOne("ALERT: No function name passed, using " + funcName +
@@ -27,8 +28,8 @@ template <typename T, typename Ret, typename... Args>
 PersistentMemoized<T, Ret, Args...> getLocalMemoizedObj(
     string (*key)(Args...), string (*pickle)(Ret), Ret (*unpickle)(string),
     string funcName, string (*hash)(string)) {
-  static_assert(std::is_base_of<PersistentMemoizable<Ret, Args...>, T>::value,
-                "Must Memoize a class that inherits from PersistentMemoizable");
+  static_assert(std::is_base_of<Memoizable<Ret, Args...>, T>::value,
+                "Must Memoize a class that inherits from Memoizable");
 
   DiskCache<Ret, Args...>* diskCache =
       new DiskCache<Ret, Args...>(key, pickle, unpickle, hash, funcName);
@@ -41,8 +42,8 @@ template <typename T, typename Ret, typename... Args>
 PersistentMemoized<T, Ret, Args...> getLocalMemoizedObj(
     MemCacheType type, string (*key)(Args...), string (*pickle)(Ret),
     Ret (*unpickle)(string), string funcName, string (*hash)(string)) {
-  static_assert(std::is_base_of<PersistentMemoizable<Ret, Args...>, T>::value,
-                "Must Memoize a class that inherits from PersistentMemoizable");
+  static_assert(std::is_base_of<Memoizable<Ret, Args...>, T>::value,
+                "Must Memoize a class that inherits from Memoizable");
 
   DiskCache<Ret, Args...>* diskCache =
       new DiskCache<Ret, Args...>(key, pickle, unpickle, hash, funcName);
@@ -55,8 +56,8 @@ template <typename T, typename Ret, typename... Args>
 PersistentMemoized<T, Ret, Args...> getLocalMemoizedObj(
     MemCacheType type, string (*key)(Args...), string (*pickle)(Ret),
     Ret (*unpickle)(string), string (*hash)(string)) {
-  static_assert(std::is_base_of<PersistentMemoizable<Ret, Args...>, T>::value,
-                "Must Memoize a class that inherits from PersistentMemoizable");
+  static_assert(std::is_base_of<Memoizable<Ret, Args...>, T>::value,
+                "Must Memoize a class that inherits from Memoizable");
 
   string funcName = typeid(T).name();
   logOne("ALERT: No function name passed, using " + funcName +

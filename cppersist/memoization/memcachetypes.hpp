@@ -1,8 +1,10 @@
+#if !defined(MEM_CACHE_TYPES)
+#define MEM_CACHE_TYPES
 /**
  * @file
  * Defines the different memory caches that can be used
  */
-enum MemCacheType {
+enum class MemCacheType {
   /** A memory cache of unbounded size */
   REGULAR,
   /**
@@ -14,3 +16,4 @@ enum MemCacheType {
   /** A memory cache of maximum size = one */
   ONE
 };
+#endif  // MEM_CACHE_TYPES

@@ -3,7 +3,6 @@
 #include <iostream>
 #include <optional>
 #include <string>
-using std::function;
 using std::nullopt;
 using std::optional;
 using std::string;

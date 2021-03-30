@@ -12,14 +12,6 @@ OneCache<Ret, Args...>* OneCache<Ret, Args...>::clone() {
 }
 
 template <typename Ret, typename... Args>
-OneCache<Ret, Args...>::OneCache(string (*key)(Args...), string (*pickle)(Ret),
-                                 Ret (*unpickle)(string)) {
-  this->key = key;
-  this->pickle = pickle;
-  this->unpickle = unpickle;
-}
-
-template <typename Ret, typename... Args>
 std::optional<string> OneCache<Ret, Args...>::getFromCache(const string& key) {
   // The previous cache access is the same as this one
   if (key.compare(lastKey) == 0)

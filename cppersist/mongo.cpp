@@ -13,8 +13,8 @@ template <typename T, typename Ret, typename... Args>
 PersistentMemoized<T, Ret, Args...> getMongoMemoizedObj(
     string (*key)(Args...), string (*pickle)(Ret), Ret (*unpickle)(string),
     string dbURL, string (*hash)(string)) {
-  static_assert(std::is_base_of<PersistentMemoizable<Ret, Args...>, T>::value,
-                "Must Memoize a class that inherits from PersistentMemoizable");
+  static_assert(std::is_base_of<Memoizable<Ret, Args...>, T>::value,
+                "Must Memoize a class that inherits from Memoizable");
 
   string funcName = typeid(T).name();
   logOne("ALERT: No function name passed, using " + funcName +
@@ -29,8 +29,8 @@ template <typename T, typename Ret, typename... Args>
 PersistentMemoized<T, Ret, Args...> getMongoMemoizedObj(
     string (*key)(Args...), string (*pickle)(Ret), Ret (*unpickle)(string),
     string dbURL, string funcName, string (*hash)(string)) {
-  static_assert(std::is_base_of<PersistentMemoizable<Ret, Args...>, T>::value,
-                "Must Memoize a class that inherits from PersistentMemoizable");
+  static_assert(std::is_base_of<Memoizable<Ret, Args...>, T>::value,
+                "Must Memoize a class that inherits from Memoizable");
 
   MongoDBCache<Ret, Args...>* mongoCache = new MongoDBCache<Ret, Args...>(
       key, pickle, unpickle, hash, dbURL, funcName);
@@ -43,8 +43,8 @@ template <typename T, typename Ret, typename... Args>
 PersistentMemoized<T, Ret, Args...> getMongoMemoizedObj(
     MemCacheType type, string (*key)(Args...), string (*pickle)(Ret),
     Ret (*unpickle)(string), string dbURL, string (*hash)(string)) {
-  static_assert(std::is_base_of<PersistentMemoizable<Ret, Args...>, T>::value,
-                "Must Memoize a class that inherits from PersistentMemoizable");
+  static_assert(std::is_base_of<Memoizable<Ret, Args...>, T>::value,
+                "Must Memoize a class that inherits from Memoizable");
 
   string funcName = typeid(T).name();
   logOne("ALERT: No function name passed, using " + funcName +
@@ -60,8 +60,8 @@ PersistentMemoized<T, Ret, Args...> getMongoMemoizedObj(
     MemCacheType type, string (*key)(Args...), string (*pickle)(Ret),
     Ret (*unpickle)(string), string dbURL, string funcName,
     string (*hash)(string)) {
-  static_assert(std::is_base_of<PersistentMemoizable<Ret, Args...>, T>::value,
-                "Must Memoize a class that inherits from PersistentMemoizable");
+  static_assert(std::is_base_of<Memoizable<Ret, Args...>, T>::value,
+                "Must Memoize a class that inherits from Memoizable");
 
   MongoDBCache<Ret, Args...>* mongoCache = new MongoDBCache<Ret, Args...>(
       key, pickle, unpickle, hash, dbURL, funcName);

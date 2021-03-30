@@ -5,7 +5,6 @@
 #include <string>
 
 #include "../../crypto/sha256.h"
-using std::function;
 using std::nullopt;
 using std::optional;
 using std::string;

@@ -1,27 +1,40 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
 project(cppersist)
 
 set(CMAKE_CXX_STANDARD 17)
 set(main ${TEST})
 
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
-SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS} -pthread")
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
 
-include_directories(crypto)
+add_executable(cppersist ${main})
 
-add_executable(cppersist ${sources} ${main})
+# ###############################################################################
+# ## CPR HTTP Request Setup #####################################################
+# ###############################################################################
+include(FetchContent) 
+FetchContent_Declare(cppersist GIT_REPOSITORY https://github.com/tallalnparis4ev/cppersist GIT_TAG master) 
+FetchContent_MakeAvailable(cppersist)
+include_directories(${cppersist_SOURCE_DIR}) 
 
-###############################################################################
-## CPR HTTP Request Setup #####################################################
-###############################################################################
-# find_package(OpenSSL REQUIRED)
-# include(FetchContent)
-# FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/whoshuu/cpr.git GIT_TAG c8d33915dbd88ad6c92b258869b03aba06587ff9) # the commit hash for 1.5.0
-# FetchContent_MakeAvailable(cpr)
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-  target_link_libraries(cppersist PRIVATE stdc++fs)
-# target_link_libraries(cppersist PRIVATE stdc++fs cpr::cpr)
-else()
-  target_link_libraries(cppersist)
-	# target_link_libraries(cppersist PRIVATE cpr::cpr)
+if(HTTPS OR HTTP)
+  FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/tallalnparis4ev/cpr.git GIT_TAG experiment) 
+  FetchContent_MakeAvailable(cpr)
+  set(CPR "cpr::cpr")
 endif()
+
+if(HTTPS) 
+  find_package(OpenSSL REQUIRED)
+endif()
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  set(FS "stdc++fs")
+endif()
+
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Threads::Threads ${CPR} ${FS}) 
+
+
+
+
+
+

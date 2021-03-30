@@ -4,11 +4,10 @@
 #include <iostream>
 #include <mutex>
 
-#include "../cacheimpl/memory/lrucache.hpp"
-#include "../cacheimpl/memory/onecache.hpp"
-#include "../cacheimpl/memory/regcache.hpp"
-#include "../utils/log.hpp"
-using std::function;
+#include "../../cacheimpl/memory/lrucache.hpp"
+#include "../../cacheimpl/memory/onecache.hpp"
+#include "../../cacheimpl/memory/regcache.hpp"
+#include "../../utils/log.hpp"
 using std::string;
 using namespace std::chrono;
 namespace cpst {
@@ -51,13 +50,13 @@ void PersistentMemoized<T, Ret, Args...>::setMemoryCache(MemCacheType type,
   auto unpickle = this->secondaryCache->getUnpickle();
 
   switch (type) {
-    case LRU_CACHE:
+    case MemCacheType::LRU_CACHE:
       primaryCache = new LRUCache<Ret, Args...>(size, key, pickle, unpickle);
       break;
-    case REGULAR:
-      primaryCache = new RegCache<Ret, Args...>(key, pickle, unpickle);
+    case MemCacheType::REGULAR:
+      primaryCache = new RegCache<Ret, Args...>(size, key, pickle, unpickle);
       break;
-    case ONE:
+    case MemCacheType::ONE:
       primaryCache = new OneCache<Ret, Args...>(key, pickle, unpickle);
       break;
     default:
@@ -151,6 +150,7 @@ PersistentMemoized<T, Ret, Args...>::operator=(
     deleteCaches();
     copy(lvalue);
   }
+  return *this;
 }
 
 template <typename T, typename Ret, typename... Args>
@@ -180,7 +180,6 @@ Ret PersistentMemoized<T, Ret, Args...>::solve(Args... args) {
       return answer.value();
     }
   }
-
   // Getting to this point means that the entry does not exist in any cache
   // so the value for this entry must be calculated.
   Ret realAnswer = T::solve(args...);
@@ -193,7 +192,6 @@ Ret PersistentMemoized<T, Ret, Args...>::solve(Args... args) {
     discard = std::async(&PersistentMemoized<T, Ret, Args...>::write, this,
                          args..., realAnswer);
   }
-
   primaryCache->put(args..., realAnswer);
   return realAnswer;
 }
