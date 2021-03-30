@@ -50,7 +50,7 @@ void PersistentMemoized<T, Ret, Args...>::setMemoryCache(MemCacheType type,
   auto unpickle = this->secondaryCache->getUnpickle();
 
   switch (type) {
-    case MemCacheType::LRU_CACHE:
+    case MemCacheType::LRU:
       primaryCache = new LRUCache<Ret, Args...>(size, key, pickle, unpickle);
       break;
     case MemCacheType::REGULAR:

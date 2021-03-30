@@ -25,7 +25,7 @@ Memoized<T, Ret, Args...> getMemoizedObj(
     case MemCacheType::REGULAR:
       return Memoized<T, Ret, Args...>(
           new RegCache<Ret, Args...>(size, key, pickle, unpickle));
-    case MemCacheType::LRU_CACHE:
+    case MemCacheType::LRU:
       return Memoized<T, Ret, Args...>(
           new LRUCache<Ret, Args...>(size, key, pickle, unpickle));
   }
