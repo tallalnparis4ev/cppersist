@@ -38,35 +38,36 @@ class PrimeRec : public Memoizable<list<int>, int>,
 
   int smallestPrime(int n) {
     if (n % 2 == 0) return 2;
-    for (int i = 3; i * i <= n; i += 2) {
+    int root = sqrt(n);
+    for (int i = 3; i <= root; i += 2) {
       if (n % i == 0) return i;
     }
     return n;
   }
 };
 
-class PrimeIter : public PersistentMemoizable<list<int>, int>,
-                  public PrimeSolver {
- public:
-  list<int> solve(int n) override {
-    list<int> primes;
-    // Print the number of 2s that divide n
-    while (n % 2 == 0) {
-      primes.push_back(2);
-      n = n / 2;
-    }
+// class PrimeIter : public Memoizable<list<int>, int>,
+//                   public PrimeSolver {
+//  public:
+//   list<int> solve(int n) override {
+//     list<int> primes;
+//     // Print the number of 2s that divide n
+//     while (n % 2 == 0) {
+//       primes.push_back(2);
+//       n = n / 2;
+//     }
+//     int root = sqrt(n);
+//     for (int i = 3; i <= root; i = i + 2) {
+//       while (n % i == 0) {
+//         primes.push_back(i);
+//         n = n / i;
+//       }
+//     }
+//     if (n > 2) primes.push_back(n);
 
-    for (int i = 3; i <= sqrt(n); i = i + 2) {
-      while (n % i == 0) {
-        primes.push_back(i);
-        n = n / i;
-      }
-    }
-    if (n > 2) primes.push_back(n);
-
-    return primes;
-  }
-};
+//     return primes;
+//   }
+// };
 
 list<int> primesUnpickle(string primeString) {
   list<int> primeFactors;
@@ -114,16 +115,17 @@ void runPrime(vector<int>& input, string type, bool cppersist, bool recursive,
     } else {
       runPrime(localMemo, input, outPath, cppersist);
     }
-  } else {
-    PrimeIter iter;
-    auto localMemo = getLocalMemoizedObj<PrimeIter>(
-        primesKey, primesPickle, primesUnpickle, "primesTest", identity<string>);
-    if (!cppersist) {
-      runPrime(iter, input, outPath, cppersist);
-    } else {
-      runPrime(localMemo, input, outPath, cppersist);
-    }
-  }
+  } 
+  // else {
+  //   PrimeIter iter;
+  //   auto localMemo = getLocalMemoizedObj<PrimeIter>(
+  //       primesKey, primesPickle, primesUnpickle, "primesTest", identity<string>);
+  //   if (!cppersist) {
+  //     runPrime(iter, input, outPath, cppersist);
+  //   } else {
+  //     runPrime(localMemo, input, outPath, cppersist);
+  //   }
+  // }
 }
 
 void runPrimeSeq(vector<int>& input, bool cppersist, bool recursive,
@@ -157,25 +159,25 @@ vector<int> generateInput(int n) {
 }
 
 int main(int argc, char const* argv[]) {
-  // int numInput = stoi(argv[1]);
-  // vector<int> input = generateInput(numInput);
-  // bool cppersist = stoi(argv[2]);
-  // bool recursive = stoi(argv[3]);
-  // bool keepCache = stoi(argv[4]);
-  // int seed = stoi(argv[5]);
-  // const char* version = argv[6];
+  
+  int numInput = stoi(argv[1]);
+  vector<int> input = generateInput(numInput);
+  bool cppersist = stoi(argv[2]);
+  bool recursive = stoi(argv[3]);
+  bool keepCache = stoi(argv[4]);
+  int seed = stoi(argv[5]);
+  const char* version = argv[6];
 
-  // if (std::strcmp(version, "seq") == 0) {
-    // runPrimeSeq(input, cppersist, recursive, keepCache);
-  // }
+  if (std::strcmp(version, "seq") == 0) {
+    runPrimeSeq(input, cppersist, recursive, keepCache);
+  }
 
-  // if (std::strcmp(version, "worep") == 0) {
-    // runPrimeWORep(input, cppersist, recursive, keepCache, seed);
-  // }
+  if (std::strcmp(version, "worep") == 0) {
+    runPrimeWORep(input, cppersist, recursive, keepCache, seed);
+  }
 
-  // if (std::strcmp(version, "wrep") == 0) {
-    // runPrimeWRep(input, cppersist, recursive, keepCache, seed);
-  // }
-
+  if (std::strcmp(version, "wrep") == 0) {
+    runPrimeWRep(input, cppersist, recursive, keepCache, seed);
+  }
   return 0;
 }
