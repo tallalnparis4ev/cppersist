@@ -20,7 +20,7 @@ class PrimeSolver {
   virtual list<int> solve(int n) = 0;
 };
 
-class PrimeRec : public PersistentMemoizable<list<int>, int>,
+class PrimeRec : public Memoizable<list<int>, int>,
                  public PrimeSolver {
  public:
   list<int> solve(int n) override {
@@ -157,25 +157,25 @@ vector<int> generateInput(int n) {
 }
 
 int main(int argc, char const* argv[]) {
-  int numInput = stoi(argv[1]);
-  vector<int> input = generateInput(numInput);
-  bool cppersist = stoi(argv[2]);
-  bool recursive = stoi(argv[3]);
-  bool keepCache = stoi(argv[4]);
-  int seed = stoi(argv[5]);
-  const char* version = argv[6];
+  // int numInput = stoi(argv[1]);
+  // vector<int> input = generateInput(numInput);
+  // bool cppersist = stoi(argv[2]);
+  // bool recursive = stoi(argv[3]);
+  // bool keepCache = stoi(argv[4]);
+  // int seed = stoi(argv[5]);
+  // const char* version = argv[6];
 
-  if (std::strcmp(version, "seq") == 0) {
-    runPrimeSeq(input, cppersist, recursive, keepCache);
-  }
+  // if (std::strcmp(version, "seq") == 0) {
+    // runPrimeSeq(input, cppersist, recursive, keepCache);
+  // }
 
-  if (std::strcmp(version, "worep") == 0) {
-    runPrimeWORep(input, cppersist, recursive, keepCache, seed);
-  }
+  // if (std::strcmp(version, "worep") == 0) {
+    // runPrimeWORep(input, cppersist, recursive, keepCache, seed);
+  // }
 
-  if (std::strcmp(version, "wrep") == 0) {
-    runPrimeWRep(input, cppersist, recursive, keepCache, seed);
-  }
+  // if (std::strcmp(version, "wrep") == 0) {
+    // runPrimeWRep(input, cppersist, recursive, keepCache, seed);
+  // }
 
   return 0;
 }
