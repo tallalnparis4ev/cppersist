@@ -10,9 +10,9 @@ enum class MemCacheType {
   /**
    * A memory cache of maximum size = 1000 entries, by default.
    * The eviction policy is least recently used. The size of this can
-   * be changed by calling setMemoryCache(LRU_CACHE, desired size).
+   * be changed by calling setMemoryCache(LRU, desired size).
    */
-  LRU_CACHE,
+  LRU,
   /** A memory cache of maximum size = one */
   ONE
 };

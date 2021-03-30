@@ -47,8 +47,8 @@ class PersistentMemoized : public T {
   void setMemoryCache(MemCacheType);
   /**
    * A method to change/assign a memory cache, followed by the size of the
-   * cache. The size is only applicable if the MemCacheType is LRU_CACHE.
-   * The size will determine the maximum number of entries in the LRU_CACHE.
+   * cache. The size is only applicable if the MemCacheType is LRU or REGULAR.
+   * The size will determine the maximum number of entries in the LRU or REGULAR.
    */
   void setMemoryCache(MemCacheType, int);
 
