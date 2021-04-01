@@ -13,7 +13,7 @@ TEST(DiskCacheTests, WorkingCorrectly) {
 
 TEST(MongoDBCacheTests, WorkingCorrectly) {
   MongoDBCache<int, int> test(&intSimple::pickle, &intSimple::pickle,
-                              &intSimple::unpickle, &sha256, "localhost:5000");
+                              &intSimple::unpickle, &sha256, "localhost:5000", "test");
   test.put(1, 1);
   EXPECT_EQ(test.get(1).value_or(2), 1)
       << "===================================================" << std::endl

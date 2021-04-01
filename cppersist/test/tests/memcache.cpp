@@ -26,7 +26,7 @@ TEST(OneCacheTests, WorkingCorrectly) {
 }
 
 TEST(RegCacheTests, WorkingCorrectly) {
-  RegCache<int, int> test(&intSimple::pickle, &intSimple::pickle,
+  RegCache<int, int> test(3, &intSimple::pickle, &intSimple::pickle,
                           &intSimple::unpickle);
   test.put(1, 1);
   test.put(2, 1);
