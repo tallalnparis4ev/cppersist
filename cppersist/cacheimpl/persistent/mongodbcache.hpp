@@ -17,13 +17,13 @@ class MongoDBCache : public PerCache<Ret, Args...> {
   using PerCache<Ret, Args...>::PerCache;
   MongoDBCache(string (*key)(Args...), string (*pickle)(Ret),
                Ret (*unpickle)(string), string (*hash)(string), string, string);
-  MongoDBCache(string (*key)(Args...), string (*pickle)(Ret),
-               Ret (*unpickle)(string), string (*hash)(string), string);
   MongoDBCache<Ret, Args...>* clone();
   std::optional<Ret> get(const Args&... args);
   void put(const Args&... args, const Ret& value);
 
  private:
+  MongoDBCache(string (*key)(Args...), string (*pickle)(Ret),
+               Ret (*unpickle)(string), string (*hash)(string), string);
   string base;
   string makeUrlForKey(const string& key);
 };
