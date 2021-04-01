@@ -81,21 +81,16 @@ std::optional<Ret> MongoDBCache<Ret, Args...>::get(const Args&... args) {
 
 template <typename Ret, typename... Args>
 void MongoDBCache<Ret, Args...>::put(const Args&... args, const Ret& value) {
-  string key = this->key(args...);
-  // string url = makeUrlForKey(key);
+  string hash = this->hash(this->key(args...));
   string url = this->base;
   string valueStr = this->pickle(value);
   string funcName = "{\"funcname\": \"test\",";
-  string hashLine = "\"hash\": \"" + key + "\",";
+  string hashLine = "\"hash\": \"" + hash + "\",";
   string nameSpace = "\"namespace\": \"cppersist\",";
   string result = "\"result\": \"" + valueStr +
                   "\""
                   "}";
   string jsonPost = funcName + hashLine + nameSpace + result;
-  // string jsonPost = std::format(jsonPostTemplate, key, valueStr);
-  // cpr::Response response =
-  // cpr::Post(cpr::Url{url}, cpr::Body{"{\"return\": \"" + valueStr + "\"}"},
-  // cpr::Header{{"Content-Type", "application/json"}});
   cpr::Response response =
       cpr::Post(cpr::Url{url}, cpr::Body{jsonPost},
                 cpr::Header{{"Content-Type", "application/json"}});
