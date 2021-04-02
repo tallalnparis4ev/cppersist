@@ -40,12 +40,22 @@ std::ostream& operator<< (std::ostream& out, const Time& time)
 
 class PrettyFormatter{
   public:
+    void formatAllDirs(std::string& dir){
+      for(auto& file: fs::directory_iterator(dir)){
+        fs::path path = file.path();
+        std::string pathStr = path;
+        std::string name = path.filename();
+        if(name == "Caches") continue;
+        formatAllFiles(pathStr);
+      }
+    }
     void formatAllFiles(std::string& dir){
       std::vector<std::string> files;
       for(auto& file: fs::directory_iterator(dir)){
         fs::path path = file.path();
         std::string pathStr = path;
         std::string name = path.filename();
+        if(name == "googleSheet.gsheet") return;
         if(name == "googleSheet.out") continue;
         files.push_back(name);
       }
@@ -61,7 +71,7 @@ class PrettyFormatter{
       int vectorInd = 0;
       std::string names[3] = { "Seq", "WORep", "WRep" };
       std::ofstream outFile;
-      outFile.open(dir+"/googleSheet.out", std::ios_base::app);
+      outFile.open(dir+"/googleSheet.gsheet", std::ios_base::app);
       for(;i<3;i++){
         outFile << names[i] << std::endl
                 << "Method, Average Time Taken (10 runs) (s)" << std::endl 
@@ -109,6 +119,6 @@ int main(int argc, char const *argv[])
 {
   PrettyFormatter pretty;
   std::string dir = argv[1];
-  pretty.formatAllFiles(dir);
+  pretty.formatAllDirs(dir);
   return 0;
 }
