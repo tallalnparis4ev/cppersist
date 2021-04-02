@@ -1,0 +1,67 @@
+Seq
+Method, Average Time Taken (10 runs) (s)
+With Cppersist (persistent cache kept between runs), 0.000000
+With Cppersist, 0.000000
+Without Cppersist, 0.000000
+
+WORep
+Method, Average Time Taken (10 runs) (s)
+With Cppersist (persistent cache kept between runs), 0.000100
+With Cppersist, 0.001000
+Without Cppersist, 135.413900
+
+WRep
+Method, Average Time Taken (10 runs) (s)
+With Cppersist (persistent cache kept between runs), 0.000000
+With Cppersist, 0.000000
+Without Cppersist, 0.000000
+
+
+WORepIterCpst.csv
+System (s),User (s),Real (s)
+0.000000,0.000000,0.000000
+
+WORepIterCpstDelCache.csv
+System (s),User (s),Real (s)
+0.000000,0.000000,0.000000
+
+WORepIterNoCpst.csv
+System (s),User (s),Real (s)
+0.000000,0.000000,0.000000
+
+WORepRecCpst.csv
+System (s),User (s),Real (s)
+0.000000,0.000000,0.000100
+
+WORepRecCpstDelCache.csv
+System (s),User (s),Real (s)
+0.000000,0.000000,0.001000
+
+WORepRecNoCpst.csv
+System (s),User (s),Real (s)
+0.000000,13.531900,135.413900
+
+WRepIterCpst.csv
+System (s),User (s),Real (s)
+0.000000,0.000000,0.000000
+
+WRepIterCpstDelCache.csv
+System (s),User (s),Real (s)
+0.000000,0.000000,0.000000
+
+WRepIterNoCpst.csv
+System (s),User (s),Real (s)
+0.000000,0.000000,0.000000
+
+WRepRecCpst.csv
+System (s),User (s),Real (s)
+0.000000,0.000000,0.000100
+
+WRepRecCpstDelCache.csv
+System (s),User (s),Real (s)
+0.000000,0.000000,0.001000
+
+WRepRecNoCpst.csv
+System (s),User (s),Real (s)
+0.000000,17.100600,171.123400
+

@@ -1,0 +1,37 @@
+WORep
+Method, Average Time Taken (10 runs) (s)
+With Cppersist (persistent cache kept between runs), 10329.228400
+With Cppersist, 10280.208000
+Without Cppersist, 13394.193500
+
+WRep
+Method, Average Time Taken (10 runs) (s)
+With Cppersist (persistent cache kept between runs), 10318.507300
+With Cppersist, 10300.215900
+Without Cppersist, 13337.565300
+
+
+WORepRecCpst.csv
+System (s),User (s),Real (s)
+0.865900,1030.977800,10329.228400
+
+WORepRecCpstDelCache.csv
+System (s),User (s),Real (s)
+2.551300,1024.379400,10280.208000
+
+WORepRecNoCpst.csv
+System (s),User (s),Real (s)
+6.112900,1327.005800,13394.193500
+
+WRepRecCpst.csv
+System (s),User (s),Real (s)
+3.551800,1027.148500,10318.507300
+
+WRepRecCpstDelCache.csv
+System (s),User (s),Real (s)
+2.468700,1026.454000,10300.215900
+
+WRepRecNoCpst.csv
+System (s),User (s),Real (s)
+5.962100,1321.815500,13337.565300
+
