@@ -55,10 +55,18 @@ class PrettyFormatter{
         fs::path path = file.path();
         std::string pathStr = path;
         std::string name = path.filename();
-        if(name == "googleSheet.gsheet") return;
+        if(name=="Iter" || name=="Rec"){
+          formatAllFiles(pathStr);
+          continue;
+        }
+        if(name == "googleSheet.gsheet"){
+          fs::remove(path);
+          continue;
+        }
         if(name == "googleSheet.out") continue;
         files.push_back(name);
       }
+      if(files.size() == 0) return;
       std::vector<Time> realTimes;
       std::vector<std::string> output;
       std::sort(files.begin(),files.end());
