@@ -46,28 +46,28 @@ class PrimeRec : public Memoizable<list<int>, int>,
   }
 };
 
-// class PrimeIter : public Memoizable<list<int>, int>,
-//                   public PrimeSolver {
-//  public:
-//   list<int> solve(int n) override {
-//     list<int> primes;
-//     // Print the number of 2s that divide n
-//     while (n % 2 == 0) {
-//       primes.push_back(2);
-//       n = n / 2;
-//     }
-//     int root = sqrt(n);
-//     for (int i = 3; i <= root; i = i + 2) {
-//       while (n % i == 0) {
-//         primes.push_back(i);
-//         n = n / i;
-//       }
-//     }
-//     if (n > 2) primes.push_back(n);
+class PrimeIter : public Memoizable<list<int>, int>,
+                  public PrimeSolver {
+ public:
+  list<int> solve(int n) override {
+    list<int> primes;
+    // Print the number of 2s that divide n
+    while (n % 2 == 0) {
+      primes.push_back(2);
+      n = n / 2;
+    }
+    int root = sqrt(n);
+    for (int i = 3; i <= root; i = i + 2) {
+      while (n % i == 0) {
+        primes.push_back(i);
+        n = n / i;
+      }
+    }
+    if (n > 2) primes.push_back(n);
 
-//     return primes;
-//   }
-// };
+    return primes;
+  }
+};
 
 list<int> primesUnpickle(string primeString) {
   list<int> primeFactors;
