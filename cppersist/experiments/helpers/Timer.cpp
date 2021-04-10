@@ -15,7 +15,7 @@ class Timer {
         std::chrono::high_resolution_clock::now();
 
     realTime =
-        std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::to_string(std::chrono::duration_cast<std::chrono::nanoseconds>(
                            nowReal - startReal)
                            .count());
 

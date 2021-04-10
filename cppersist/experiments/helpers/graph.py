@@ -5,14 +5,18 @@ import os
 import shutil
 from os import listdir
 from os.path import isfile, join
+from sigfig import round
+
+should_output = False
+unit = 1000000000
+# unit = 1000
 
 def get_data(file_path):
   df = pd.read_csv(file_path, header=None)
-  real_col = df.iloc[:,-1:].squeeze().map(lambda x : x/1000)
+  real_col = df.iloc[:,-1:].squeeze()
   real_mean = real_col.mean()
   real_sd = real_col.std()
-  return {"real_mean":real_mean, "real_sd":real_sd}
-  # return {"real_mean":real_mean/1000, "real_sd":real_sd/1000}
+  return {"real_mean":real_mean/unit, "real_sd":real_sd/unit}
 
 
 
@@ -40,12 +44,14 @@ def make_graph(file_paths,save_to):
   for patch in bar.patches:
       label = "{:.2f}".format(patch.get_height())
       plt.annotate(label, (patch.get_x() + (0.6 * patch.get_width()), patch.get_height()))
-  
-  plt.savefig(save_to, bbox_inches='tight')
+  if should_output:
+    plt.savefig(save_to, bbox_inches='tight')
   plt.clf()
 
 
 def make_graph_dirs(dir):
+  if not should_output:
+    return
   if os.path.exists(dir):
     shutil.rmtree(dir)
   os.makedirs(dir)
@@ -54,7 +60,7 @@ def make_graph_dirs(dir):
 def make_graphs(dir):
   final_part = os.path.basename(os.path.normpath(dir))
   non_filtered = [join(dir, f) for f in listdir(dir) if isfile(join(dir, f))]
-  files = sorted(list(filter(lambda x : "google" not in x, non_filtered)))
+  files = sorted(list(filter(lambda x : "Rec" in x or "Iter" in x, non_filtered)))
   print(files)
   #Code adapted from https://www.geeksforgeeks.org/break-list-chunks-size-n-python/
   n = 3 
@@ -70,6 +76,6 @@ def make_graphs(dir):
     make_graph(chunk,dir+"/"+new_dir+"/"+save_to+".png")
 
 
-make_graphs('experiments/data/TTT')
+make_graphs('experiments/data/Fibonacci')
 
 

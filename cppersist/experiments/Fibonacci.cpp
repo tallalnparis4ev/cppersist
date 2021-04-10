@@ -72,8 +72,9 @@ void runFib(vector<int>& input, string type,
     auto localMemo = getLocalMemoizedObj<FibRec>(
         fibKey, fibPickle, fibUnpickle, "fibTest", identity<string>);
     if (!cppersist) {
-      runFib(rec, input, path);
-    } else {
+      // runFib(rec, input, path);
+    } 
+    else {
       runFib(localMemo, input, path);
     }
   } else {
