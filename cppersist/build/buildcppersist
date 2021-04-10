@@ -5,6 +5,6 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 	~/Documents/ctest/cmake-3.15.2/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DTEST=$1 ..
 elif [[ "$OSTYPE" == "darwin"* ]]; then
 	echo "Building for Mac PC"
-	cmake -DCMAKE_BUILD_TYPE=Debug -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl -DTEST=$1 ..        
+	cmake -DCMAKE_BUILD_TYPE=Debug -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl -DHTTPS=true -DTEST=$1 ..        
 fi
 make

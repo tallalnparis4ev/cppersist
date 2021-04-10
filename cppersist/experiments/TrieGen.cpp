@@ -50,7 +50,7 @@ class TrieGen {
   virtual TrieNode* solve(string dictPath) = 0;
 };
 
-class TrieGenerator : public PersistentMemoizable<TrieNode*,string>, public TrieGen{
+class TrieGenerator : public Memoizable<TrieNode*,string>, public TrieGen{
   public:
     TrieNode* solve(string dictPath){
       TrieNode* ret = new TrieNode(false);
@@ -70,13 +70,18 @@ string genKey(string path){
 
 void runTrie(TrieGen& generator, vector<string>& input,
               string outPath, bool cppersist) {
+  vector<TrieNode*> toFree;
   Timer timer;
   timer.start();
-  for (vector<string>::iterator it = input.begin(); it != input.end(); it++) {
-    TrieNode* answer = generator.solve(*it);
-    TrieNode::freeAll(answer);
+  // Convert dictionary ("words.txt") into a Trie data structure twice.
+  for(int i=0;i<2;i++){
+    TrieNode* answer = generator.solve("words.txt");
+    toFree.push_back(answer);
   }
   timer.end();
+  for (vector<TrieNode*>::iterator it = toFree.begin(); it != toFree.end(); it++) {
+    TrieNode::freeAll(*it);
+  }
   appendRowToFile(outPath, timer.getRow());
 }
 
