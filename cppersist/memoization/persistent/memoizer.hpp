@@ -8,6 +8,7 @@
 #include "../../interfaces/cache.hpp"
 #include "../../interfaces/memcache.hpp"
 #include "../memcachetypes.hpp"
+#include "../memoizable.hpp"
 using std::string;
 namespace cpst {
 /**
@@ -52,6 +53,8 @@ class PersistentMemoized : public T {
    */
   void setMemoryCache(MemCacheType, int);
 
+  void setDecision(bool (*decision)(Args...));
+
   virtual Ret solve(Args... args);
 
  private:
@@ -72,6 +75,8 @@ class PersistentMemoized : public T {
    * can only be a persistent cache.
    */
   Cache<Ret, Args...>* secondaryCache;
+
+  bool (*decision)(Args...) = returnTrue<Args...>;
 };
 }  // namespace cpst
 #include "memoizer.cpp"
