@@ -71,10 +71,11 @@ string genKey(string path){
 void runTrie(TrieGen& generator, vector<string>& input,
               string outPath, bool cppersist) {
   vector<TrieNode*> toFree;
+  int n = 4;
   Timer timer;
   timer.start();
   // Convert dictionary ("words.txt") into a Trie data structure twice.
-  for(int i=0;i<2;i++){
+  for(int i=0;i<n;i++){
     TrieNode* answer = generator.solve("words.txt");
     toFree.push_back(answer);
   }
@@ -87,7 +88,7 @@ void runTrie(TrieGen& generator, vector<string>& input,
 
 void runTrie(vector<string>& input, string type,
               bool cppersist, bool recursive, bool keepCache) {
-  string outPath = getOutPath("Trie5", type, cppersist, recursive, keepCache);
+  string outPath = getOutPath("TrieTwoSame", type, cppersist, recursive, keepCache);
   if (recursive) {
     if (!cppersist) {
       TrieGenerator gen;
