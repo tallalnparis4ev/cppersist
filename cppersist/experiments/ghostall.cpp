@@ -158,7 +158,6 @@ void runGhost(GhostSolver& solver, vector<string>& input, TrieNode* dict,
   for (vector<string>::iterator it = input.begin(); it != input.end(); it++) {
     string* answer = new string();
     solver.solve(*it, dict, answer);
-    cout << *answer << endl;
   }
   timer.end();
   appendRowToFile(path, timer.getRow());
