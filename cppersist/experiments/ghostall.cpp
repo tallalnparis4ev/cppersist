@@ -234,7 +234,7 @@ int main(int argc, char const* argv[]) {
   completeTrie(head,"./words.txt");
   vector<string> validPref = validPrefixes(head);
   vector<string> inp;
-  while(inp.size() != 100000) {
+  while(inp.size() != 1000000) {
     inp.push_back(validPref[rand() % validPref.size()]);
   }
   runGhostWORep(inp, head, cppersist, recursive, keepCache, seed);
