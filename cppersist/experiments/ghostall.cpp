@@ -165,7 +165,7 @@ void runGhost(GhostSolver& solver, vector<string>& input, TrieNode* dict,
 
 bool decision(bool p2, string* ignored1, TrieNode* cur){
   int length = cur->prefix.length();
-  if(length>4) return false;
+  if(length>5) return false;
 
   if(p2) return (length%2) == 1;
   return (length%2) == 0;
