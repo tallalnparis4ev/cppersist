@@ -7,18 +7,21 @@ from os import listdir
 from os.path import isfile, join
 from sigfig import round
 
-should_output = False
-unit = 1000000000
-# unit = 1000
+should_output = True
+# unit = 1000000000 #Just for Fibonacci
+unit = 1000 #For the rest
 
 def get_data(file_path):
+  if file_path == "data/Fibonacci/WORepRecCpstDelCache.csv":
+    print("HEY")
   df = pd.read_csv(file_path, header=None)
+  if len(df.index) > 10:
+    df = df.iloc[10:,]
+
   real_col = df.iloc[:,-1:].squeeze()
-  real_mean = real_col.mean()
-  real_sd = real_col.std()
-  return {"real_mean":real_mean/unit, "real_sd":real_sd/unit}
-
-
+  real_mean = real_col.mean()/unit
+  real_sd = real_col.std()/unit
+  return {"real_mean":real_mean, "real_sd":real_sd}
 
 def make_graph(file_paths,save_to):
   names = ['With Cppersist and a\n cache is kept between runs','With Cppersist','Without Cppersist']
@@ -42,7 +45,10 @@ def make_graph(file_paths,save_to):
 
   error_bars = plt.errorbar(names,real_means,yerr=(ybot,ytop) ,capsize=10,fmt='o', markersize=0)
   for patch in bar.patches:
-      label = "{:.2f}".format(patch.get_height())
+      label = f'{patch.get_height():.2}'
+      if "e" in label:
+        label = "{:.20f}".format(float(label)).rstrip('0').rstrip('.')
+      # label = "{:.2g}".format(patch.get_height())
       plt.annotate(label, (patch.get_x() + (0.6 * patch.get_width()), patch.get_height()))
   if should_output:
     plt.savefig(save_to, bbox_inches='tight')
@@ -76,6 +82,42 @@ def make_graphs(dir):
     make_graph(chunk,dir+"/"+new_dir+"/"+save_to+".png")
 
 
-make_graphs('experiments/data/Fibonacci')
+# make_graphs('cppersist/experiments/data/Primes')
+make_graphs('data/Primes')
 
+
+
+
+
+
+
+
+
+
+#Trie stuff 
+#279496 words, maximum length word is 15
+#24887 number of valid prefixes 
+
+# def make_trie(*words):
+#      root = dict()
+#      for word in words:
+#          current_dict = root
+#          for letter in word:
+#              current_dict = current_dict.setdefault(letter, {})
+#          current_dict[_end] = _end
+#      return root
+
+# # Using readlines()
+# scrabble = open('words.txt', 'r')
+# lines = scrabble.readlines()
+# trie = make_trie(lines)
+
+# lens = list(map(lambda x : len(x) - 1,lines))
+# a = max(lens)
+# print(a)
+# for x in lens:
+#   if type(x) != int:
+#     print(x)
+# print("hey")
+# print(lens)
 
