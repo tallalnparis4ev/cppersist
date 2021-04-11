@@ -8,6 +8,12 @@
 #include <stack>
 class TrieNode {
  public:
+  bool isLeaf(){
+    return this->isWord;
+    // for (int i = 0; i < ALPHABET_SIZE; i++) 
+      // if (this->children[i] != nullptr) return false;
+    // return true;
+  }
   static string pickle(TrieNode* root) {
     if (root == nullptr)
         return "";
@@ -56,6 +62,7 @@ class TrieNode {
   }
   
   std::string prefix = "";
+  bool isRoot = false;
   TrieNode(string prefix) { this->prefix = prefix; }
   TrieNode(bool isWord) { this->isWord = isWord; }
   std::array<TrieNode*, ALPHABET_SIZE> children = {};
