@@ -4,7 +4,7 @@
 #include "../../mongo.hpp"
 using namespace cpst;
 // Fibonacci Sequence Example
-// class FibonacciSolver: public PersistentMemoizable<int, int>{
+// class FibonacciSolver: public Memoizable<int, int>{
 //   public:
 //     int solve(int n) override {
 //       // std::cout << "Original" << std::endl;
@@ -14,7 +14,7 @@ using namespace cpst;
 //     }
 // };
 typedef unsigned long long fibNumber;
-class FibonacciSolver : public PersistentMemoizable<fibNumber, fibNumber> {
+class FibonacciSolver : public Memoizable<fibNumber, fibNumber> {
  public:
   fibNumber solve(fibNumber n) override {
     if (n == 0) return 0;

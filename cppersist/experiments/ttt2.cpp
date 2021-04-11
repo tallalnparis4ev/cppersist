@@ -134,6 +134,17 @@ bool isXTurn(const Board& board){
   return xCount == oCount;
 }
 
+int countSymbols(const Board& board){
+  int count = 0;
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 3; j++) {
+      const char& ref = board.get(i,j);
+      if (ref == 'x' || ref == 'o') count++;
+    }
+  }
+  return count;
+}
+
 int numStates = 0;
 void createBoards(int square_num, char curBoard[3][3],
                   std::vector<Board>& boards, int& index) {
@@ -158,7 +169,7 @@ void createBoards(int square_num, char curBoard[3][3],
   }
 }
 
-class TTTSolver : public PersistentMemoizable<Move, Board> {
+class TTTSolver : public Memoizable<Move, Board> {
  public:
   Move solve(Board board) override {
     bool xTurn = isXTurn(board);
@@ -233,29 +244,50 @@ void runTTTWRep(std::vector<Board>& input, bool cppersist,
   while (newInp.size() != input.size()) {
     newInp.push_back(input[rand() % input.size()]);
   }
-  runTTT(newInp, "WRep", cppersist, recursive, keepCache);
+  // runTTT(newInp, "WRep", cppersist, recursive, keepCache);
 }
 
 
+
 int main(int argc, char const* argv[]) {
-
-  int numInput = stoi(argv[1]);
-  bool cppersist = stoi(argv[2]);
-  bool recursive = stoi(argv[3]);
-  bool keepCache = stoi(argv[4]);
-  int seed = stoi(argv[5]);
-  const char* version = argv[6];
-
   char empty[3][3] = {{'_', '_', '_'}, {'_', '_', '_'}, {'_', '_', '_'}};
   std::vector<Board> input;
   int index = 0;
   createBoards(0, empty, input, index);
-  if (std::strcmp(version, "worep") == 0) {
-    runTTTWORep(input, cppersist, recursive, keepCache, seed);
+  for(int i=1;i<=10;i++){
+    srand(i);
+    std::vector<Board> newInp;
+    int ind = 0;
+    while (newInp.size() != input.size()) {
+      newInp.push_back(input[rand() % input.size()]);
+    }
+    int count = 0;
+    for(int i=0;i<newInp.size();i++){
+      count += countSymbols(newInp[i]);
+    }
+    cout << count << endl;
   }
+  // int numInput = stoi(argv[1]);
+  // bool cppersist = stoi(argv[2]);
+  // bool recursive = stoi(argv[3]);
+  // bool keepCache = stoi(argv[4]);
+  // int seed = stoi(argv[5]);
+  // const char* version = argv[6];
 
-  if (std::strcmp(version, "wrep") == 0) {
-    runTTTWRep(input, cppersist, recursive, keepCache, seed);
-  }
-  return 0;
+
+  // TTTSolver rec;
+  //   auto localMemo = getLocalMemoizedObj<TTTSolver>(
+  //       tttKey, Move::toString, Move::fromString, identity<string>);
+  // for (std::vector<Board>::iterator it = input.begin(); it != input.end(); it++) {
+  //   Move answer = localMemo.solve(*it);
+  // }
+
+  // if (std::strcmp(version, "worep") == 0) {
+  //   runTTTWORep(input, cppersist, recursive, keepCache, seed);
+  // }
+
+  // if (std::strcmp(version, "wrep") == 0) {
+  //   runTTTWRep(input, cppersist, recursive, keepCache, seed);
+  // }
+  // return 0;
 }

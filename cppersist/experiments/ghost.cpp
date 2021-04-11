@@ -89,7 +89,7 @@ class GhostSolver {
   virtual Result solve(string partial, TrieNode* head) = 0;
 };
 
-class GhostRec : public PersistentMemoizable<Result, string, TrieNode*>,
+class GhostRec : public Memoizable<Result, string, TrieNode*>,
                  public GhostSolver {
  public:
   Result solve(string partial, TrieNode* dict) override {

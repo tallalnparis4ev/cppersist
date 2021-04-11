@@ -19,7 +19,7 @@ class Node {
   Node(int label) : label(label) {}
 };
 
-class DFSSolver : public PersistentMemoizable<int, Node*, int> {
+class DFSSolver : public Memoizable<int, Node*, int> {
  public:
   int solve(Node* root, int find) override {
     if (root == NULL) return 0;
@@ -29,7 +29,7 @@ class DFSSolver : public PersistentMemoizable<int, Node*, int> {
   };
 };
 
-class DFSSolverIterative : public PersistentMemoizable<int, Node*, int> {
+class DFSSolverIterative : public Memoizable<int, Node*, int> {
  public:
   int solve(Node* root, int find) override {
     std::list<Node*> nodes;
@@ -45,7 +45,7 @@ class DFSSolverIterative : public PersistentMemoizable<int, Node*, int> {
   };
 };
 
-class HeightSolver : public PersistentMemoizable<int, Node*> {
+class HeightSolver : public Memoizable<int, Node*> {
  public:
   int solve(Node* root) override {
     std::list<Node*> nodes;

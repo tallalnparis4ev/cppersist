@@ -20,7 +20,7 @@ class FibSolver {
   virtual bigint solve(int n) = 0;
 };
 
-class FibIter : public PersistentMemoizable<bigint, int>, public FibSolver {
+class FibIter : public Memoizable<bigint, int>, public FibSolver {
  public:
   bigint solve(int n) override {
     if (n == 0) return 0;
@@ -37,7 +37,7 @@ class FibIter : public PersistentMemoizable<bigint, int>, public FibSolver {
   };
 };
 
-class FibRec : public PersistentMemoizable<bigint, int>, public FibSolver {
+class FibRec : public Memoizable<bigint, int>, public FibSolver {
  public:
   bigint solve(int n) override {
     if (n == 0) return 0;

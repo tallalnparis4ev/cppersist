@@ -7,7 +7,7 @@
 using std::list;
 using namespace std;
 // Prime Factors Example
-class PrimeFactorizer : public PersistentMemoizable<list<int>, int> {
+class PrimeFactorizer : public Memoizable<list<int>, int> {
  public:
   list<int> solve(int n) override {
     list<int> primeFactors;

@@ -92,7 +92,7 @@ class GhostSolver {
 };
 
 
-class GhostRec : public PersistentMemoizable<Result, string, string>,
+class GhostRec : public Memoizable<Result, string, string>,
                  public GhostSolver {
  public:
   Result solve(string partial, string dictPath) override {

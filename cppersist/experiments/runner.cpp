@@ -7,7 +7,7 @@ using namespace cpst;
 
 template <typename T, typename Ret, typename Args>
 void runTests(ArgGenerator argGenerator,
-              PersistentMemoizable<T, Ret, Args...> memoized) {
+              Memoizable<T, Ret, Args...> memoized) {
   while (argGenerator.hasNext()) {
     long totalTimeMs = 0;
   }

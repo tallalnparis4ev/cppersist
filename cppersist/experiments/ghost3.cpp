@@ -110,7 +110,7 @@ class GhostSolver {
   virtual Result solve(string partial, TrieNode* dict) = 0;
 };
 
-class GhostRec : public PersistentMemoizable<Result, string, TrieNode*>,
+class GhostRec : public Memoizable<Result, string, TrieNode*>,
                  public GhostSolver {
  public:
   Result solve(string partial, TrieNode* dict) override {
@@ -139,7 +139,7 @@ class TrieGen {
   virtual TrieNode* solve(string dictPath) = 0;
 };
 
-class TrieGenerator : public PersistentMemoizable<TrieNode*,string>, public TrieGen{
+class TrieGenerator : public Memoizable<TrieNode*,string>, public TrieGen{
   public:
     TrieNode* solve(string dictPath){
       TrieNode* ret = new TrieNode(false);

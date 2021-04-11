@@ -27,12 +27,12 @@ bigint binom(int n, int k) {
   return value;
 }
 
-class NKIter : public PersistentMemoizable<bigint, int, int>, public NKSolver {
+class NKIter : public Memoizable<bigint, int, int>, public NKSolver {
  public:
   bigint solve(int n, int k) override { return 2; };
 };
 
-class NKRec : public PersistentMemoizable<bigint, int, int>, public NKSolver {
+class NKRec : public Memoizable<bigint, int, int>, public NKSolver {
  public:
   bigint solve(int n, int k) override {
     if (n == k || k == 0) return 1;

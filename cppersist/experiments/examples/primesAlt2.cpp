@@ -8,7 +8,7 @@ using std::list;
 using namespace std;
 using namespace cpst;
 // Prime Factors Example
-class PrimeFactorizerAlt2 : public PersistentMemoizable<list<int>, int> {
+class PrimeFactorizerAlt2 : public Memoizable<list<int>, int> {
  public:
   list<int> solve(int n) override {
     int nextPrime = smallestPrime(n);

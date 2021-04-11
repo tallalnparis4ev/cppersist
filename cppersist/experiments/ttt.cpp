@@ -227,7 +227,7 @@ void createBoards(int square_num, char curBoard[3][3],
   }
 }
 
-class TTTSolver : public PersistentMemoizable<Move, Board> {
+class TTTSolver : public Memoizable<Move, Board> {
  public:
   Move solve(Board board) override { return findBestMove(board.board); }
 };
