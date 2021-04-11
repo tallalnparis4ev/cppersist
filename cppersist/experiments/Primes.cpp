@@ -112,20 +112,21 @@ void runPrime(vector<int>& input, string type, bool cppersist, bool recursive,
         primesKey, primesPickle, primesUnpickle, "primesTest", identity<string>);
     if (!cppersist) {
       runPrime(rec, input, outPath, cppersist);
-    } else {
-      runPrime(localMemo, input, outPath, cppersist);
-    }
+    } 
+    // else {
+    //   runPrime(localMemo, input, outPath, cppersist);
+    // }
   } 
-  else {
-    PrimeIter iter;
-    auto localMemo = getLocalMemoizedObj<PrimeIter>(
-        primesKey, primesPickle, primesUnpickle, "primesTest", identity<string>);
-    if (!cppersist) {
-      runPrime(iter, input, outPath, cppersist);
-    } else {
-      runPrime(localMemo, input, outPath, cppersist);
-    }
-  }
+  // else {
+    // PrimeIter iter;
+    // auto localMemo = getLocalMemoizedObj<PrimeIter>(
+        // primesKey, primesPickle, primesUnpickle, "primesTest", identity<string>);
+    // if (!cppersist) {
+      // runPrime(iter, input, outPath, cppersist);
+    // } else {
+      // runPrime(localMemo, input, outPath, cppersist);
+    // }
+  // }
 }
 
 void runPrimeSeq(vector<int>& input, bool cppersist, bool recursive,
