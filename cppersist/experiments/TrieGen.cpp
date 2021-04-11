@@ -71,7 +71,7 @@ string genKey(string path){
 void runTrie(TrieGen& generator, vector<string>& input,
               string outPath, bool cppersist) {
   vector<TrieNode*> toFree;
-  int n = 4;
+  int n = 5;
   Timer timer;
   timer.start();
   // Convert dictionary ("words.txt") into a Trie data structure twice.
@@ -138,11 +138,12 @@ int main(int argc, char const* argv[]) {
   int seed = stoi(argv[5]);
   const char* version = argv[6];
   std::vector<string> filePaths = getFilePaths();
-  if (std::strcmp(version, "worep") == 0) {
-    runTrieWORep(filePaths, cppersist, recursive, keepCache, seed);
-  }
-  if (std::strcmp(version, "wrep") == 0) {
-    runTrieWRep(filePaths, cppersist, recursive, keepCache, seed);
-  }
+  runTrieWORep(filePaths, cppersist, recursive, keepCache, seed);
+  // if (std::strcmp(version, "worep") == 0) {
+    // runTrieWORep(filePaths, cppersist, recursive, keepCache, seed);
+  // }
+  // if (std::strcmp(version, "wrep") == 0) {
+    // runTrieWRep(filePaths, cppersist, recursive, keepCache, seed);
+  // }
   return 0;
 }

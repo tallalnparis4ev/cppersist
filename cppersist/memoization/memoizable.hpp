@@ -5,6 +5,12 @@ template <typename T>
 T identity(T obj) {
   return obj;
 }
+
+template <typename... Args>
+bool returnTrue(Args... args){
+  return true;
+}
+
 /**
  * This is an abstract class, and a class which a user wants to memoize
  * must inherit from this class.
