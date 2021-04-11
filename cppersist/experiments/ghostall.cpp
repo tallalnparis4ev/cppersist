@@ -233,7 +233,11 @@ int main(int argc, char const* argv[]) {
   head->isRoot = true;
   completeTrie(head,"./words.txt");
   vector<string> validPref = validPrefixes(head);
-  runGhostWORep(validPref, head, cppersist, recursive, keepCache, seed);
+  vector<string> inp;
+  while(inp.size() != 100000) {
+    inp.push_back(validPref[rand() % validPref.size()]);
+  }
+  runGhostWORep(inp, head, cppersist, recursive, keepCache, seed);
   TrieNode::freeAll(head);
 
 
