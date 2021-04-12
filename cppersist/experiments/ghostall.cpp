@@ -235,7 +235,7 @@ int main(int argc, char const* argv[]) {
   vector<string> validPref = validPrefixes(head);
   vector<string> inp;
   srand(seed);
-  while(inp.size() != 10000000) {
+  while(inp.size() != numInput) {
     inp.push_back(validPref[rand() % validPref.size()]);
   }
   runGhostWORep(inp, head, cppersist, recursive, keepCache, seed);
