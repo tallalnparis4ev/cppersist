@@ -289,18 +289,16 @@ void runTTTWORep(std::vector<Board>& input, bool cppersist,
 }
 
 void runTTTWRep(std::vector<Board>& input, bool cppersist,
-                  bool recursive, bool keepCache, int seed) {
+                  bool recursive, bool keepCache, int seed, int numInp) {
   srand(seed);
   std::vector<Board> newInp;
-  int ind = 0;
-  while (newInp.size() != input.size()) {
+  while (newInp.size() != numInp) {
     newInp.push_back(input[rand() % input.size()]);
   }
-  // runTTT(newInp, "WRep", cppersist, recursive, keepCache);
+  runTTT(newInp, "WRep", cppersist, recursive, keepCache);
 }
 
 
-#include <math.h>
 int main(int argc, char const* argv[]) {
   //43046721 
   std::vector<Board> input;
@@ -317,7 +315,7 @@ int main(int argc, char const* argv[]) {
   }
 
   if (std::strcmp(version, "wrep") == 0) {
-    runTTTWRep(input, cppersist, recursive, keepCache, seed);
+    runTTTWRep(input, cppersist, recursive, keepCache, seed, numInput);
   }
   return 0;
 }
