@@ -178,7 +178,7 @@ bool decision(bool p2, string* ignored1, TrieNode* cur){
 
 void runGhost(vector<string>& input, TrieNode* dict, string type,
               bool cppersist, bool recursive, bool keepCache) {
-  string path = getOutPath("GhostAll", type, cppersist, recursive, keepCache);
+  string path = getOutPath("GhostSearchNodes", type, cppersist, recursive, keepCache);
   if (recursive) {
     LeafRec noMemo; 
     auto hasMemo = getLocalMemoizedObj<LeafRec>(
@@ -254,27 +254,15 @@ int main(int argc, char const* argv[]) {
   TrieNode* head = new TrieNode(false);
   head->isRoot = true;
   completeTrie(head,"./words.txt");
-  // cout << TrieNode::pickle(head) << endl;
   postOrder(head);
-  LeafRec rec;
-  auto hasMemo = getLocalMemoizedObj<LeafRec>(
-        ghostKey, identity<string>, identity<string>, identity<string>);
-  string* ans = new string();
-  hasMemo(true,ans,head);
-  // rec.solve(false,ans,head);
-  cout << *ans << endl;
-  // cout << "Label root: " << head->label << endl;
-  // int x = 2;
-
-  // vector<string> validPref = validPrefixes(head);
-  // vector<string> inp;
-  // srand(seed);
-  // while(inp.size() != numInput) {
-  //   inp.push_back(validPref[rand() % validPref.size()]);
-  // }
-  // runGhostWORep(inp, head, cppersist, recursive, keepCache, seed);
-  // TrieNode::freeAll(head);
-
+  vector<string> validPref = validPrefixes(head);
+  vector<string> inp;
+  srand(seed);
+  while(inp.size() != numInput) {
+    inp.push_back(validPref[rand() % validPref.size()]);
+  }
+  runGhostWORep(inp, head, cppersist, recursive, keepCache, seed);
+  TrieNode::freeAll(head);
 
   // if (std::strcmp(version, "worep") == 0) {
   //   runGhostWORep(validPref, head, cppersist, recursive, keepCache, seed);
@@ -283,6 +271,7 @@ int main(int argc, char const* argv[]) {
   // if (std::strcmp(version, "wrep") == 0) {
   //   runGhostWRep(validPref, head, cppersist, recursive, keepCache, seed);
   // }
+
 
   // return 0;
 }
