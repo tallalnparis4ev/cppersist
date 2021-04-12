@@ -8,6 +8,7 @@
 #include <stack>
 class TrieNode {
  public:
+  char label = '_'; //indicates if this is a goal for p1 or p2
   bool isLeaf(){
     return this->isWord;
     // for (int i = 0; i < ALPHABET_SIZE; i++) 
