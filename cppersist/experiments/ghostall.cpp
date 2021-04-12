@@ -154,12 +154,12 @@ vector<string> validPrefixes(TrieNode* head) {
 void runGhost(GhostSolver& solver, vector<string>& input, TrieNode* dict,
               string path, bool cppersist) {
   Timer timer;
-  timer.start();
   for (vector<string>::iterator it = input.begin(); it != input.end(); it++) {
     string* answer = new string();
+    timer.start();
     solver.solve(*it, dict, answer);
+    timer.end();
   }
-  timer.end();
   appendRowToFile(path, timer.getRow());
 }
 
@@ -193,7 +193,7 @@ void runGhost(vector<string>& input, TrieNode* dict, string type,
 
 void runGhostWORep(vector<string>& input, TrieNode* dict, bool cppersist,
                    bool recursive, bool keepCache, int seed) {
-  shuffle(input.begin(), input.end(), default_random_engine(seed));
+  // shuffle(input.begin(), input.end(), default_random_engine(seed));
   runGhost(input, dict, "WORep", cppersist, recursive, keepCache);
 }
 
@@ -234,6 +234,7 @@ int main(int argc, char const* argv[]) {
   completeTrie(head,"./words.txt");
   vector<string> validPref = validPrefixes(head);
   vector<string> inp;
+  srand(seed);
   while(inp.size() != 10000000) {
     inp.push_back(validPref[rand() % validPref.size()]);
   }
