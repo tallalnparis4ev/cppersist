@@ -9,8 +9,6 @@ using std::nullopt;
 using std::optional;
 using std::string;
 namespace cpst {
-template <typename Ret, typename... Args>
-const string DiskCache<Ret, Args...>::OUT_DIR = "persist";
 
 template <typename Ret, typename... Args>
 DiskCache<Ret, Args...>* DiskCache<Ret, Args...>::clone() {
@@ -25,8 +23,8 @@ DiskCache<Ret, Args...>::DiskCache(string (*key)(Args...),
                                    string (*hash)(string), string funcName)
     : DiskCache(key, pickle, unpickle, hash) {
   this->funcName = funcName;
-  std::filesystem::create_directories(OUT_DIR + "/" + funcName);
-  this->outputPath = "./" + OUT_DIR + "/" + funcName + "/";
+  this->outputPath = "./persist/" + funcName + "/";
+  std::filesystem::create_directories(this->outputPath);
 }
 
 template <typename Ret, typename... Args>
@@ -53,5 +51,11 @@ void DiskCache<Ret, Args...>::put(const Args&... args, const Ret& value) {
   std::ofstream myfile(makePathForKey(this->key(args...)));
   myfile << this->pickle(value);
   myfile.close();
+}
+
+template <typename Ret, typename... Args>
+void DiskCache<Ret, Args...>::setLoc(string& loc){
+  this->outputPath = loc + "/" + this->funcName + "/";
+  std::filesystem::create_directories(this->outputPath);
 }
 }  // namespace cpst

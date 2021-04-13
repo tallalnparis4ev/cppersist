@@ -19,9 +19,8 @@ class DiskCache : public PerCache<Ret, Args...> {
   DiskCache<Ret, Args...>* clone();
   std::optional<Ret> get(const Args&... args);
   void put(const Args&... args, const Ret& value);
-
+  void setLoc(string&);
  private:
-  static const string OUT_DIR;
   string makePathForKey(const string& key);
   string outputPath;
 };
