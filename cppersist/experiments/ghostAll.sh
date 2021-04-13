@@ -1,4 +1,4 @@
-start=5000000
+start=10000000
 for counter in {1..11}
 do
    ./runWoRep.sh 10 $start 0 
