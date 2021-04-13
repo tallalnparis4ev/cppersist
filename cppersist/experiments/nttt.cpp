@@ -197,7 +197,6 @@ char getSymbol(int& x){
   }
   return 'n';
 }
-
 int numStates = 0;
 void createBoards(std::vector<Board>& boards) {
   int combinations = pow(3,numCells);
@@ -212,12 +211,15 @@ void createBoards(std::vector<Board>& boards) {
         potential[row][col] = getSymbol(combination);
         combination /= 3;
       }
-      if(isValidTTTBoard(potential)) boards.push_back(potential);
+      if(isValidTTTBoard(potential)){
+        Board board(potential);
+        boards.push_back(board);
+      }
   }
 }
 
 bool decision(Board board){
-  return countBlanks(board) >= 12;
+  return countBlanks(board) >= 10;
 }
 
 class TTTSolver : public Memoizable<Move, Board> {
