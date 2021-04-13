@@ -55,6 +55,16 @@ class PersistentMemoized : public T {
 
   void setDecision(bool (*decision)(Args...));
 
+  void setCacheLoc(string loc);
+
+  Cache<Ret, Args...>* getCache(){
+    return this->primaryCache;
+  }
+
+  Cache<Ret, Args...>* getSecondaryCache(){
+    return this->secondaryCache;
+  }
+
   virtual Ret solve(Args... args);
 
  private:

@@ -8,6 +8,7 @@
 #include "../../cacheimpl/memory/lrucache.hpp"
 #include "../../cacheimpl/memory/onecache.hpp"
 #include "../../cacheimpl/memory/regcache.hpp"
+#include "../../interfaces/percache.hpp"
 #include "../../utils/log.hpp"
 using std::string;
 namespace cpst {
@@ -169,6 +170,13 @@ void PersistentMemoized<T, Ret, Args...>::write(Args const&... args,
 template <typename T, typename Ret, typename... Args>
 void PersistentMemoized<T, Ret, Args...>::setDecision(bool (*decision_)(Args...)){
   this->decision = decision_;
+}
+
+template <typename T, typename Ret, typename... Args>
+void PersistentMemoized<T, Ret, Args...>::setCacheLoc(string loc){
+  Cache<Ret,Args...>* toCast = secondaryCache == NULL ? this->primaryCache : this->secondaryCache;
+  PerCache<Ret,Args...>* casted = static_cast<PerCache<Ret,Args...>*>(this->primaryCache);
+  casted->setLoc(loc);
 }
 
 template <typename T, typename Ret, typename... Args>
