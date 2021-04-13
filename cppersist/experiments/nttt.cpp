@@ -199,7 +199,6 @@ char getSymbol(int& x){
 }
 int numStates = 0;
 void createBoards(std::vector<Board>& boards) {
-  int count = 0;
   int combinations = pow(3,numCells);
   for(int i = 0; i < combinations; i++)
   {
@@ -215,10 +214,8 @@ void createBoards(std::vector<Board>& boards) {
       if(isValidTTTBoard(potential)){
         Board board(potential);
         boards.push_back(board);
-        if(countBlanks(board) >= 10) count++;
       }
   }
-  cout << count << endl;
 }
 
 bool decision(Board board){
@@ -308,19 +305,19 @@ int main(int argc, char const* argv[]) {
   //43046721 
   std::vector<Board> input;
   createBoards(input);
-  // int numInput = stoi(argv[1]);
-  // bool cppersist = stoi(argv[2]);
-  // bool recursive = stoi(argv[3]);
-  // bool keepCache = stoi(argv[4]);
-  // int seed = stoi(argv[5]);
-  // const char* version = argv[6];
+  int numInput = stoi(argv[1]);
+  bool cppersist = stoi(argv[2]);
+  bool recursive = stoi(argv[3]);
+  bool keepCache = stoi(argv[4]);
+  int seed = stoi(argv[5]);
+  const char* version = argv[6];
 
-  // if (std::strcmp(version, "worep") == 0) {
-  //   runTTTWORep(input, cppersist, recursive, keepCache, seed);
-  // }
+  if (std::strcmp(version, "worep") == 0) {
+    runTTTWORep(input, cppersist, recursive, keepCache, seed);
+  }
 
-  // if (std::strcmp(version, "wrep") == 0) {
-  //   runTTTWRep(input, cppersist, recursive, keepCache, seed, numInput);
-  // }
-  // return 0;
+  if (std::strcmp(version, "wrep") == 0) {
+    runTTTWRep(input, cppersist, recursive, keepCache, seed, numInput);
+  }
+  return 0;
 }
