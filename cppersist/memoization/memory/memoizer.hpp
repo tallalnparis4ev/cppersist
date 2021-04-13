@@ -57,6 +57,10 @@ class Memoized : public T {
     this->decision = decision_;
   }
 
+  MemCache<Ret, Args...>* getCache(){
+    return this->cache;
+  }
+
  private:
   bool (*decision)(Args...) = returnTrue<Args...>;
   MemCache<Ret, Args...>* cache;
