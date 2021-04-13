@@ -104,7 +104,7 @@ class LeafRec : public Memoizable<string,bool,TrieNode*>, public LeafSolver{
       string ans = "";
       for (TrieNode*& child : cur->children) {
         if(child!=nullptr){
-          string ret = solve(p2,cur);
+          string ret = solve(p2,child);
           if(ret!="") ans.append(ret);
         }
       }
