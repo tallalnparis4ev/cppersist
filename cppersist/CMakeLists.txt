@@ -18,7 +18,7 @@ FetchContent_MakeAvailable(cppersist)
 include_directories(${cppersist_SOURCE_DIR}) 
 
 if(HTTPS OR HTTP)
-  FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/tallalnparis4ev/cpr.git GIT_TAG experiment) 
+  FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/tallalnparis4ev/cpr.git GIT_TAG stable) 
   FetchContent_MakeAvailable(cpr)
   set(CPR "cpr::cpr")
 endif()
