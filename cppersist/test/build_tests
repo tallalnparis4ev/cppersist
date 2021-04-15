@@ -1,6 +1,6 @@
+rm -rf build
+mkdir build
 cd build
-rm cmake_install.cmake Makefile CMakeCache.txt
-rm -rf bin _deps lib CMakeFiles
-cmake -DCMAKE_BUILD_TYPE=Debug -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl ..
+cmake -DCMAKE_BUILD_TYPE=Debug -DOPENSSL_ROOT_DIR=$1 ..
 make
 mv tests ../run_tests
