@@ -26,20 +26,21 @@ Here is an example of how cppersist is used:
 #include <cppersist/memory.hpp> //if you need to memoize in-memory
 #include <iostream>
 
-//The class to be memoized - must implement a solve method
-class FibonacciSolver: public cpst::Memoizable<int, int>{
+//The class containing the function you want to memoize
+class FibonacciSolver: public cpst::Memoizable<int, int>{ //<--- these templates must correspond to 
+//<return type of function to memoize, comma separated list of input types of function to memoize>
   public:
-    int solve(int n) override {
+    int solve(int n) override { //the function you want to memoize - must be called "solve"!
       if(n<=1) return n;
       return solve(n-1) + solve(n-2);
     }
 };
 
-//Pickle/serialize function
+//Serialization function
 std::string intostr(int x){
   return std::to_string(x);
 }
-//Unpickle/deserialize function
+//Deserialization function
 int strtoi(std::string x){
   return std::stoi(x);
 }
