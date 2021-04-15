@@ -42,15 +42,13 @@ TEST(MongoMemoizedObj, ChangeLocMiss) {
   memo("a");
   ASSERT_EQ(memo.getCache()->get("a"), "a");
   memo.setCacheLoc(newLoc);
-  ASSERT_EQ(memo.getCache()->get("a"), nullopt);
+  ASSERT_EQ(memo.getCache()->get("a"), "a");
 }
 
 TEST(MongoMemoizedObj, ChangeLocHit) {
   string newLoc = "localhost:5001";
   auto memo = getMongoMemoizedObj<TestClass>(identity<string>,identity<string>,identity<string>,"localhost:5000");
   memo.setCacheLoc(newLoc);
-  ASSERT_EQ(memo.getCache()->get("a"), nullopt);
-  memo("a");
   ASSERT_EQ(memo.getCache()->get("a"), "a");
 }
 
