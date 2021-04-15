@@ -22,7 +22,7 @@ class Timer {
     userCpu += endCpu.tms_utime - startCpu.tms_utime;
   }
 
-  std::string headers() { return "System (ms), User (ms), Real (ms)"; }
+  std::string headers() { return "System (ms), User (ms), Real (ns)"; }
 
   std::string getRow() {
     return std::to_string(sysCpu) + "," + std::to_string(userCpu) + "," +
