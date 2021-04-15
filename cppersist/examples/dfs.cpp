@@ -13,7 +13,7 @@ class Node {
   Node* right;
 };
 
-class DFSSolver : public PersistentMemoizable<int, Node*, int> {
+class DFSSolver : public Memoizable<int, Node*, int> {
  public:
   int solve(Node* root, int find) override {
     if (root == NULL) return 0;

@@ -53,8 +53,18 @@ class PersistentMemoized : public T {
    */
   void setMemoryCache(MemCacheType, int);
 
+  /**
+   * A method to change/assign a memory cache, followed by the size of the
+   * cache. The size is only applicable if the MemCacheType is LRU or REGULAR.
+   * The size will determine the maximum number of entries in the LRU or REGULAR.
+   */
   void setDecision(bool (*decision)(Args...));
 
+  /**
+   * A method to change the location of your cache.
+   * If a filesystem cache this will save entries in the directory 'loc/funcName'.
+   * If a MongoDB cache this will save entries in to the database at the URL 'loc'
+   */
   void setCacheLoc(string loc);
 
   Cache<Ret, Args...>* getCache(){

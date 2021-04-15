@@ -8,8 +8,9 @@
 #include "../../interfaces/memcache.hpp"
 namespace cpst {
 /**
- * This is a class that represents an in-memory cache with no bound on the
- * number of entries it has.
+ * This is a class that represents an in-memory cache which has a limit
+ * on the number of entries it can store. When that limit is reached,
+ * entries are removed randomly from the cache.
  */
 template <typename Ret, typename... Args>
 class RegCache : public MemCache<Ret, Args...> {
