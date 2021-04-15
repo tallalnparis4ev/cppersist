@@ -9,7 +9,6 @@
 #include <filesystem>
 
 #include "../local.hpp"
-#include "../memory.hpp"
 #include "../utils/files.hpp"
 #include "../utils/log.hpp"
 #include "data-generation/generators.cpp"
@@ -56,6 +55,7 @@ struct Result {
   void print() {
     string winner = p1Win ? "player one " : "player two ";
     string line = winner + "will win by playing towards " + word;
+    cout << line << endl;
   }
   static string toString(Result res){
     string oneOrZero = res.p1Win ? "1" : "0";
@@ -84,58 +84,40 @@ bool isValidPartial(string partial, TrieNode* head) {
   return true;
 }
 
-class LeafSolver{
-  public:
-    virtual string solve(bool,TrieNode*) = 0;
-};
-
-class LeafRec : public Memoizable<string,bool,TrieNode*>, public LeafSolver{
-  public:
-    string solve(bool p2, TrieNode* cur) override{
-      if(cur->isLeaf()){
-        if(isRightLabel(p2,cur)){
-          return cur->prefix + ", ";
-        }
-        return "";
-      }
-
-      if(!isRightLabel(p2,cur)) return "";
-      
-      string ans = "";
-      for (TrieNode*& child : cur->children) {
-        if(child!=nullptr){
-          string ret = solve(p2,child);
-          if(ret!="") ans.append(ret);
-        }
-      }
-      return ans;
-    }
-
-    bool isRightLabel(bool p2, TrieNode*& check){
-      if(check->label == '2') return p2 ? true : false;
-      else return p2 ? false : true;
-    }
-};
-
-class GhostSolver{
+class GhostSolver {
  public:
-  GhostSolver(LeafSolver& solver_) : solver(solver_) {}
-  string solve(string prefix, TrieNode* dict) {
-    return solver.solve(prefix.length()==1,dict->getNode(prefix));
+  virtual Result solve(string partial, TrieNode* head) = 0;
+};
+
+class GhostRec : public Memoizable<Result, string, TrieNode*>,
+                 public GhostSolver {
+ public:
+  Result solve(string partial, TrieNode* dict) override {
+    bool p1 = (partial.length() % 2) == 0;
+    TrieNode* cur = dict->getNode(partial);
+    if (cur->isWord) return Result{cur->prefix, p1};
+    Result aLosingRes;
+    for (TrieNode*& child : cur->children) {
+      if (child != nullptr) {
+        Result res = solve(child->prefix, dict);
+        if (res.p1Win && p1) {
+          return res;
+        }
+        if (!res.p1Win && !p1) {
+          return res;
+        }
+        aLosingRes = res;
+      }
+    }
+    return aLosingRes;
   }
-  private:
-    LeafSolver& solver;
 };
 
 //Explore smaller words, maybe make the dictionairy bigger?
 //Change the computational problem to calculate the Trie each time
 //While generating prefixes give higher weighting to smaller length words
 
-string ghostKey(bool p2, TrieNode* curNode) 
-{ 
-  if(curNode->isRoot) return "root_node";
-  return curNode->prefix+to_string(p2); 
-}
+string ghostKey(string partial, TrieNode* ignored) { return partial; }
 
 vector<string> validPrefixes(TrieNode* head) {
   vector<string> prefixes;
@@ -158,45 +140,32 @@ vector<string> validPrefixes(TrieNode* head) {
 void runGhost(GhostSolver& solver, vector<string>& input, TrieNode* dict,
               string path, bool cppersist) {
   Timer timer;
+  timer.start();
   for (vector<string>::iterator it = input.begin(); it != input.end(); it++) {
-    timer.start();
-    string ans = solver.solve(*it, dict);
-    timer.end();
+    Result answer = solver.solve(*it, dict);
   }
+  timer.end();
   appendRowToFile(path, timer.getRow());
-}
-
-bool decision(bool p2, TrieNode* cur){
-  int length = cur->prefix.length();
-  if(length>2 || (p2 && (cur->label == '1') || (!p2  && (cur->label == '2')))) return false;
-  return true;
-  // if(p2) return (length%2) == 1;
-  // return (length%2) == 0;
-  // cur->prefix % 2 == 0 when its p1's turn
-  // cur->prefix % 2 == 1 when its p2's turn
 }
 
 void runGhost(vector<string>& input, TrieNode* dict, string type,
               bool cppersist, bool recursive, bool keepCache) {
-  string path = getOutPath("GhostSearchNodes", type, cppersist, recursive, keepCache);
+  string path = getOutPath("Ghost", type, cppersist, recursive, keepCache);
   if (recursive) {
-    LeafRec noMemo; 
-    auto hasMemo = getLocalMemoizedObj<LeafRec>(
-        ghostKey, identity<string>, identity<string>, identity<string>);
-    hasMemo.setDecision(decision);
+    GhostRec rec;
+    auto localMemo = getLocalMemoizedObj<GhostRec>(
+        ghostKey, Result::toString, Result::fromString, identity<string>);
     if (!cppersist) {
-      GhostSolver rec(noMemo);
       runGhost(rec, input, dict, path, cppersist);
     } else {
-      GhostSolver rec(hasMemo);
-      runGhost(rec, input, dict, path, cppersist);
+      runGhost(localMemo, input, dict, path, cppersist);
     }
   }
 }
 
 void runGhostWORep(vector<string>& input, TrieNode* dict, bool cppersist,
                    bool recursive, bool keepCache, int seed) {
-  // shuffle(input.begin(), input.end(), default_random_engine(seed));
+  shuffle(input.begin(), input.end(), default_random_engine(seed));
   runGhost(input, dict, "WORep", cppersist, recursive, keepCache);
 }
 
@@ -210,37 +179,6 @@ void runGhostWRep(vector<string>& input, TrieNode* dict, bool cppersist,
   runGhost(newInp, dict, "WRep", cppersist, recursive, keepCache);
 }
 
-void postOrder(TrieNode* cur){
-  if(cur->isLeaf()){
-    if((cur->prefix.length() % 2) == 0) cur->label = '1';
-    else cur->label = '2';
-    return;
-  }
-  for (TrieNode*& child : cur->children){
-    if(child!=nullptr){
-      postOrder(child);
-    }
-  }
-
-  bool allSame = true;
-  char prev = '-';
-  for (TrieNode*& child : cur->children){
-    if(child!=nullptr){
-      char curC = child->label;
-      if(prev == '-') prev = curC;
-      else if(prev != curC){
-        allSame = false;
-        break;
-      }
-    }
-  }
-  
-  if(allSame) cur->label = prev;
-  else{
-    if((cur->prefix.length() % 2) == 0) cur->label = '1';
-    else cur->label = '2';
-  }
-}
 
 int main(int argc, char const* argv[]) {
 
@@ -252,26 +190,17 @@ int main(int argc, char const* argv[]) {
   const char* version = argv[6];
 
   TrieNode* head = new TrieNode(false);
-  head->isRoot = true;
   completeTrie(head,"./words.txt");
-  postOrder(head);
   vector<string> validPref = validPrefixes(head);
-  vector<string> inp;
-  srand(seed);
-  while(inp.size() != numInput) {
-    inp.push_back(validPref[rand() % validPref.size()]);
+
+  if (std::strcmp(version, "worep") == 0) {
+    runGhostWORep(validPref, head, cppersist, recursive, keepCache, seed);
   }
-  runGhostWORep(inp, head, cppersist, recursive, keepCache, seed);
+
+  if (std::strcmp(version, "wrep") == 0) {
+    runGhostWRep(validPref, head, cppersist, recursive, keepCache, seed);
+  }
+
   TrieNode::freeAll(head);
-
-  // if (std::strcmp(version, "worep") == 0) {
-  //   runGhostWORep(validPref, head, cppersist, recursive, keepCache, seed);
-  // }
-
-  // if (std::strcmp(version, "wrep") == 0) {
-  //   runGhostWRep(validPref, head, cppersist, recursive, keepCache, seed);
-  // }
-
-
-  // return 0;
+  return 0;
 }
