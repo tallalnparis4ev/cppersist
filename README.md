@@ -9,7 +9,15 @@ cppersist is a small framework which allows users to apply persistent memoizatio
 [![Documentation](https://img.shields.io/badge/docs-online-informational?style=for-the-badge&link=https://tallalnparis4ev.github.io/)](https://tallalnparis4ev.github.io/)  
 The documentation of cppersist is found [here](https://tallalnparis4ev.github.io/). Navigate to the 'modules' tab for documentation on the user-visible parts of cppersist.
 
+## Minimal Working Example
+```console
+~$ git clone git@github.com:tallalnparis4ev/cppersist.git
+~$ cd ./cppersist/demo
+~/cppersist/demo$ ./build_demo
+~/cppersist/demo$ ./demo
+```
 
+## Example C++ File Using Cppersist
 Here is an example of how cppersist is used:
 
 ```c++
@@ -50,7 +58,7 @@ int main(int argc, char** argv) {
 }
 ```
 
-## Usage
+## Example CMake File Building the Above File
 To build your project, utilising cppersist, via CMake (version 3.15.2+ required):
 ```cmake
 cmake_minimum_required(VERSION 3.15.2)
