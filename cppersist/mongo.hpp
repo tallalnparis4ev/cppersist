@@ -1,8 +1,8 @@
 #ifndef MONGO_H_FILE
 #define MONGO_H_FILE
 
-#include "../crypto/sha256.h"
-#include "../memoization/persistent/memoizer.hpp"
+#include "crypto/sha256.h"
+#include "memoization/persistent/memoizer.hpp"
 
 namespace cpst {
 /**

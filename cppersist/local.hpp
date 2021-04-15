@@ -1,8 +1,8 @@
 #ifndef LOCAL_H_FILE
 #define LOCAL_H_FILE
 
-#include "../crypto/sha256.h"
-#include "../memoization/persistent/memoizer.hpp"
+#include "crypto/sha256.h"
+#include "memoization/persistent/memoizer.hpp"
 
 namespace cpst {
 /**

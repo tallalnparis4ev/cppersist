@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "../include/local.hpp"
-#include "../include/memory.hpp"
-#include "../include/mongo.hpp"
+#include "../local.hpp"
+#include "../memory.hpp"
+#include "../mongo.hpp"
 using namespace cpst;
 // Fibonacci Sequence Example
 class FibonacciSolver : public Memoizable<int, int> {

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <list>
 
-#include "../include/local.hpp"
+#include "../local.hpp"
 #define STOP "A "
 #define DELIMITER " "
 using namespace std;
