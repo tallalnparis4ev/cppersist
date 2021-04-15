@@ -2,7 +2,13 @@
 
 ## TLDR
 
-cppersist is a small framework which allows users to apply persistent memoization to a member function. cppersist allows member functions to be memoized via the local filesystem, MongoDB, or in-memory.
+cppersist is a small framework which allows users to apply persistent memoization to a member function. cppersist allows member functions to be memoized via a filesystem, MongoDB, or in-memory.
+
+## Documentation
+
+[![Documentation](https://img.shields.io/badge/docs-online-informational?style=for-the-badge&link=https://tallalnparis4ev.github.io/)](https://tallalnparis4ev.github.io/)  
+The documentation of cppersist is found [here](https://tallalnparis4ev.github.io/). Navigate to the 'modules' tab for documentation on the user-visible parts of cppersist.
+
 
 Here is an example of how cppersist is used:
 
@@ -43,11 +49,6 @@ int main(int argc, char** argv) {
   std::cout << memoizedInMemoryFib(2) << std::endl;
 }
 ```
-
-## Documentation
-
-[![Documentation](https://img.shields.io/badge/docs-online-informational?style=for-the-badge&link=https://tallalnparis4ev.github.io/)](https://tallalnparis4ev.github.io/)  
-The documentation of cppersist is found [here](https://tallalnparis4ev.github.io/). Navigate to the 'modules' tab for documentation on the user-visible parts of cppersist.
 
 ## Usage
 To build your project, utilising cppersist, via CMake (version 3.15.2+ required):
