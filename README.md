@@ -16,7 +16,7 @@ The documentation of cppersist is found [here](https://tallalnparis4ev.github.io
 ~/cppersist/demo$ ./build_demo
 ~/cppersist/demo$ ./demo
 ```
-
+You should see the output "2" twice. You should also have a directory called "persist" that is populated with entries.
 ## Example C++ File Using cppersist
 Here is an example of how cppersist is used:
 
