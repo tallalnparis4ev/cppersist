@@ -1,5 +1,5 @@
 #include "cppersist/local.hpp"
-#include "cppersist/mongo.hpp"
+// #include "cppersist/mongo.hpp"
 using namespace cpst;
 using namespace std;
 class FibSolver : Memoizable<int, int>{
@@ -32,10 +32,10 @@ int main(int argc, char const *argv[])
     fibKeyMaker,intostr,strtoi,"fib",hashKey
   );
 
-  auto mongoFib = getMongoMemoizedObj<FibSolver>(
-    fibKeyMaker,intostr,strtoi,"localhost:5000","fib",hashKey
-  );
+  // auto mongoFib = getMongoMemoizedObj<FibSolver>(
+    // fibKeyMaker,intostr,strtoi,"localhost:5000","fib",hashKey
+  // );
   localFib(6);
-  mongoFib(6);
+  // mongoFib(6);
   return 0;
 }
