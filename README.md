@@ -17,7 +17,7 @@ The documentation of cppersist is found [here](https://tallalnparis4ev.github.io
 ~/cppersist/demo$ ./demo
 ```
 
-## Example C++ File Using Cppersist
+## Example C++ File Using cppersist
 Here is an example of how cppersist is used:
 
 ```c++
