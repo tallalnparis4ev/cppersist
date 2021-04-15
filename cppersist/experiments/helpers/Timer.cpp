@@ -2,7 +2,7 @@
 
 #include <chrono>
 typedef unsigned long long chronoTime;
-
+//Class that abstracts timing mechanisms 
 class Timer {
  public:
   void start() {

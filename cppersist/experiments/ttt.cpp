@@ -13,21 +13,25 @@ typedef unsigned long long largestUnsigned;
 using namespace std::chrono;
 using namespace std;
 using namespace cpst;
-const int N = 4;
+const int N = 4; //The dimension of the TTT board. This implementation only works for N<=9.
 const int numCells = N*N;
 const int invalidNumXs = (numCells%2 == 0) ? (numCells/2) : ((numCells/2) + 1);
 
+//A move in a tic-tac-toe board
 struct Move {
-  int row, col = 0;
-  int score;
+  int row, col = 0; //of the cell that the current player should place their symbol
+  int score; //1 = x's will win, -1 o's will win, 0 will end in a tie
+  //serialize
   static string toString(Move move){
     std::ostringstream oss;
     oss << move.row << move.col << move.score;
     return oss.str();
   }
+  //deserialize
   static Move fromString(string moveStr){
     return Move{moveStr.at(0) - '0', moveStr.at(1) - '0', std::stoi(moveStr.substr(2))};
   }
+  //Compare two moves to see what is better for the current player. isX determines the current player (true = x's, false = o's)
   bool isOtherBetter(const Move& other, bool isX){
     if(isX){
       return other.score > this->score;
@@ -38,19 +42,15 @@ struct Move {
 
 char player = 'x', opponent = 'o';
 
-bool isMovesLeft(char board[N][N]) {
+//is there any unfilled cells
+bool isMovesLeft(char board[N][N]) { 
   for (int i = 0; i < N; i++)
     for (int j = 0; j < N; j++)
       if (board[i][j] == '_') return true;
   return false;
 }
 
-// struct Result{
-//   bool someoneWon = false;
-//   int score;
-// }
-
-
+//determines if there is a winner in either a row or column. If row=true, check for rows, otherwise check for columns.
 int checkRowCol(char b[N][N], bool row){
   for(int i=0;i<N;i++){
     bool allSame = true;
@@ -72,6 +72,7 @@ int checkRowCol(char b[N][N], bool row){
   return 0;
 }
 
+//determine if there's a winner in one diagonal
 int checkDiag(char b[N][N]){
   char prev = b[0][0];
   for(int i=1;i<N;i++){
@@ -85,6 +86,7 @@ int checkDiag(char b[N][N]){
   return 0;
 }
 
+//determine if there's a winner in the other diagonal
 int checkOtherDiag(char b[N][N]){
   char prev = b[0][N-1];
   for(int i=1;i<N;i++){
@@ -98,6 +100,7 @@ int checkOtherDiag(char b[N][N]){
   return 0;
 }
 
+//determines if either player has won in the board. Returns 10 if x's won, -10 if o's won, 0 for a tie/no-winner
 int evaluate(char b[N][N]) {
   int rows = checkRowCol(b,true);
   if(rows!=0) return rows;
@@ -114,9 +117,7 @@ int evaluate(char b[N][N]) {
   return 0;
 }
 
-
-
-
+//either count the number of x's or o's filled in a board - determined by 'xs'
 int count(char curBoard[N][N], bool xs) {
   int xCount = 0;
   int oCount = 0;
@@ -129,20 +130,24 @@ int count(char curBoard[N][N], bool xs) {
   return xs ? xCount : oCount;
 }
 
+//checks if a board is valid - game hasn't ended and there's a valid number of x's + o's
 bool isValidTTTBoard(char curBoard[N][N]) {
   int xCount = count(curBoard, true);
   int oCount = count(curBoard, false);
   return ( (xCount == oCount) || (oCount == (xCount-1)) ) 
             && (evaluate(curBoard) == 0) && (xCount != invalidNumXs);
 }
+
+//copy one board's symbols to another board
 void copyBoardTo(char from[N][N], char to[N][N]) {
   for (int i = 0; i < N; i++)
     for (int j = 0; j < N; j++) to[i][j] = from[i][j];
 }
 
+//representing a board
 class Board {
  public:
-  char board[N][N];
+  char board[N][N]; //the symbols
   Board(char board[N][N]) { copyBoardTo(board, this->board); }
   Board() {}
   void assign(int i, int j, char c){
@@ -153,6 +158,7 @@ class Board {
   }
 };
 
+//returns whether or not it's x's turn on the current board
 bool isXTurn(const Board& board){
   int xCount = 0;
   int oCount = 0;
@@ -166,6 +172,7 @@ bool isXTurn(const Board& board){
   return xCount == oCount;
 }
 
+//returns the number of unfilled cells on the current board
 int countBlanks(const Board& board){
   int count = 0;
   for (int i = 0; i < N; i++) {
@@ -177,6 +184,7 @@ int countBlanks(const Board& board){
   return count;
 }
 
+//returns the number of filled cells on the current board
 int countSymbols(const Board& board){
   int count = 0;
   for (int i = 0; i < N; i++) {
@@ -188,6 +196,7 @@ int countSymbols(const Board& board){
   return count;
 }
 
+//Used to generate boards
 char getSymbol(int& x){
   switch (x%3)
   {
@@ -197,9 +206,10 @@ char getSymbol(int& x){
   }
   return 'n';
 }
-int numStates = 0;
+
+//Brute force - generate 3^(N*N) boards. This is a much more efficient + smarter way than recursively generating boards.
 void createBoards(std::vector<Board>& boards) {
-  int combinations = pow(3,numCells);
+  int combinations = pow(3,numCells); //3^(N*N) boards
   for(int i = 0; i < combinations; i++)
   {
       char potential[N][N];
@@ -218,43 +228,44 @@ void createBoards(std::vector<Board>& boards) {
   }
 }
 
+//Memoization decision
 bool decision(Board board){
-  return countBlanks(board) >= 10;
+  return countBlanks(board) >= 10; //there has to be at least 10 blanks on the board
 }
 
 class TTTSolver : public Memoizable<Move, Board> {
  public:
-  Move solve(Board board) override {
-    bool xTurn = isXTurn(board);
+  Move solve(Board board) override { //recursive minimax function - returns best move for the current board
+    bool xTurn = isXTurn(board); //check who's turn it is
 
-    int score = evaluate(board.board);
-    if (score == 10) return Move{0,0,1};
-    if (score == -10) return Move{0,0,-1};
-    if (isMovesLeft(board.board) == false) return Move{0,0,0};
+    int score = evaluate(board.board); //see if anyone has won
+    if (score == 10) return Move{0,0,1}; //x's won
+    if (score == -10) return Move{0,0,-1}; //o's won
+    if (isMovesLeft(board.board) == false) return Move{0,0,0}; //tie
     
-    Move best;
+    Move best; //find the best move to make
     bool firstAssign = true;
-    char play = xTurn ? 'x' : 'o';
+    char play = xTurn ? 'x' : 'o'; //the current player's symbol
     for (int i = 0; i < N; i++) {
       for (int j = 0; j < N; j++) {
-        if (board.get(i,j) == '_') {
-          board.assign(i,j,play);
-          Move attempt = solve(board);
-          if(firstAssign){
-            best = attempt;
+        if (board.get(i,j) == '_') { //iterate over unfilled characters
+          board.assign(i,j,play); //attempt to play the current player's symbol
+          Move attempt = solve(board); //recurse minimax function
+          if(firstAssign){ 
+            best = attempt; //this is the first attempted move 
             firstAssign = false;
           }
-          else if(best.isOtherBetter(attempt,xTurn)) best = attempt;
-          board.assign(i,j,'_');
+          else if(best.isOtherBetter(attempt,xTurn)) best = attempt; //found a move that is better than the current best move
+          board.assign(i,j,'_'); //backtrack
         }
       }
     }
-    return best;
+    return best; //return the best move
   }
 };
 
 string tttKey(Board board) {
-  return string(&board.board[0][0], &board.board[2][2] + 1);
+  return string(&board.board[0][0], &board.board[(N-1)][(N-1)] + 1);
 }
 
 void runTTT(TTTSolver& solver, std::vector<Board>& input,
