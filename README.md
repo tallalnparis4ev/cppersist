@@ -123,4 +123,4 @@ By default the MongoDB server communicates to a single MongoDB instance which sh
 ```
 Note: again, not all systems will require you to pass /path/to/openssl. This was a requirment on macOS Catalina 10.15.6, and was solved by passing in the path to OpenSSL which will look like "/usr/local/opt/openssl". However, on CentOS 8 there was no need to pass in anything.
 
-Additionally, for the MongoDB tests to pass you must setup two MongoDB servers - one listening at port 5000 and the other at port 5001. The MongoDB instance they copmmunicate with must not have any entries in the collection "persist" of the database "memoisation".
+Additionally, for the MongoDB tests to pass you must setup two MongoDB servers - one listening at port 5000 and the other at port 5001. The MongoDB instance they communicate with must not have any entries in the collection "persist" of the database "memoisation".
