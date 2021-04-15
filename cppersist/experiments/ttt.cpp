@@ -265,7 +265,7 @@ class TTTSolver : public Memoizable<Move, Board> {
 };
 
 string tttKey(Board board) {
-  return string(&board.board[0][0], &board.board[(N-1)][(N-1)] + 1);
+  return string(&board.board[0][0], &board.board[(N-1)][(N-1)] + 1); //key - simply convert the 2D board to a 1D string
 }
 
 void runTTT(TTTSolver& solver, std::vector<Board>& input,
@@ -295,12 +295,14 @@ void runTTT(std::vector<Board>& input, string type,
   }
 }
 
+//simply shuffle all valid boards and make that the workload
 void runTTTWORep(std::vector<Board>& input, bool cppersist,
                    bool recursive, bool keepCache, int seed) {
   shuffle(input.begin(), input.end(), default_random_engine(seed));
   runTTT(input, "WORep", cppersist, recursive, keepCache);
 }
 
+//randomly select 'numInp' boards from 'input' - with replacement 
 void runTTTWRep(std::vector<Board>& input, bool cppersist,
                   bool recursive, bool keepCache, int seed, int numInp) {
   srand(seed);
@@ -313,9 +315,8 @@ void runTTTWRep(std::vector<Board>& input, bool cppersist,
 
 
 int main(int argc, char const* argv[]) {
-  //43046721 
   std::vector<Board> input;
-  createBoards(input);
+  createBoards(input); //enumerate all possible valid boards
   int numInput = stoi(argv[1]);
   bool cppersist = stoi(argv[2]);
   bool recursive = stoi(argv[3]);

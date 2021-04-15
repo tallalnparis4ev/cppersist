@@ -7,9 +7,11 @@ from os import listdir
 from os.path import isfile, join
 from sigfig import round
 
-should_output = False
-unit = 1000000000 #Just for Fibonacci
-# unit = 1000 #For the rest
+should_output = False #true to output graphs, false otherwise
+
+# Set this depending on the precision for the computational problem 
+unit = 1000000000 #nanoseconds
+# unit = 1000 #milliseconds
 
 def get_data(file_path):
   if file_path == "data/Fibonacci/WORepRecCpstDelCache.csv":
