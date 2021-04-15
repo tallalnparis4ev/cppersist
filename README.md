@@ -16,7 +16,7 @@ The documentation of cppersist is found [here](https://tallalnparis4ev.github.io
 ~/cppersist/demo$ ./build_demo
 ~/cppersist/demo$ ./demo
 ```
-
+You should see the output "2" twice. You should also have a directory called "persist" that is populated with entries.
 ## Example C++ File Using cppersist
 Here is an example of how cppersist is used:
 
@@ -100,12 +100,12 @@ make
 ```
 
 ## Build - for MongoDB cache
-Note: not all systems will require you to pass -DOPENSSL_ROOT_DIR. It is required on macOS though.
+Note: not all systems will require you to pass -DOPENSSL_ROOT_DIR. This was a requirment on macOS Catalina 10.15.6, and was solved by passing in the path to OpenSSL which will look like "/usr/local/opt/openssl". However, on CentOS 8 there was no need to pass in anything.
 ```
 cmake -DMONGO=true -DOPENSSL_ROOT_DIR=/path/to/your/openSSL/root/dir .
 make
 ```
-# Setting up the MongoDB server
+## Setting up the MongoDB server
 ```console
 ~/cppersist/$ cd mongo_server
 ~/cppersist/mongo_server$ python3 setup.py install
@@ -114,3 +114,13 @@ make
 This will run the MongoDB server at localhost:[desired port number]. The default port number is 5000, which will be used if a port number isn't passed in. The MongoDB server is configured by the settings.py file. 
 
 By default the MongoDB server communicates to a single MongoDB instance which should run at localhost:27017. You are responsible for setting up this MongoDB instance in any way you would like.
+
+## Running Tests
+```console
+~$ cd ./cppersist/test
+~/cppersist/test$ ./build_tests /path/to/openSSL
+~/cppersist/test$ ./remake_tests
+```
+Note: again, not all systems will require you to pass /path/to/openssl. This was a requirment on macOS Catalina 10.15.6, and was solved by passing in the path to OpenSSL which will look like "/usr/local/opt/openssl". However, on CentOS 8 there was no need to pass in anything.
+
+Additionally, for the MongoDB tests to pass you must setup two MongoDB servers - one listening at port 5000 and the other at port 5001. The MongoDB instance they copmmunicate with must not have any entries in the collection "persist" of the database "memoisation".
