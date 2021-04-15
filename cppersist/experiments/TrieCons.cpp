@@ -15,12 +15,12 @@
 #include "data-generation/generators.cpp"
 #include "helpers/Timer.cpp"
 #include "helpers/TrieNode.cpp"
-#include "helpers/bigint.cpp"
 typedef unsigned long long largestUnsigned;
 using namespace std::chrono;
 using namespace cpst;
 using namespace std;
 
+//Used for Trie construction, adds 'word' from dictionary to 'head'
 void addWordToTrie(std::string& word, TrieNode* head) {
   TrieNode* cur = head;
   for (char& c : word) {
@@ -34,6 +34,8 @@ void addWordToTrie(std::string& word, TrieNode* head) {
   }
   cur->isWord = true;
 }
+
+//Construct a trie, with root = 'head', from the words in the dictionary at 'path'
 void completeTrie(TrieNode* head, string& dictPath) {
   std::ifstream infile(dictPath);
   std::string line;
@@ -61,6 +63,7 @@ class TrieGenerator : public Memoizable<TrieNode*,string>, public TrieGen{
 
 namespace fs = std::filesystem;
 using namespace std::chrono_literals;
+//Key for the trie generator - must also store the time the file at path was modified
 string genKey(string path){
   fs::path p = path;
   auto ftime = fs::last_write_time(p);
@@ -68,13 +71,14 @@ string genKey(string path){
   return path + std::asctime(std::localtime(&cftime));
 }
 
-void runTrie(TrieGen& generator, vector<string>& input,
+
+//'n' indicates how many times the trie structure should be constructed in a workload
+void runTrie(TrieGen& generator, int n,
               string outPath, bool cppersist) {
   vector<TrieNode*> toFree;
-  int n = 5;
   Timer timer;
   timer.start();
-  // Convert dictionary ("words.txt") into a Trie data structure twice.
+  // Workload = convert dictionary ("words.txt") into a Trie data structure n times.
   for(int i=0;i<n;i++){
     TrieNode* answer = generator.solve("words.txt");
     toFree.push_back(answer);
@@ -86,48 +90,20 @@ void runTrie(TrieGen& generator, vector<string>& input,
   appendRowToFile(outPath, timer.getRow());
 }
 
-void runTrie(vector<string>& input, string type,
+void runTrie(int input, string type,
               bool cppersist, bool recursive, bool keepCache) {
-  string outPath = getOutPath("TrieTwoSame", type, cppersist, recursive, keepCache);
+  string outPath = getOutPath("TrieTenSame", type, cppersist, recursive, keepCache);
   if (recursive) {
-    if (!cppersist) {
+    if (!cppersist) { //run workload on trie construction function, without cppersist applied. 
       TrieGenerator gen;
       runTrie(gen, input, outPath, cppersist);
     } 
-    else {
+    else { //run workload on trie construction function, with cppersist applied. 
       auto genMemo = getLocalMemoizedObj<TrieGenerator>(genKey, TrieNode::pickle, 
         TrieNode::unpickle, sha256);
       runTrie(genMemo, input, outPath, cppersist);
     }
   }
-}
-
-void runTrieWORep(vector<string>& input, bool cppersist,
-                   bool recursive, bool keepCache, int seed) {
-  shuffle(input.begin(), input.end(), default_random_engine(seed));
-  runTrie(input, "WORep", cppersist, recursive, keepCache);
-}
-
-void runTrieWRep(vector<string>& input, bool cppersist,
-                  bool recursive, bool keepCache, int seed) {
-  srand(seed);
-  vector<string> newInp;
-  while (newInp.size() != input.size()) {
-    newInp.push_back(input[rand() % input.size()]);
-  }
-  runTrie(newInp, "WRep", cppersist, recursive, keepCache);
-}
-
-
-std::vector<string> getFilePaths(){
-  std::vector<string> ret;
-  string dir = "./TrieGenInput";
-  for(auto& file: fs::directory_iterator(dir)){
-    fs::path path = file.path();
-    std::string pathStr = path;
-    ret.push_back(pathStr);
-  }
-  return ret;
 }
 
 int main(int argc, char const* argv[]) {
@@ -137,13 +113,6 @@ int main(int argc, char const* argv[]) {
   bool keepCache = stoi(argv[4]);
   int seed = stoi(argv[5]);
   const char* version = argv[6];
-  std::vector<string> filePaths = getFilePaths();
-  runTrieWORep(filePaths, cppersist, recursive, keepCache, seed);
-  // if (std::strcmp(version, "worep") == 0) {
-    // runTrieWORep(filePaths, cppersist, recursive, keepCache, seed);
-  // }
-  // if (std::strcmp(version, "wrep") == 0) {
-    // runTrieWRep(filePaths, cppersist, recursive, keepCache, seed);
-  // }
+  runTrie(numInput, "", cppersist, recursive, keepCache);
   return 0;
 }
