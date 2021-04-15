@@ -1,7 +1,7 @@
 #!/bin/bash
-#$1 means = number of runs
-#$2 means = recursion num input
-#$3 means = iterative num input
+#$1 = number of runs
+#$2 = recursion num input
+#$3 = iterative num input
 
 ./run $1 $2 $3 worep
 ./run $1 $2 $3 wrep

@@ -1,8 +1,8 @@
 #!/bin/bash
-#$1 means = number of runs
-#$2 means = recursion num input
-#$3 means = iterative num input
-#$4 means = seq/wrep/worep
+#$1 = number of runs
+#$2 = recursion num input
+#$3 = iterative num input
+#$4 = seq/wrep/worep
 
 #5 input, use cppersist, recursive, keep cache, seed, worep/wrep/seq 
 #5 1 1 0 0 worep/wrep/seq
