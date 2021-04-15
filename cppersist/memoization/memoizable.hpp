@@ -1,11 +1,19 @@
 #if !defined(MEMOIZABLE_H_FILE)
 #define MEMOIZABLE_H_FILE
 namespace cpst {
+/**
+ * A helper function for memoization, will simply return the value you give it.
+ * Common use case: identity<string> for a hashing function.
+ */
 template <typename T>
 T identity(T obj) {
   return obj;
 }
 
+/**
+ * A helper function for memoization, will simply return true.
+ * Common use case: returnTrue<Args...> to reset your decision function.
+ */
 template <typename... Args>
 bool returnTrue(Args... args){
   return true;
