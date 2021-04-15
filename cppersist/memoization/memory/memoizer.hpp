@@ -30,33 +30,55 @@ class Memoized : public T {
   }
   Ret operator()(Args... args) { return solve(args...); }
 
+  /**
+   * Destructor
+   */
   ~Memoized() { delete cache; }
 
-  Memoized(const Memoized& other)  // copy constructor
+  /**
+   * Copy constructor
+   */
+  Memoized(const Memoized& other)  
   {
     this->cache = other.cache->clone();
   }
 
-  Memoized(Memoized&& other) noexcept  // move constructor
+  /**
+   * Move constructor
+   */
+  Memoized(Memoized&& other) noexcept  
       : cache(std::exchange(other.cache, nullptr)) {}
 
-  Memoized& operator=(const Memoized& other)  // copy assignment
+  /**
+   * Copy constructor
+   */
+  Memoized& operator=(const Memoized& other)  
   {
     if (this == &other) return *this;
     return *this = Memoized(other);
   }
 
-  Memoized& operator=(Memoized&& other) noexcept  // move assignment
+  /**
+   * Move assignment
+   */
+  Memoized& operator=(Memoized&& other) noexcept  
   {
     if (this == &other) return *this;
     std::swap(cache, other.cache);
     return *this;
   }
 
+  /**
+   * A method that returns a boolean indicating if this set of input arguments
+   * should be memoized or not.
+   */
   void setDecision(bool (*decision_)(Args...)){
     this->decision = decision_;
   }
 
+  /**
+   * Returns the underlying MemCache object.
+   */ 
   MemCache<Ret, Args...>* getCache(){
     return this->cache;
   }
