@@ -111,3 +111,6 @@ make
 ~/cppersist/mongo_server$ python3 setup.py install
 ~/cppersist/mongo_server$ python3 run.py [desried port number]
 ```
+This will run the MongoDB server at localhost:[desired port number]. The default port number is 5000, which will be used if a port number isn't passed in. The MongoDB server is configured by the settings.py file. 
+
+By default the MongoDB server communicates to a single MongoDB instance which should run at localhost:27017. You are responsible for setting up this MongoDB instance in any way you would like.
