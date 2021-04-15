@@ -145,10 +145,10 @@ void runGhost(vector<string>& input, TrieNode* dict, string type,
     auto hasMemo = getLocalMemoizedObj<LeafRec>(
         ghostKey, identity<string>, identity<string>, identity<string>);
     hasMemo.setDecision(decision); //set the memoization decision
-    if (!cppersist) { //run experiments w/o cppersist
+    if (!cppersist) { //run workload w/o cppersist
       GhostSolver rec(noMemo);
       runGhost(rec, input, dict, path, cppersist);
-    } else { //run experiments w cppersist
+    } else { //run workload w cppersist
       GhostSolver rec(hasMemo);
       runGhost(rec, input, dict, path, cppersist);
     }
