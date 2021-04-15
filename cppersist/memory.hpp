@@ -42,6 +42,8 @@ Memoized<T, Ret, Args...> getMemoizedObj(
       return Memoized<T, Ret, Args...>(
           new LRUCache<Ret, Args...>(size, key, pickle, unpickle));
   }
+  return Memoized<T, Ret, Args...>(
+          new RegCache<Ret, Args...>(size, key, pickle, unpickle));
 }
 
 /**
