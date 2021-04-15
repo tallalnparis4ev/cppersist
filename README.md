@@ -105,3 +105,9 @@ Note: not all systems will require you to pass -DOPENSSL_ROOT_DIR. It is require
 cmake -DMONGO=true -DOPENSSL_ROOT_DIR=/path/to/your/openSSL/root/dir .
 make
 ```
+# Setting up the MongoDB server
+```console
+~/cppersist/$ cd mongo_server
+~/cppersist/mongo_server$ python3 setup.py install
+~/cppersist/mongo_server$ python3 run.py [desried port number]
+```
