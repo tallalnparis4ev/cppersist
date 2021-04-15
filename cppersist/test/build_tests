@@ -1,6 +1,7 @@
+./google_build 
 rm -rf build
 mkdir build
 cd build
-cmake -DCMAKE_BUILD_TYPE=Debug -DOPENSSL_ROOT_DIR=$1 ..
+cmake -DMONGO=true -DCMAKE_BUILD_TYPE=Debug -DOPENSSL_ROOT_DIR=$1 ..
 make
 mv tests ../run_tests
