@@ -19,15 +19,10 @@ find_package(Filesystem REQUIRED)
 include_directories(${cppersist_SOURCE_DIR})
 
 #Get cpr if needed
-if(HTTPS OR HTTP)
+if(MONGO)
   FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/tallalnparis4ev/cpr.git GIT_TAG stable)
   FetchContent_MakeAvailable(cpr)
   set(CPR "cpr::cpr")
-endif()
-
-#Get OpenSSL if needed
-if(HTTPS)
   find_package(OpenSSL REQUIRED)
 endif()
-
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Threads::Threads std::filesystem ${CPR})
