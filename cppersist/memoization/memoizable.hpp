@@ -2,7 +2,7 @@
 #define MEMOIZABLE_H_FILE
 namespace cpst {
 /**
- * A helper function for memoization, will simply return the value you give it.
+ * A helper function for memoization, will return the value you give input.
  * Common use case: identity<string> for a hashing function.
  */
 template <typename T>
@@ -11,7 +11,7 @@ T identity(T obj) {
 }
 
 /**
- * A helper function for memoization, will simply return true.
+ * A helper function for memoization, will return true regardless of input.
  * Common use case: returnTrue<Args...> to reset your decision function.
  */
 template <typename... Args>
