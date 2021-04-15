@@ -2,7 +2,7 @@
 
 ## TLDR
 
-cppersist is a small framework which allows users to apply persistent memoization to a member function. cppersist allows member functions to be memoized via a filesystem, MongoDB, or in-memory.
+Cppersist is a small framework which allows users to apply persistent memoization to a member function. Cppersist allows member functions to be memoized via a filesystem, MongoDB, or in-memory.
 
 ## Documentation
 
