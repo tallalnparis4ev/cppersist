@@ -18,5 +18,4 @@ do
 done
 
 ./deleteAndRun $1 $2 $3 wrep
-./runNoDelete $1 $2 $3 wrep 
 
