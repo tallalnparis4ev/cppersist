@@ -15,12 +15,12 @@
 #include "data-generation/generators.cpp"
 #include "helpers/Timer.cpp"
 #include "helpers/TrieNode.cpp"
-#include "helpers/bigint.cpp"
 typedef unsigned long long largestUnsigned;
 using namespace std::chrono;
 using namespace cpst;
 using namespace std;
 
+//Used for Trie construction, adds 'word' from dictionary to 'head'
 void addWordToTrie(std::string& word, TrieNode* head) {
   TrieNode* cur = head;
   for (char& c : word) {
@@ -34,6 +34,8 @@ void addWordToTrie(std::string& word, TrieNode* head) {
   }
   cur->isWord = true;
 }
+
+//Construct a trie, with root = 'head', from the words in the dictionary at 'path'
 void completeTrie(TrieNode* head, string path) {
   std::ifstream infile(path);
   std::string line;
@@ -45,72 +47,36 @@ void completeTrie(TrieNode* head, string path) {
   }
 }
 
-bool isP2Win(TrieNode* cur) { return (cur->length() % 2) == 1; }
-
-struct Result {
-  string word;
-  bool p1Win;
-  string getWord() { 
-    return word;
-  }
-  void print() {
-    string winner = p1Win ? "player one " : "player two ";
-    string line = winner + "will win by playing towards " + word;
-  }
-  static string toString(Result res){
-    string oneOrZero = res.p1Win ? "1" : "0";
-    return oneOrZero + " " + res.getWord();
-  }
-  static Result fromString(string resStr){
-    return Result{resStr.substr(2), resStr.at(0) == '1'};
-  }
-};
-
-bool isValidPartial(string partial, TrieNode* head) {
-  TrieNode* cur = head;
-  for (char& c : partial) {
-    TrieNode* child = cur->getChild(c);
-
-    if (child == nullptr) {
-      return false;
-    }
-
-    if (child->isWord) {
-      return false;
-    }
-
-    cur = child;
-  }
-  return true;
-}
-
 class LeafSolver{
   public:
-    virtual string solve(bool,TrieNode*) = 0;
+    virtual string solve(bool,TrieNode*) = 0; //to reduce repeated code...
 };
 
 class LeafRec : public Memoizable<string,bool,TrieNode*>, public LeafSolver{
   public:
+    //The ghost function that is memoized. p2 indicates which player it is desired to win for, true = player 2, false = player 1.
+    //'Cur' is the trie node to begin search. 
     string solve(bool p2, TrieNode* cur) override{
       if(cur->isLeaf()){
         if(isRightLabel(p2,cur)){
-          return cur->prefix + ", ";
+          return cur->prefix + ", "; //Append this winning for p2
         }
-        return "";
+        return ""; //We know we can't win...return empty string
       }
 
-      if(!isRightLabel(p2,cur)) return "";
+      if(!isRightLabel(p2,cur)) return ""; //We know we can't win...return empty string
       
-      string ans = "";
+      string ans = ""; //the comma separated string of words to play for 
       for (TrieNode*& child : cur->children) {
         if(child!=nullptr){
           string ret = solve(p2,child);
-          if(ret!="") ans.append(ret);
+          if(ret!="") ans.append(ret); //append winning strings
         }
       }
-      return ans;
+      return ans; //the comma separated string of words to play for 
     }
-
+    
+    //Returns if the 'check' trie node has a label that means the current player, indicated by 'p2', will win
     bool isRightLabel(bool p2, TrieNode*& check){
       if(check->label == '2') return p2 ? true : false;
       else return p2 ? false : true;
@@ -120,23 +86,20 @@ class LeafRec : public Memoizable<string,bool,TrieNode*>, public LeafSolver{
 class GhostSolver{
  public:
   GhostSolver(LeafSolver& solver_) : solver(solver_) {}
-  string solve(string prefix, TrieNode* dict) {
-    return solver.solve(prefix.length()==1,dict->getNode(prefix));
+  string solve(string prefix, TrieNode* dict) { //helper function to call our memoized search
+    return solver.solve(prefix.length()==1,dict->getNode(prefix)); //traverse to correct starting node
   }
   private:
     LeafSolver& solver;
 };
 
-//Explore smaller words, maybe make the dictionairy bigger?
-//Change the computational problem to calculate the Trie each time
-//While generating prefixes give higher weighting to smaller length words
-
 string ghostKey(bool p2, TrieNode* curNode) 
 { 
-  if(curNode->isRoot) return "root_node";
-  return curNode->prefix+to_string(p2); 
+  if(curNode->isRoot) return "root_node"; //only if we desire to start search from the empty string...can never be player two
+  return curNode->prefix+to_string(p2); //key is indicated by which player we want to win and the current prefix to search from
 }
 
+//Generated all the valid prefixes from 'head'
 vector<string> validPrefixes(TrieNode* head) {
   vector<string> prefixes;
   queue<TrieNode*> queue;
@@ -155,6 +118,7 @@ vector<string> validPrefixes(TrieNode* head) {
   return prefixes;
 }
 
+//Run the experiments 
 void runGhost(GhostSolver& solver, vector<string>& input, TrieNode* dict,
               string path, bool cppersist) {
   Timer timer;
@@ -166,14 +130,11 @@ void runGhost(GhostSolver& solver, vector<string>& input, TrieNode* dict,
   appendRowToFile(path, timer.getRow());
 }
 
+//Memoization decision that only memoizes calls to nodes that are root or 1-level higher than the root
 bool decision(bool p2, TrieNode* cur){
   int length = cur->prefix.length();
   if(length>2 || (p2 && (cur->label == '1') || (!p2  && (cur->label == '2')))) return false;
   return true;
-  // if(p2) return (length%2) == 1;
-  // return (length%2) == 0;
-  // cur->prefix % 2 == 0 when its p1's turn
-  // cur->prefix % 2 == 1 when its p2's turn
 }
 
 void runGhost(vector<string>& input, TrieNode* dict, string type,
@@ -183,46 +144,36 @@ void runGhost(vector<string>& input, TrieNode* dict, string type,
     LeafRec noMemo; 
     auto hasMemo = getLocalMemoizedObj<LeafRec>(
         ghostKey, identity<string>, identity<string>, identity<string>);
-    hasMemo.setDecision(decision);
-    if (!cppersist) {
+    hasMemo.setDecision(decision); //set the memoization decision
+    if (!cppersist) { //run experiments w/o cppersist
       GhostSolver rec(noMemo);
       runGhost(rec, input, dict, path, cppersist);
-    } else {
+    } else { //run experiments w cppersist
       GhostSolver rec(hasMemo);
       runGhost(rec, input, dict, path, cppersist);
     }
   }
 }
 
-void runGhostWORep(vector<string>& input, TrieNode* dict, bool cppersist,
-                   bool recursive, bool keepCache, int seed) {
-  // shuffle(input.begin(), input.end(), default_random_engine(seed));
-  runGhost(input, dict, "WORep", cppersist, recursive, keepCache);
-}
-
 void runGhostWRep(vector<string>& input, TrieNode* dict, bool cppersist,
-                  bool recursive, bool keepCache, int seed) {
-  srand(seed);
-  vector<string> newInp;
-  while (newInp.size() != input.size()) {
-    newInp.push_back(input[rand() % input.size()]);
-  }
-  runGhost(newInp, dict, "WRep", cppersist, recursive, keepCache);
+                   bool recursive, bool keepCache, int seed) {
+  runGhost(input, dict, "WRep", cppersist, recursive, keepCache);
 }
 
+//Preprocess the trie - post order traversal
 void postOrder(TrieNode* cur){
-  if(cur->isLeaf()){
-    if((cur->prefix.length() % 2) == 0) cur->label = '1';
-    else cur->label = '2';
+  if(cur->isLeaf()){ //it is a word in our dictionary
+    if((cur->prefix.length() % 2) == 0) cur->label = '1'; //p1 wins from here
+    else cur->label = '2'; //p2 wins from here
     return;
   }
   for (TrieNode*& child : cur->children){
     if(child!=nullptr){
-      postOrder(child);
+      postOrder(child); //post order traverse the children
     }
   }
 
-  bool allSame = true;
+  bool allSame = true; //check if all the children of this node all have the same label
   char prev = '-';
   for (TrieNode*& child : cur->children){
     if(child!=nullptr){
@@ -235,10 +186,14 @@ void postOrder(TrieNode* cur){
     }
   }
   
-  if(allSame) cur->label = prev;
+  if(allSame) cur->label = prev; //all the children of this node have the same label, so set this node's label to their label
   else{
-    if((cur->prefix.length() % 2) == 0) cur->label = '1';
-    else cur->label = '2';
+    
+    if((cur->prefix.length() % 2) == 0) cur->label = '1'; //it is p1's turn at this node, therefore they can play towards one of their
+    //children with a label corresponding to p1 winning
+    
+    else cur->label = '2'; //it is p2's turn at this node, therefore they can play towards one of their
+    //children with a label corresponding to p2 winning
   }
 }
 
@@ -254,24 +209,13 @@ int main(int argc, char const* argv[]) {
   TrieNode* head = new TrieNode(false);
   head->isRoot = true;
   completeTrie(head,"./words.txt");
-  postOrder(head);
-  vector<string> validPref = validPrefixes(head);
+  postOrder(head); //preprocess the trie
+  vector<string> validPref = validPrefixes(head); //get all valid prefixes
   vector<string> inp;
   srand(seed);
-  while(inp.size() != numInput) {
+  while(inp.size() != numInput) { //randomly add 'numInput' valid prefixes for this workload
     inp.push_back(validPref[rand() % validPref.size()]);
   }
-  runGhostWORep(inp, head, cppersist, recursive, keepCache, seed);
-  TrieNode::freeAll(head);
-
-  // if (std::strcmp(version, "worep") == 0) {
-  //   runGhostWORep(validPref, head, cppersist, recursive, keepCache, seed);
-  // }
-
-  // if (std::strcmp(version, "wrep") == 0) {
-  //   runGhostWRep(validPref, head, cppersist, recursive, keepCache, seed);
-  // }
-
-
-  // return 0;
+  runGhostWRep(inp, head, cppersist, recursive, keepCache, seed);
+  TrieNode::freeAll(head); //free the trie!
 }
