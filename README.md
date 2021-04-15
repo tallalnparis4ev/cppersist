@@ -11,7 +11,7 @@ The documentation of cppersist is found [here](https://tallalnparis4ev.github.io
 
 ## Minimal Working Example
 ```console
-~$ git clone git@github.com:tallalnparis4ev/cppersist.git
+~$ git clone https://github.com/tallalnparis4ev/cppersist.git
 ~$ cd ./cppersist/demo
 ~/cppersist/demo$ ./build_demo
 ~/cppersist/demo$ ./demo
