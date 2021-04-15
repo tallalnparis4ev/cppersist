@@ -192,14 +192,16 @@
 //     Ret realAnswer = T::solve(args...);
 //     if(this->secondaryCache != NULL){
 //       this->cacheConsistent.lock();
-//       discard = std::async(&PersistentMemoized<T,Ret,Args...>::write,this,args..., realAnswer);
+//       discard =
+//       std::async(&PersistentMemoized<T,Ret,Args...>::write,this,args...,
+//       realAnswer);
 //     }
 
-//     start = high_resolution_clock::now(); 
+//     start = high_resolution_clock::now();
 //     primaryCache->put(args..., realAnswer);
 //     end = high_resolution_clock::now();
 //     missPenalty = duration_cast<nanoseconds>(end-start).count();
-//     return realAnswer;  
+//     return realAnswer;
 //   }
 
 // template <typename T, typename Ret, typename... Args>
@@ -216,8 +218,6 @@
 //   delete this->secondaryCache;
 // }
 // }  // namespace cpst
-
-
 
 #include <chrono>
 #include <functional>
@@ -387,14 +387,15 @@ void PersistentMemoized<T, Ret, Args...>::write(Args const&... args,
 }
 
 template <typename T, typename Ret, typename... Args>
-void PersistentMemoized<T, Ret, Args...>::setDecision(bool (*decision_)(Args...)){
+void PersistentMemoized<T, Ret, Args...>::setDecision(
+    bool (*decision_)(Args...)) {
   this->decision = decision_;
 }
 
 template <typename T, typename Ret, typename... Args>
 Ret PersistentMemoized<T, Ret, Args...>::solve(Args... args) {
-  if(!this->decision(args...)) return T::solve(args...);
-  
+  if (!this->decision(args...)) return T::solve(args...);
+
   std::optional<Ret> answer = primaryCache->get(args...);
   // Check if entry exists in primary cache
   if (answer) {

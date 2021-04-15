@@ -6,9 +6,9 @@
 #include <vector>
 
 #include "../local.hpp"
-#include "./helpers/Timer.cpp"
 #include "../utils/files.hpp"
 #include "../utils/log.hpp"
+#include "./helpers/Timer.cpp"
 #include "data-generation/generators.cpp"
 typedef unsigned long long largestUnsigned;
 using namespace std::chrono;
@@ -20,8 +20,7 @@ class PrimeSolver {
   virtual list<int> solve(int n) = 0;
 };
 
-class PrimeRec : public Memoizable<list<int>, int>,
-                 public PrimeSolver {
+class PrimeRec : public Memoizable<list<int>, int>, public PrimeSolver {
  public:
   list<int> solve(int n) override {
     int nextPrime = smallestPrime(n);
@@ -46,8 +45,7 @@ class PrimeRec : public Memoizable<list<int>, int>,
   }
 };
 
-class PrimeIter : public Memoizable<list<int>, int>,
-                  public PrimeSolver {
+class PrimeIter : public Memoizable<list<int>, int>, public PrimeSolver {
  public:
   list<int> solve(int n) override {
     list<int> primes;
@@ -108,24 +106,25 @@ void runPrime(vector<int>& input, string type, bool cppersist, bool recursive,
   string outPath = getOutPath("Primes", type, cppersist, recursive, keepCache);
   if (recursive) {
     PrimeRec rec;
-    auto localMemo = getLocalMemoizedObj<PrimeRec>(
-        primesKey, primesPickle, primesUnpickle, "primesTest", identity<string>);
+    auto localMemo =
+        getLocalMemoizedObj<PrimeRec>(primesKey, primesPickle, primesUnpickle,
+                                      "primesTest", identity<string>);
     if (!cppersist) {
       runPrime(rec, input, outPath, cppersist);
-    } 
+    }
     // else {
     //   runPrime(localMemo, input, outPath, cppersist);
     // }
-  } 
+  }
   // else {
-    // PrimeIter iter;
-    // auto localMemo = getLocalMemoizedObj<PrimeIter>(
-        // primesKey, primesPickle, primesUnpickle, "primesTest", identity<string>);
-    // if (!cppersist) {
-      // runPrime(iter, input, outPath, cppersist);
-    // } else {
-      // runPrime(localMemo, input, outPath, cppersist);
-    // }
+  // PrimeIter iter;
+  // auto localMemo = getLocalMemoizedObj<PrimeIter>(
+  // primesKey, primesPickle, primesUnpickle, "primesTest", identity<string>);
+  // if (!cppersist) {
+  // runPrime(iter, input, outPath, cppersist);
+  // } else {
+  // runPrime(localMemo, input, outPath, cppersist);
+  // }
   // }
 }
 
@@ -160,7 +159,6 @@ vector<int> generateInput(int n) {
 }
 
 int main(int argc, char const* argv[]) {
-  
   int numInput = stoi(argv[1]);
   vector<int> input = generateInput(numInput);
   bool cppersist = stoi(argv[2]);

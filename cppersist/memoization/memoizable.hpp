@@ -7,7 +7,7 @@ T identity(T obj) {
 }
 
 template <typename... Args>
-bool returnTrue(Args... args){
+bool returnTrue(Args... args) {
   return true;
 }
 

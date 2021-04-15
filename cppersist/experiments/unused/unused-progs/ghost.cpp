@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <filesystem>
 #include <iostream>
 #include <queue>
 #include <random>
@@ -6,7 +7,6 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include <filesystem>
 
 #include "../local.hpp"
 #include "../utils/files.hpp"
@@ -49,19 +49,17 @@ bool isP2Win(TrieNode* cur) { return (cur->length() % 2) == 1; }
 struct Result {
   string word;
   bool p1Win;
-  string getWord() { 
-    return word;
-  }
+  string getWord() { return word; }
   void print() {
     string winner = p1Win ? "player one " : "player two ";
     string line = winner + "will win by playing towards " + word;
     cout << line << endl;
   }
-  static string toString(Result res){
+  static string toString(Result res) {
     string oneOrZero = res.p1Win ? "1" : "0";
     return oneOrZero + " " + res.getWord();
   }
-  static Result fromString(string resStr){
+  static Result fromString(string resStr) {
     return Result{resStr.substr(2), resStr.at(0) == '1'};
   }
 };
@@ -113,9 +111,9 @@ class GhostRec : public Memoizable<Result, string, TrieNode*>,
   }
 };
 
-//Explore smaller words, maybe make the dictionairy bigger?
-//Change the computational problem to calculate the Trie each time
-//While generating prefixes give higher weighting to smaller length words
+// Explore smaller words, maybe make the dictionairy bigger?
+// Change the computational problem to calculate the Trie each time
+// While generating prefixes give higher weighting to smaller length words
 
 string ghostKey(string partial, TrieNode* ignored) { return partial; }
 
@@ -179,9 +177,7 @@ void runGhostWRep(vector<string>& input, TrieNode* dict, bool cppersist,
   runGhost(newInp, dict, "WRep", cppersist, recursive, keepCache);
 }
 
-
 int main(int argc, char const* argv[]) {
-
   int numInput = stoi(argv[1]);
   bool cppersist = stoi(argv[2]);
   bool recursive = stoi(argv[3]);
@@ -190,7 +186,7 @@ int main(int argc, char const* argv[]) {
   const char* version = argv[6];
 
   TrieNode* head = new TrieNode(false);
-  completeTrie(head,"./words.txt");
+  completeTrie(head, "./words.txt");
   vector<string> validPref = validPrefixes(head);
 
   if (std::strcmp(version, "worep") == 0) {

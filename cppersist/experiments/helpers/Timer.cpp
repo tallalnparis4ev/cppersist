@@ -2,7 +2,7 @@
 
 #include <chrono>
 typedef unsigned long long chronoTime;
-//Class that abstracts timing mechanisms 
+// Class that abstracts timing mechanisms
 class Timer {
  public:
   void start() {
@@ -14,9 +14,9 @@ class Timer {
     std::chrono::time_point<std::chrono::high_resolution_clock> nowReal =
         std::chrono::high_resolution_clock::now();
 
-    realTime += std::chrono::duration_cast<std::chrono::nanoseconds>(
-                           nowReal - startReal)
-                           .count();
+    realTime += std::chrono::duration_cast<std::chrono::nanoseconds>(nowReal -
+                                                                     startReal)
+                    .count();
 
     sysCpu += endCpu.tms_stime - startCpu.tms_stime;
     userCpu += endCpu.tms_utime - startCpu.tms_utime;

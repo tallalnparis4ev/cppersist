@@ -22,8 +22,9 @@ void getDiskMetrics(int seed) {
   size_t totalMissPenalty = 0;
   StringGenerator sg(seed);
   int numberOfRuns = 30000;
-  PersistentMemoized toyExample =
-      getLocalMemoizedObj<ToyExample>(identity<string>, identity<string>, identity<string>, "test", identity<string>);
+  PersistentMemoized toyExample = getLocalMemoizedObj<ToyExample>(
+      identity<string>, identity<string>, identity<string>, "test",
+      identity<string>);
   for (int i = 0; i < numberOfRuns; i++) {
     string input = sg.getNext();
     toyExample(input);
@@ -51,7 +52,8 @@ void getDiskMetrics(int seed) {
 //   StringGenerator sg(seed);
 //   int numberOfRuns = 30000;
 //   PersistentMemoized toyExample = getMongoMemoizedObj<ToyExample>(
-//       identity<string>, identity<string>, identity<string>, "localhost:5000", "test", identity<string>);
+//       identity<string>, identity<string>, identity<string>, "localhost:5000",
+//       "test", identity<string>);
 //   for (int i = 0; i < numberOfRuns; i++) {
 //     string input = sg.getNext();
 //     toyExample(input);

@@ -14,7 +14,7 @@ class Memoized : public T {
  public:
   Memoized(MemCache<Ret, Args...>* newCache) : cache(newCache) {}
   Ret solve(Args... args) {
-   if(!decision(args...)) return T::solve(args...);
+    if (!decision(args...)) return T::solve(args...);
     // Check if entry exists in primary cache
     std::optional<Ret> answer = cache->get(args...);
     if (answer) {
@@ -53,10 +53,7 @@ class Memoized : public T {
     return *this;
   }
 
-  void setDecision(bool (*decision_)(Args...)){
-    this->decision = decision_;
-  }
-
+  void setDecision(bool (*decision_)(Args...)) { this->decision = decision_; }
 
  private:
   bool (*decision)(Args...) = returnTrue<Args...>;
