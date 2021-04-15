@@ -89,7 +89,6 @@ if(MONGO)
   FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/tallalnparis4ev/cpr.git GIT_TAG stable)
   FetchContent_MakeAvailable(cpr)
   set(CPR "cpr::cpr")
-  find_package(OpenSSL REQUIRED)
 endif()
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Threads::Threads std::filesystem ${CPR})
 ```
@@ -102,7 +101,7 @@ make
 ## Build - for MongoDB cache
 Note: not all systems will require you to pass -DOPENSSL_ROOT_DIR. This was a requirment on macOS Catalina 10.15.6, and was solved by passing in the path to OpenSSL which will look like "/usr/local/opt/openssl". However, on CentOS 8 there was no need to pass in anything.
 ```
-cmake -DMONGO=true -DOPENSSL_ROOT_DIR=/path/to/your/openSSL/root/dir .
+cmake -DMONGO=true -DOPENSSL_ROOT_DIR=/path/to/openssl .
 make
 ```
 ## Setting up the MongoDB server
@@ -118,9 +117,9 @@ By default the MongoDB server communicates to a single MongoDB instance which sh
 ## Running Tests
 ```console
 ~$ cd ./cppersist/test
-~/cppersist/test$ ./build_tests /path/to/openSSL
-~/cppersist/test$ ./remake_tests
+~/cppersist/test$ ./build_tests /path/to/openssl
+~/cppersist/test$ ./run_tests
 ```
 Note: again, not all systems will require you to pass /path/to/openssl. This was a requirment on macOS Catalina 10.15.6, and was solved by passing in the path to OpenSSL which will look like "/usr/local/opt/openssl". However, on CentOS 8 there was no need to pass in anything.
 
-Additionally, for the MongoDB tests to pass you must setup two MongoDB servers - one listening at port 5000 and the other at port 5001. The MongoDB instance they copmmunicate with must not have any entries in the collection "persist" of the database "memoisation".
+Additionally, for the MongoDB tests to pass you must setup two MongoDB servers - one listening at port 5000 and the other at port 5001. The MongoDB instance they communicate with must not have any entries in the collection "persist" of the database "memoisation".
