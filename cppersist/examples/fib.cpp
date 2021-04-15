@@ -30,9 +30,9 @@ int main() {
   memoized2.getCache();
   PersistentMemoized memoized =
       getLocalMemoizedObj<FibonacciSolver>(keymaker, intostr, strtoi, "fib");
-  memoized.setDecision(decision);
-  memoized.getCache();
-  memoized.setCacheLoc("../apples");
+  // memoized.setDecision(decision);
+  // memoized.getCache();
+  // memoized.setCacheLoc("../apples");
   // Memoized memoized = getMemoizedObj<FibonacciSolver>(
       // keymaker, intostr, strtoi, MemCacheType::LRU, 10, decision);
   // Memoized memoized = getMemoizedObj<FibonacciSolver>(

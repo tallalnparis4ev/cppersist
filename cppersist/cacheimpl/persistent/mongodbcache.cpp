@@ -39,13 +39,15 @@ string MongoDBCache<Ret, Args...>::makeUrlForKey(const string& key) {
   return this->base + this->hash(key);
 }
 
+//'s' corresponds to the JSON string returned by Eve. This function will return
+//the result corresponding to the JSON return by Eve.
 std::string parseJson(std::string s) {
   for (std::string::size_type i = 0; i < s.size(); i++) {
-    if (s[i] == '\"') {
+    if (s[i] == '\"') { //Look for JSON keys (open quote)
       bool isResult = false;
       string resultStr = "result";
       int index = 0;
-      for (std::string::size_type j = i + 1; j < s.size(); j++) {
+      for (std::string::size_type j = i + 1; j < s.size(); j++) {//Find the key that equals "result"
         if (isResult && (s[j] == '\"') && (s[j + 1] == ':')) {
           int startIndex = j + 1;
           while (startIndex < s.size()) {
@@ -72,11 +74,11 @@ std::string parseJson(std::string s) {
 template <typename Ret, typename... Args>
 std::optional<Ret> MongoDBCache<Ret, Args...>::get(const Args&... args) {
   cpr::Response response =
-      cpr::Get(cpr::Url{makeUrlForKey(this->key(args...))});  // catch error
-  if (response.status_code == 200) {
-    return optional<Ret>{this->unpickle(parseJson(response.text))};
+      cpr::Get(cpr::Url{makeUrlForKey(this->key(args...))}); //Look for entry
+  if (response.status_code == 200) { 
+    return optional<Ret>{this->unpickle(parseJson(response.text))}; //cache hit - deserialize
   }
-  return nullopt;
+  return nullopt; //cache miss
 }
 
 template <typename Ret, typename... Args>
@@ -89,8 +91,9 @@ void MongoDBCache<Ret, Args...>::put(const Args&... args, const Ret& value) {
   string nameSpace = "\"namespace\": \"" + NAMESPACE + "\",";
   string result = "\"result\": \"" + valueStr +
                   "\""
-                  "}";
+                  "}"; //create the string to post in an Eve friendly format!
   string jsonPost = funcName + hashLine + nameSpace + result;
+  //Post the result using CPR
   cpr::Response response =
       cpr::Post(cpr::Url{url}, cpr::Body{jsonPost},
                 cpr::Header{{"Content-Type", "application/json"}});

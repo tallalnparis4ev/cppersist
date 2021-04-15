@@ -21,8 +21,12 @@ class DiskCache : public PerCache<Ret, Args...> {
   void put(const Args&... args, const Ret& value);
   void setLoc(string&);
  private:
+  static const string DEFAULT_PATH; //'./persist/'
   string makePathForKey(const string& key);
-  string outputPath;
+  //corresponds to the directory where entries are stored for this cache, by
+  //default this is './persist/funcName'
+  string outputPath; 
+
 };
 }  // namespace cpst
 #include "diskcache.cpp"
