@@ -119,7 +119,7 @@ By default the MongoDB server communicates to a single MongoDB instance which sh
 ```console
 ~$ cd ./cppersist/test
 ~/cppersist/test$ ./build_tests /path/to/openSSL
-~/cppersist/test$ ./remake_tests
+~/cppersist/test$ ./run_tests
 ```
 Note: again, not all systems will require you to pass /path/to/openssl. This was a requirment on macOS Catalina 10.15.6, and was solved by passing in the path to OpenSSL which will look like "/usr/local/opt/openssl". However, on CentOS 8 there was no need to pass in anything.
 
