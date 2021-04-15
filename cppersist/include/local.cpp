@@ -1,10 +1,10 @@
 #include <iostream>
 #include <string>
 
-#include "cacheimpl/persistent/diskcache.hpp"
-#include "crypto/sha256.h"
-#include "memoization/memoizable.hpp"
-#include "utils/log.hpp"
+#include "../cacheimpl/persistent/diskcache.hpp"
+#include "../crypto/sha256.h"
+#include "../memoization/memoizable.hpp"
+#include "../utils/log.hpp"
 
 using std::string;
 namespace cpst {

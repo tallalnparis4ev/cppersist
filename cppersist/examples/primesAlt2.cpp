@@ -2,7 +2,7 @@
 #include <iterator>
 #include <list>
 
-#include "../local.hpp"
+#include "../include/local.hpp"
 using std::list;
 using namespace std;
 // Prime Factors Example

@@ -1,10 +1,10 @@
 #include <iostream>
 #include <string>
 
-#include "cacheimpl/memory/lrucache.hpp"
-#include "cacheimpl/memory/regcache.hpp"
-#include "cacheimpl/persistent/mongodbcache.hpp"
-#include "utils/log.hpp"
+#include "../cacheimpl/memory/lrucache.hpp"
+#include "../cacheimpl/memory/regcache.hpp"
+#include "../cacheimpl/persistent/mongodbcache.hpp"
+#include "../utils/log.hpp"
 
 using std::string;
 namespace cpst {

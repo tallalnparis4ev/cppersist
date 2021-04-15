@@ -3,12 +3,12 @@
 
 #include <string>
 
-#include "cacheimpl/memory/lrucache.hpp"
-#include "cacheimpl/memory/onecache.hpp"
-#include "cacheimpl/memory/regcache.hpp"
-#include "memoization/memcachetypes.hpp"
-#include "memoization/memoizable.hpp"
-#include "memoization/memory/memoizer.hpp"
+#include "../cacheimpl/memory/lrucache.hpp"
+#include "../cacheimpl/memory/onecache.hpp"
+#include "../cacheimpl/memory/regcache.hpp"
+#include "../memoization/memcachetypes.hpp"
+#include "../memoization/memoizable.hpp"
+#include "../memoization/memory/memoizer.hpp"
 
 namespace cpst {
 /**
