@@ -22,6 +22,8 @@ namespace cpst {
  * for any return of the solve function.
  * @param unpickle - this function is the inverse of pickle.
  * @param dbUrl - this corresponds to the URL of the mongoDB server.
+ * @param hash - this is applied to the key produced by the key function, the string it
+ * returns will be used as the final key for cache entries. Default = sha256.
  */
 template <typename T, typename Ret, typename... Args>
 PersistentMemoized<T, Ret, Args...> getMongoMemoizedObj(
@@ -43,6 +45,8 @@ PersistentMemoized<T, Ret, Args...> getMongoMemoizedObj(
  * @param funcName - this corresponds to which collection in the 'cppersist'
  * database results should be persisted. If this is not passed in, the name
  * typeid(T).name() is used instead.
+ * @param hash - this is applied to the key produced by the key function, the string it
+ * returns will be used as the final key for cache entries. Default = sha256.
  */
 template <typename T, typename Ret, typename... Args>
 PersistentMemoized<T, Ret, Args...> getMongoMemoizedObj(
@@ -63,6 +67,8 @@ PersistentMemoized<T, Ret, Args...> getMongoMemoizedObj(
  * for any return of the solve function.
  * @param unpickle - this function is the inverse of pickle.
  * @param dbUrl - this corresponds to the URL of the mongoDB server.
+ * @param hash - this is applied to the key produced by the key function, the string it
+ * returns will be used as the final key for cache entries. Default = sha256.
  */
 template <typename T, typename Ret, typename... Args>
 PersistentMemoized<T, Ret, Args...> getMongoMemoizedObj(
@@ -86,6 +92,8 @@ PersistentMemoized<T, Ret, Args...> getMongoMemoizedObj(
  * @param funcName - this corresponds to which collection in the 'cppersist'
  * database results should be persisted. If this is not passed in,
  * typeid(T).name() is used instead.
+ * @param hash - this is applied to the key produced by the key function, the string it
+ * returns will be used as the final key for cache entries. Default = sha256.
  */
 template <typename T, typename Ret, typename... Args>
 PersistentMemoized<T, Ret, Args...> getMongoMemoizedObj(

@@ -21,6 +21,8 @@ namespace cpst {
  * @param pickle - this function should return a string representation
  * for any return of the solve function.
  * @param unpickle - this function is the inverse of pickle.
+ * @param hash - this is applied to the key produced by the key function, the string it
+ * returns will be used as the final key for cache entries. Default = sha256.
  */
 template <typename T, typename Ret, typename... Args>
 PersistentMemoized<T, Ret, Args...> getLocalMemoizedObj(
@@ -40,6 +42,8 @@ PersistentMemoized<T, Ret, Args...> getLocalMemoizedObj(
  * @param unpickle - this function is the inverse of pickle.
  * @param funcName - files will be stored at "./cppersist/{funcName}", if
  * funcName is not specified typeid(T).name() is used instead.
+ * @param hash - this is applied to the key produced by the key function, the string it
+ * returns will be used as the final key for cache entries. Default = sha256.
  */
 template <typename T, typename Ret, typename... Args>
 PersistentMemoized<T, Ret, Args...> getLocalMemoizedObj(
@@ -59,6 +63,8 @@ PersistentMemoized<T, Ret, Args...> getLocalMemoizedObj(
  * @param pickle - this function should return a string representation
  * for any return of the solve function.
  * @param unpickle - this function is the inverse of pickle.
+ * @param hash - this is applied to the key produced by the key function, the string it
+ * returns will be used as the final key for cache entries. Default = sha256.
  */
 template <typename T, typename Ret, typename... Args>
 PersistentMemoized<T, Ret, Args...> getLocalMemoizedObj(
@@ -80,6 +86,8 @@ PersistentMemoized<T, Ret, Args...> getLocalMemoizedObj(
  * @param unpickle - this function is the inverse of pickle.
  * @param funcName - files will be stored at "./cppersist/{funcName}", if
  * funcName is not specified typeid(T).name() is used instead.
+ * @param hash - this is applied to the key produced by the key function, the string it
+ * returns will be used as the final key for cache entries. Default = sha256.
  */
 template <typename T, typename Ret, typename... Args>
 PersistentMemoized<T, Ret, Args...> getLocalMemoizedObj(
