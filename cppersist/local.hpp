@@ -11,9 +11,9 @@ namespace cpst {
  */
 
 /**
- * Creates an object, of type T, that has persistent memoization applied
+ * Creates an object that has persistent memoization applied
  * to T's solve function. Here, the storage medium for persistent memoization
- * is the local file system.
+ * is the filesystem.
  * @tparam T - the class which the user wants to instantiate an object of,
  * with a memoized version of the solve function.
  * @param key - this function should return a string representation for a
@@ -28,9 +28,9 @@ PersistentMemoized<T, Ret, Args...> getLocalMemoizedObj(
     string (*hash)(string) = sha256);
 
 /**
- * Creates an object, of type T, that has persistent memoization applied
+ * Creates an object that has persistent memoization applied
  * to T's solve function. Here, the storage medium for persistent memoization
- * is the local file system.
+ * is the filesystem.
  * @tparam T - the class which the user wants to instantiate an object of,
  * with a memoized version of the solve function.
  * @param key - this function should return a string representation for a
@@ -47,9 +47,9 @@ PersistentMemoized<T, Ret, Args...> getLocalMemoizedObj(
     string funcName, string (*hash)(string) = sha256);
 
 /**
- * Creates an object, of type T, that has persistent memoization applied
+ * Creates an object that has persistent memoization applied
  * to T's solve function. Here, the storage medium for persistent memoization
- * is the local file system.
+ * is the filesystem.
  * @tparam T - the class which the user wants to instantiate an object of,
  * with a memoized version of the solve function.
  * @param primaryCache - this will initialise the specified memory cache and use
@@ -66,9 +66,9 @@ PersistentMemoized<T, Ret, Args...> getLocalMemoizedObj(
     Ret (*unpickle)(string), string (*hash)(string) = sha256);
 
 /**
- * Creates an object, of type T, that has persistent memoization applied
+ * Creates an object that has persistent memoization applied
  * to T's solve function. Here, the storage medium for persistent memoization
- * is the local file system.
+ * is the filesystem.
  * @tparam T - the class which the user wants to instantiate an object of,
  * with a memoized version of the solve function.
  * @param primaryCache - this will initialise the specified memory cache and use

@@ -11,6 +11,19 @@
 #include "memoization/memory/memoizer.hpp"
 
 namespace cpst {
+/**
+ * Creates an object that has non-persistent memoization applied
+ * to T's solve function. 
+ * @tparam T - the class which the user wants to instantiate an object of,
+ * with a memoized version of the solve function.
+ * @param type - this will indicate the eviction strategy of the in-memory cache. Default is REGULAR.
+ * @param size - maximum size of the cache, not applicable if type == ONE. Default size is 1000.
+ * @param key - this function should return a string representation for a
+ * given argument to the solve function.
+ * @param pickle - this function should return a string representation
+ * for any return of the solve function.
+ * @param unpickle - this function is the inverse of pickle.
+ */
 template <typename T, typename Ret, typename... Args>
 Memoized<T, Ret, Args...> getMemoizedObj(
     std::string (*key)(Args...), std::string (*pickle)(Ret),
@@ -31,12 +44,23 @@ Memoized<T, Ret, Args...> getMemoizedObj(
   }
 }
 
+/**
+ * Creates an object that has non-persistent memoization applied
+ * to T's solve function. Will use a cache with eviction type REGULAR.
+ * @tparam T - the class which the user wants to instantiate an object of,
+ * with a memoized version of the solve function.
+ * @param size - maximum size of the cache, not applicable if type == ONE. Default size is 1000.
+ * @param key - this function should return a string representation for a
+ * given argument to the solve function.
+ * @param pickle - this function should return a string representation
+ * for any return of the solve function.
+ * @param unpickle - this function is the inverse of pickle.
+ */
 template <typename T, typename Ret, typename... Args>
 Memoized<T, Ret, Args...> getMemoizedObj(std::string (*key)(Args...),
                                          std::string (*pickle)(Ret),
                                          Ret (*unpickle)(std::string),
                                          int size) {
-  logOne("aux");
   return getMemoizedObj<T, Ret, Args...>(key, pickle, unpickle,
                                          MemCacheType::REGULAR, size);
 }
