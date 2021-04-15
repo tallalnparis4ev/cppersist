@@ -7,7 +7,7 @@ cppersist is a small framework which allows users to apply persistent memoizatio
 Here is an example of how cppersist is used:
 
 ```c++
-#include <cppersist/local.hpp> //if you need to memoize with the local filesystem
+#include <cppersist/local.hpp> //if you need to memoize with your filesystem
 #include <cppersist/mongo.hpp> //if you need to memoize with MongoDB
 #include <cppersist/memory.hpp> //if you need to memoize in-memory
 #include <iostream>
@@ -75,16 +75,23 @@ find_package(Filesystem REQUIRED)
 include_directories(${cppersist_SOURCE_DIR})
 
 #Get cpr if needed
-if(HTTPS OR HTTP)
-  FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/tallalnparis4ev/cpr.git GIT_TAG experiment)
+if(MONGO)
+  FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/tallalnparis4ev/cpr.git GIT_TAG stable)
   FetchContent_MakeAvailable(cpr)
   set(CPR "cpr::cpr")
-endif()
-
-#Get OpenSSL if needed
-if(HTTPS)
   find_package(OpenSSL REQUIRED)
 endif()
-
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Threads::Threads std::filesystem ${CPR})
+```
+## Build - only for filesystem cache
+```
+cmake .
+make
+```
+
+## Build - for MongoDB cache
+Note: not all systems will require you to pass -DOPENSSL_ROOT_DIR. It is required on macOS though.
+```
+cmake -DMONGO=true -DOPENSSL_ROOT_DIR=/path/to/your/openSSL/root/dir .
+make
 ```
