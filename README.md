@@ -105,7 +105,7 @@ Note: not all systems will require you to pass -DOPENSSL_ROOT_DIR. This was a re
 cmake -DMONGO=true -DOPENSSL_ROOT_DIR=/path/to/your/openSSL/root/dir .
 make
 ```
-# Setting up the MongoDB server
+## Setting up the MongoDB server
 ```console
 ~/cppersist/$ cd mongo_server
 ~/cppersist/mongo_server$ python3 setup.py install
@@ -115,7 +115,7 @@ This will run the MongoDB server at localhost:[desired port number]. The default
 
 By default the MongoDB server communicates to a single MongoDB instance which should run at localhost:27017. You are responsible for setting up this MongoDB instance in any way you would like.
 
-# Running Tests
+## Running Tests
 ```console
 ~$ cd ./cppersist/test
 ~/cppersist/test$ ./build_tests /path/to/openSSL
