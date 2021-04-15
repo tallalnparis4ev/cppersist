@@ -7,13 +7,14 @@ from os import listdir
 from os.path import isfile, join
 from sigfig import round
 
-should_output = False
-unit = 1000000000 #Just for Fibonacci
-# unit = 1000 #For the rest
+should_output = False #true to output graphs, false otherwise
 
+# Set this depending on the precision for the computational problem 
+# unit = 1000000000 #nanoseconds
+unit = 1000 #milliseconds
+
+#read in the data at file_path
 def get_data(file_path):
-  if file_path == "data/Fibonacci/WORepRecCpstDelCache.csv":
-    print("HEY")
   df = pd.read_csv(file_path, header=None)
   if len(df.index) > 10:
     df = df.iloc[10:,]
@@ -23,6 +24,7 @@ def get_data(file_path):
   real_sd = real_col.std()/unit
   return {"real_mean":real_mean, "real_sd":real_sd}
 
+#find the corresponding name to path
 def get_name(path):
   names = ['With Cppersist and a\n cache is kept between runs','With Cppersist','Without Cppersist']
   if path.endswith("NoCpst.csv"):
@@ -33,6 +35,8 @@ def get_name(path):
   elif path.endswith("CpstDelCache.csv"):
     return names[1]
 
+#file_paths, these paths could come in any order: [with_cppersist.csv, without_cppersist.csv]
+#save_to, where to output the generated graphs
 def make_graph(file_paths,save_to):
   # names = ['With Cppersist and a\n cache is kept between runs','With Cppersist','Without Cppersist']
   names = ['With Cppersist','Without Cppersist']
@@ -55,11 +59,8 @@ def make_graph(file_paths,save_to):
   plt.ylabel("Mean Real Time Taken (s)")
   bar = plt.bar(names,real_means,alpha=0.5, color=colors)
   ytop = [std for i,std in enumerate(real_std)]
-  ybot = [std if real_means[i] - std >= 0 else real_means[i] for i,std in enumerate(real_std)]
-  # stds = [[0,0], real_std]
-  # print(ytop)
-  # print(ybot)
-  # error_bars = plt.errorbar(names,real_means,yerr=(ybot,ytop),capsize=10,fmt='o', markersize=0)
+  ybot = [std if real_means[i] - std >= 0 else real_means[i] for i,std in enumerate(real_std)] #cut off if negative time
+
   error_bars = plt.errorbar(names,real_means,yerr=(ybot,ytop) ,capsize=10,fmt='o', markersize=0)
   bottom, top = plt.ylim()
   add = (0.005) * (top-bottom)
@@ -81,7 +82,7 @@ def make_graph_dirs(dir):
     shutil.rmtree(dir)
   os.makedirs(dir)
 
-
+#reads the .csv files in 'dir' and makes graphs to compare the function with and without cppersist
 def make_graphs(dir):
   final_part = os.path.basename(os.path.normpath(dir))
   non_filtered = [join(dir, f) for f in listdir(dir) if isfile(join(dir, f))]
@@ -101,15 +102,12 @@ def make_graphs(dir):
     make_graph(chunk,dir+"/"+new_dir+"/"+save_to+".png")
 
 
-# make_graphs('cppersist/experiments/data/Primes')
-make_graphs('data/TTT')
+make_graphs('data/TTTSize4')
 
+#If we want to manually graph, we can use this function and fill in the internal values
 def manual_graph(save_to):
-  # names = ['With Cppersist and a\n cache is kept between runs','With Cppersist','Without Cppersist']
-  # names = ['With Cppersist','Without Cppersist']
   names = ['Constructing from serialization','Constructing from dictionary']
 
-  # colors = ['green','red'] if len(names) == 2 else ['red', 'blue', 'green']
   colors = ['green','red'] if len(names) == 2 else ['red', 'blue', 'green']
   
   real_means = [0.2632282333, 0.38528312119999997]
@@ -130,36 +128,3 @@ def manual_graph(save_to):
   plt.savefig(save_to, bbox_inches='tight')
   plt.clf()
 
-# manual_graph('./serialize.png')
-
-
-# a = pd.read_csv("data/Primes/WORepRecCpstDelCache.csv", header=None).iloc[:,0].squeeze()
-# print(a.mean()/1000)
-
-
-
-#Trie stuff 
-#279496 words, maximum length word is 15
-#24887 number of valid prefixes 
-
-# def make_trie(*words):
-#      root = dict()
-#      for word in words:
-#          current_dict = root
-#          for letter in word:
-#              current_dict = current_dict.setdefault(letter, {})
-#          current_dict[_end] = _end
-#      return root
-
-# # # Using readlines()
-# scrabble = open('words.txt', 'r')
-# lines = scrabble.readlines()
-# # trie = make_trie(lines)
-
-# filtered = list(filter(lambda x : len(x)-1 > 4, lines))
-# # lens = list(map(lambda x : len(x) - 1,lines))
-# # a = max(lens)
-# # print(a)
-# # for line in lines:
-#   # if len(line)-1 == 15: 
-#     # print(line)
