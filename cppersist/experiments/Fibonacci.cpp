@@ -24,7 +24,7 @@ class FibSolver {
 class FibRec : public Memoizable<largestUnsigned, int>,
                  public FibSolver {
  public:
-  largestUnsigned solve(int n) override {
+  largestUnsigned solve(int n) override { //Recursive fibonacci function
     if(n==0) return 0;
     if(n==1) return 1;
     return solve(n-1) + solve(n-2);
@@ -34,7 +34,7 @@ class FibRec : public Memoizable<largestUnsigned, int>,
 class FibIter : public Memoizable<largestUnsigned, int>,
                  public FibSolver {
  public:
-  largestUnsigned solve(int n) override {
+  largestUnsigned solve(int n) override { //Iterative fibonacci function
     if (n == 0) return 0;
     if (n == 1) return 1;
     largestUnsigned prev = 0;
@@ -49,8 +49,9 @@ class FibIter : public Memoizable<largestUnsigned, int>,
   }
 };
 
-string fibKey(int x) { return std::to_string(x); }
-largestUnsigned fibUnpickle(string x) { return std::stoull(x); }
+string fibKey(int x) { return std::to_string(x); } //key is simple - return string version the n^th fibonacci number
+//Use standard lib implementations for serialize + deserialize 
+largestUnsigned fibUnpickle(string x) { return std::stoull(x); } 
 string fibPickle(largestUnsigned x) { return std::to_string(x); }
 
 void runFib(FibSolver& solver, vector<int>& input, string path) {
@@ -71,30 +72,32 @@ void runFib(vector<int>& input, string type,
     FibRec rec;
     auto localMemo = getLocalMemoizedObj<FibRec>(
         fibKey, fibPickle, fibUnpickle, "fibTest", identity<string>);
-    if (!cppersist) {
-      // runFib(rec, input, path);
+    if (!cppersist) { //run workload on recursive fibonacci function, without cppersist.
+      runFib(rec, input, path);
     } 
-    else {
+    else { //run workload on recursive fibonacci function, with cppersist.
       runFib(localMemo, input, path);
     }
   } else {
     FibIter iter;
     auto localMemo = getLocalMemoizedObj<FibIter>(
         fibKey, fibPickle, fibUnpickle, "fibTest", identity<string>);
-    if (!cppersist) {
+    if (!cppersist) { //run workload on iterative fibonacci function, without cppersist.
       runFib(iter, input, path);
-    } else {
+    } else { //run workload on iterative fibonacci function, without cppersist.
       runFib(localMemo, input, path);
     }
   }
 }
 
+//Without repetition - simply shuffle the input.
 void runFibWORep(vector<int>& input, bool cppersist,
                    bool recursive, bool keepCache, int seed) {
   shuffle(input.begin(), input.end(), default_random_engine(seed));
   runFib(input,"WORep", cppersist, recursive, keepCache);
 }
 
+//With repetition - randomly pick elements from the input, replacing them when you pick them.
 void runFibWRep(vector<int>& input,  bool cppersist,
                   bool recursive, bool keepCache, int seed) {
   srand(seed);
