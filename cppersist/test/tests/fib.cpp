@@ -20,44 +20,45 @@ string keymaker(int x) { return std::to_string(x); }
 
 string fibOutPath = "./persist/fib";
 
-TEST(Fibonacci, FineInputFS) {
+TEST(Fibonacci, TestMongoCache) {//mongo
+  auto fibSolver =
+      getMongoMemoizedObj<FibonacciSolver>(keymaker, intostr, strtoi, "localhost:5000", "test");
+  ASSERT_EQ(fibSolver.getCache()->get(8), nullopt); //test Cache object
+  ASSERT_EQ(fibSolver(8), 13);
+  ASSERT_EQ(fibSolver.getCache()->get(8).value_or(2), 13); //test Cache object
+}
+
+TEST(Fibonacci, FineInputFS) { //filesystem
   auto fibSolver =
       getLocalMemoizedObj<FibonacciSolver>(keymaker, intostr, strtoi, "fib");
-  ASSERT_EQ(fibSolver(8), 13);
+  ASSERT_EQ(fibSolver(8), 13); //ensure correct answer
   removeDir(fibOutPath);
 }
 
-TEST(Fibonacci, FineInputMongo) {
+TEST(Fibonacci, FineInputMongo) { //mongo
   auto fibSolver =
-      getMongoMemoizedObj<FibonacciSolver>(keymaker, intostr, strtoi, "fib");
-  ASSERT_EQ(fibSolver(8), 13);
+      getMongoMemoizedObj<FibonacciSolver>(keymaker, intostr, strtoi, "localhost:5000", "test");
+  ASSERT_EQ(fibSolver(8), 13); //ensure correct answer
 }
 
-TEST(Fibonacci, FineInputMem) {
+TEST(Fibonacci, FineInputMem) { //in-memory
   auto fibSolver =
       getMemoizedObj<FibonacciSolver>(keymaker, intostr, strtoi);
-  ASSERT_EQ(fibSolver(8), 13);
+  ASSERT_EQ(fibSolver(8), 13); //ensure correct answer
 }
 
-TEST(Fibonacci, TestMongoCache) {
-  auto fibSolver =
-      getMongoMemoizedObj<FibonacciSolver>(keymaker, intostr, strtoi, "localhost:5000");
-  ASSERT_EQ(fibSolver(8), 13);
-  ASSERT_EQ(fibSolver.getCache()->get(8).value_or(2), 13);
-}
-
-TEST(Fibonacci, TestFSCache) {
+TEST(Fibonacci, TestFSCache) {//filesystem
   auto fibSolver =
       getLocalMemoizedObj<FibonacciSolver>(keymaker, intostr, strtoi, "fib");
-  ASSERT_EQ(fibSolver.getCache()->get(8),nullopt);
+  ASSERT_EQ(fibSolver.getCache()->get(8),nullopt); //test Cache object
   ASSERT_EQ(fibSolver(8), 13);
-  ASSERT_EQ(fibSolver.getCache()->get(8).value_or(2), 13);
+  ASSERT_EQ(fibSolver.getCache()->get(8).value_or(2), 13); //test Cache object
 }
 
-TEST(Fibonacci, TestMemCache) {
+TEST(Fibonacci, TestMemCache) {//in-memory
   auto fibSolver =
       getMemoizedObj<FibonacciSolver>(keymaker, intostr, strtoi);
-  ASSERT_EQ(fibSolver.getCache()->get(8),nullopt);
+  ASSERT_EQ(fibSolver.getCache()->get(8),nullopt); //test Cache object
   ASSERT_EQ(fibSolver(8), 13);
-  ASSERT_EQ(fibSolver.getCache()->get(8), 13);
+  ASSERT_EQ(fibSolver.getCache()->get(8), 13); //test Cache object
 }

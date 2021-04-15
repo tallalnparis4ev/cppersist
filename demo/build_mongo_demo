@@ -1,0 +1,10 @@
+set -e
+if [ -d "./build/" ] 
+then
+	rm -rf build
+fi 
+mkdir build
+cd build
+cmake -DMONGO=true -DDEMO=../mongo_fib.cpp -DOPENSSL_ROOT_DIR=$1 ..
+make
+mv demo ../mongo_demo

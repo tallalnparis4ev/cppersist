@@ -5,6 +5,6 @@ then
 fi 
 mkdir build
 cd build
-cmake ..
+cmake -DDEMO=../fib.cpp ..
 make
 mv demo ..

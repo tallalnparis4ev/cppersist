@@ -33,5 +33,5 @@ int main(int argc, char** argv) {
   std::cout << memoizedInMemoryFib(3) << std::endl;
 
   // cpst::PersistentMemoized mongoMemoizedFib = cpst::getMongoMemoizedObj<FibonacciSolver>(keymaker,serialize,deserialize,"localhost:5000"); //mongo cache
-  // std::cout << memoizedFib(3) << std::endl;
+  // std::cout << mongoMemoizedFib(3) << std::endl;
 }

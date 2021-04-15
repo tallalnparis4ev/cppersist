@@ -3,7 +3,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(demo)
-add_executable(${CMAKE_PROJECT_NAME} fib.cpp)
+add_executable(${CMAKE_PROJECT_NAME} ${DEMO})
 
 #Get cppersist 
 include(FetchContent)
