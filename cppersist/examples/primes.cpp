@@ -5,6 +5,7 @@
 #include "../local.hpp"
 using std::list;
 using namespace std;
+using namespace cpst;
 // Prime Factors Example
 class PrimeFactorizer : public Memoizable<list<int>, int> {
  public:

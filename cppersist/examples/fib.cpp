@@ -2,7 +2,7 @@
 
 #include "../local.hpp"
 #include "../memory.hpp"
-#include "../mongo.hpp"
+// #include "../mongo.hpp"
 using namespace cpst;
 // Fibonacci Sequence Example
 class FibonacciSolver : public Memoizable<int, int> {
@@ -25,9 +25,9 @@ bool decision(int x){
 using namespace std;
 int main() {
   FibonacciSolver fibonacciSolver;
-  Memoized memoized2 =
-      getMemoizedObj<FibonacciSolver>(keymaker, intostr, strtoi);
-  memoized2.getCache();
+  // Memoized memoized2 =
+      // getMemoizedObj<FibonacciSolver>(keymaker, intostr, strtoi);
+  // memoized2.getCache();
   PersistentMemoized memoized =
       getLocalMemoizedObj<FibonacciSolver>(keymaker, intostr, strtoi, "fib");
   // memoized.setDecision(decision);
@@ -40,8 +40,8 @@ int main() {
   // memoized.setDecision(decision);
   // PersistentMemoized memoizedFibDb1 = getMongoMemoizedObj<FibonacciSolver>(
   // keymaker, intostr, strtoi, "http://localhost:5000");
-  int x = memoized(3);
-  x = memoized(3);
+  // int x = memoized(3);
+  // x = memoized(3);
   // int y = memoizedFibDb1(3);
   // int z = memoizedFib(3);
 }
