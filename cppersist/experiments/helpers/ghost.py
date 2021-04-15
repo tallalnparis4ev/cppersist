@@ -9,14 +9,18 @@ from os.path import isfile, join
 from sigfig import round
 import operator
 
+#This is used specifically for the scatter graphs of Ghost
+
 should_output = False #true to output graphs, false otherwise
 
 # Set this depending on the precision for the computational problem 
 unit = 1000000000 #nanoseconds
 # unit = 1000 #milliseconds
 
-scatter_dir = "GhostSearchNodesNoDec"
-prefix = "NoDec"
+scatter_dir = "GhostSearchNodesNoDec" #the directory that contains the .csv data files
+prefix = "NoDec" #prefix of the output graphs
+
+#read in the data at file_path
 def get_data(file_path):
   df = pd.read_csv(file_path, header=None)
   real_means = []
@@ -30,19 +34,15 @@ def get_data(file_path):
     real_sds.append(real_chunk_sd)
   return real_means, real_sds
 
+#speedups - an array of speedups due to the application of cppersist
+#x - the workload that generated the 'speedups'
+#outputs the corresponding speed up graph
 def output_speedup_graph(speedups, x):
-  # coefficients = np.polynomial.polynomial.polyfit(x, speedups, 1)
-  # fit = Polynomial.fit(x, speedups, 1)
-  # plt.plot(*fit.linespace())
-  
-  # z = np.polyfit(x, speedups, 1)
   fig = plt.figure()
   axes = fig.add_subplot(111)
   axes.set_xticks(x, minor=False)
   axes.scatter(x, speedups, s=2, c='g', marker="o")
   axes.plot(x, speedups, c='g',alpha=0.5)
-  # p = Polynomial.fit(x, speedups, 1)
-  # plt.plot(*p.linspace())
   plt.xlabel("Number of Valid Prefixes Input")
   plt.ylabel("Speedup")
   plt.ticklabel_format(useOffset=False)
@@ -51,6 +51,7 @@ def output_speedup_graph(speedups, x):
     plt.savefig("./data/{}/{}Speedup.png".format(scatter_dir,prefix), bbox_inches='tight')
   plt.clf()
 
+#print some metrics and also output the speedup graph
 def print_metrics(wo_cpst, w_cpst, x):
   speedups = list(map(operator.truediv, wo_cpst[0], w_cpst[0]))
   diffs = list(map(operator.sub, wo_cpst[0], w_cpst[0]))
@@ -60,7 +61,7 @@ def print_metrics(wo_cpst, w_cpst, x):
   if should_output:
     output_speedup_graph(speedups,x)
 
-
+#make the scatter plot for ghost
 def make_scatter():
   # x = [x for x in range(5000000,16000000,1000000)]
   x = [x for x in range(10000000,21000000,1000000)]
@@ -89,26 +90,6 @@ def make_scatter():
   if should_output:
     plt.savefig("./data/{}/{}Scatter.png".format(scatter_dir,prefix), bbox_inches='tight')
   plt.clf()
-
-  # real_means = [plot_dict[name]['real_mean'] for name in names]
-  # real_std = [plot_dict[name]['real_sd'] for name in names]
-  # plt.xlabel("Method")
-  # plt.ylabel("Mean Real Time Taken (s)")
-  # bar = plt.bar(names,real_means,alpha=0.5, color=colors)
-  # ytop = [std for i,std in enumerate(real_std)]
-  # ybot = [std if real_means[i] - std >= 0 else real_means[0] - 0.0001 for i,std in enumerate(real_std)]
-
-  # error_bars = plt.errorbar(names,real_means,yerr=(ybot,ytop) ,capsize=10,fmt='o', markersize=0)
-  # bottom, top = plt.ylim()
-  # add = (0.005) * (top-bottom)
-  # for patch in bar.patches:
-  #     label = f'{patch.get_height():.2}'
-  #     if "e" in label:
-  #       label = "{:.20f}".format(float(label)).rstrip('0').rstrip('.')
-  #     # label = "{:.2g}".format(patch.get_height())
-  #     plt.annotate(label, (patch.get_x() + (0.6 * patch.get_width()), patch.get_height()+add))
-
-
 
 def rm_file_if_exists():
   if not should_output:
