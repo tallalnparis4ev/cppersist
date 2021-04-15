@@ -18,15 +18,13 @@ class FibonacciSolver : public Memoizable<int, int> {
 int strtoi(string x) { return std::stoi(x); }
 string intostr(int x) { return std::to_string(x); }
 string keymaker(int x) { return std::to_string(x); }
-bool decision(int x){
-  return true;
-}
+bool decision(int x) { return true; }
 
 using namespace std;
 int main() {
   FibonacciSolver fibonacciSolver;
   // Memoized memoized2 =
-      // getMemoizedObj<FibonacciSolver>(keymaker, intostr, strtoi);
+  // getMemoizedObj<FibonacciSolver>(keymaker, intostr, strtoi);
   // memoized2.getCache();
   PersistentMemoized memoized =
       getLocalMemoizedObj<FibonacciSolver>(keymaker, intostr, strtoi, "fib");
@@ -34,9 +32,9 @@ int main() {
   // memoized.getCache();
   // memoized.setCacheLoc("../apples");
   // Memoized memoized = getMemoizedObj<FibonacciSolver>(
-      // keymaker, intostr, strtoi, MemCacheType::LRU, 10, decision);
+  // keymaker, intostr, strtoi, MemCacheType::LRU, 10, decision);
   // Memoized memoized = getMemoizedObj<FibonacciSolver>(
-      // keymaker, intostr, strtoi);
+  // keymaker, intostr, strtoi);
   // memoized.setDecision(decision);
   // PersistentMemoized memoizedFibDb1 = getMongoMemoizedObj<FibonacciSolver>(
   // keymaker, intostr, strtoi, "http://localhost:5000");

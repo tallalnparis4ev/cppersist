@@ -1,10 +1,11 @@
 #ifndef LOG_H_FILE
 #define LOG_H_FILE
-//A simple logging file
+// A simple logging file
 #include <iostream>
 using namespace std;
 namespace cpst {
-bool shouldLog = false; //if true log statements will be output to stdout, otherwise they won't.
+bool shouldLog = false;  // if true log statements will be output to stdout,
+                         // otherwise they won't.
 template <typename T>
 void print(T value) {
   if (!shouldLog) return;

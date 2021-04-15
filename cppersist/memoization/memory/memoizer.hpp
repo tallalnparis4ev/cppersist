@@ -14,7 +14,7 @@ class Memoized : public T {
  public:
   Memoized(MemCache<Ret, Args...>* newCache) : cache(newCache) {}
   Ret solve(Args... args) {
-    if(!decision(args...)) return T::solve(args...);
+    if (!decision(args...)) return T::solve(args...);
     // Check if entry exists in primary cache
     std::optional<Ret> answer = cache->get(args...);
     if (answer) {
@@ -38,22 +38,18 @@ class Memoized : public T {
   /**
    * Copy constructor
    */
-  Memoized(const Memoized& other)  
-  {
-    this->cache = other.cache->clone();
-  }
+  Memoized(const Memoized& other) { this->cache = other.cache->clone(); }
 
   /**
    * Move constructor
    */
-  Memoized(Memoized&& other) noexcept  
+  Memoized(Memoized&& other) noexcept
       : cache(std::exchange(other.cache, nullptr)) {}
 
   /**
    * Copy constructor
    */
-  Memoized& operator=(const Memoized& other)  
-  {
+  Memoized& operator=(const Memoized& other) {
     if (this == &other) return *this;
     return *this = Memoized(other);
   }
@@ -61,8 +57,7 @@ class Memoized : public T {
   /**
    * Move assignment
    */
-  Memoized& operator=(Memoized&& other) noexcept  
-  {
+  Memoized& operator=(Memoized&& other) noexcept {
     if (this == &other) return *this;
     std::swap(cache, other.cache);
     return *this;
@@ -72,16 +67,12 @@ class Memoized : public T {
    * A method that returns a boolean indicating if this set of input arguments
    * should be memoized or not.
    */
-  void setDecision(bool (*decision_)(Args...)){
-    this->decision = decision_;
-  }
+  void setDecision(bool (*decision_)(Args...)) { this->decision = decision_; }
 
   /**
    * Returns the underlying MemCache object.
-   */ 
-  MemCache<Ret, Args...>* getCache(){
-    return this->cache;
-  }
+   */
+  MemCache<Ret, Args...>* getCache() { return this->cache; }
 
  private:
   bool (*decision)(Args...) = returnTrue<Args...>;

@@ -1,3 +1,1 @@
-void removeDir(string dir){
-  std::filesystem::remove_all(dir);
-}
+void removeDir(string dir) { std::filesystem::remove_all(dir); }

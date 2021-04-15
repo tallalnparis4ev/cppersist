@@ -1,7 +1,7 @@
-#include "gtest/gtest.h"
 #include "cppersist/local.hpp"
-#include "cppersist/mongo.hpp"
 #include "cppersist/memory.hpp"
+#include "cppersist/mongo.hpp"
+#include "gtest/gtest.h"
 using namespace cpst;
 #include "tests/fib.cpp"
 #include "tests/memcache.cpp"

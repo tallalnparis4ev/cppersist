@@ -15,7 +15,7 @@ T identity(T obj) {
  * Common use case: returnTrue<Args...> to reset your decision function.
  */
 template <typename... Args>
-bool returnTrue(Args... args){
+bool returnTrue(Args... args) {
   return true;
 }
 

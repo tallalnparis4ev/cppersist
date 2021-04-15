@@ -17,6 +17,7 @@ class PerCache : public Cache<Ret, Args...> {
     this->hash = hash;
   }
   virtual void setLoc(string& loc) = 0;
+
  protected:
   std::string funcName;
 };

@@ -49,7 +49,8 @@ class PersistentMemoized : public T {
   /**
    * A method to change/assign a memory cache, followed by the size of the
    * cache. The size is only applicable if the MemCacheType is LRU or REGULAR.
-   * The size will determine the maximum number of entries in the LRU or REGULAR.
+   * The size will determine the maximum number of entries in the LRU or
+   * REGULAR.
    */
   void setMemoryCache(MemCacheType, int);
 
@@ -61,26 +62,23 @@ class PersistentMemoized : public T {
 
   /**
    * A method to change the location of your cache.
-   * If a filesystem cache this will save entries in the directory 'loc/funcName'.
-   * If a MongoDB cache this will save entries in to the database at the URL 'loc'.
+   * If a filesystem cache this will save entries in the directory
+   * 'loc/funcName'. If a MongoDB cache this will save entries in to the
+   * database at the URL 'loc'.
    */
   void setCacheLoc(string loc);
 
   /**
    * Returns the underlying Cache object, if a hybrid cache is used this will be
    * a MemCache object. Otherwise it will be a PerCache object.
-   */ 
-  Cache<Ret, Args...>* getCache(){
-    return this->primaryCache;
-  }
+   */
+  Cache<Ret, Args...>* getCache() { return this->primaryCache; }
 
   /**
-   * Returns the underlying Cache object, this can only be a PerCache object. 
+   * Returns the underlying Cache object, this can only be a PerCache object.
    * If a hybrid cache is not set, this function doesn't have a defined return.
-   */ 
-  Cache<Ret, Args...>* getSecondaryCache(){
-    return this->secondaryCache;
-  }
+   */
+  Cache<Ret, Args...>* getSecondaryCache() { return this->secondaryCache; }
 
   virtual Ret solve(Args... args);
 

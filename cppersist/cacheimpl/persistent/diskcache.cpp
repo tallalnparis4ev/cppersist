@@ -26,7 +26,8 @@ DiskCache<Ret, Args...>::DiskCache(string (*key)(Args...),
     : DiskCache(key, pickle, unpickle, hash) {
   this->funcName = funcName;
   this->outputPath = DEFAULT_PATH + funcName + "/";
-  std::filesystem::create_directories(this->outputPath); //create directory just in case user hasn't
+  std::filesystem::create_directories(
+      this->outputPath);  // create directory just in case user hasn't
 }
 
 template <typename Ret, typename... Args>
@@ -36,28 +37,30 @@ string DiskCache<Ret, Args...>::makePathForKey(const string& key) {
 
 template <typename Ret, typename... Args>
 std::optional<Ret> DiskCache<Ret, Args...>::get(const Args&... args) {
-  std::ifstream inFile(makePathForKey(this->key(args...))); //attempt to read entry
-  if (!inFile) { 
+  std::ifstream inFile(
+      makePathForKey(this->key(args...)));  // attempt to read entry
+  if (!inFile) {
     logOne("Unable to open file");
-    return nullopt; //cache miss
+    return nullopt;  // cache miss
   }
-  std::ostringstream ss; //cache hit
+  std::ostringstream ss;  // cache hit
   ss << inFile.rdbuf();
-  string str = ss.str(); //read the file's content
+  string str = ss.str();  // read the file's content
   inFile.close();
-  return optional<Ret>{this->unpickle(str)}; //deserialize
+  return optional<Ret>{this->unpickle(str)};  // deserialize
 }
 
 template <typename Ret, typename... Args>
 void DiskCache<Ret, Args...>::put(const Args&... args, const Ret& value) {
   std::ofstream myfile(makePathForKey(this->key(args...)));
   myfile << this->pickle(value);
-  myfile.close(); //write and close entry 
+  myfile.close();  // write and close entry
 }
 
 template <typename Ret, typename... Args>
-void DiskCache<Ret, Args...>::setLoc(string& loc){
+void DiskCache<Ret, Args...>::setLoc(string& loc) {
   this->outputPath = loc + "/" + this->funcName + "/";
-  std::filesystem::create_directories(this->outputPath); //create directory just in case user hasn't
+  std::filesystem::create_directories(
+      this->outputPath);  // create directory just in case user hasn't
 }
 }  // namespace cpst

@@ -168,20 +168,23 @@ void PersistentMemoized<T, Ret, Args...>::write(Args const&... args,
 }
 
 template <typename T, typename Ret, typename... Args>
-void PersistentMemoized<T, Ret, Args...>::setDecision(bool (*decision_)(Args...)){
+void PersistentMemoized<T, Ret, Args...>::setDecision(
+    bool (*decision_)(Args...)) {
   this->decision = decision_;
 }
 
 template <typename T, typename Ret, typename... Args>
-void PersistentMemoized<T, Ret, Args...>::setCacheLoc(string loc){
-  Cache<Ret,Args...>* toCast = secondaryCache == NULL ? this->primaryCache : this->secondaryCache;
-  PerCache<Ret,Args...>* casted = static_cast<PerCache<Ret,Args...>*>(this->primaryCache);
+void PersistentMemoized<T, Ret, Args...>::setCacheLoc(string loc) {
+  Cache<Ret, Args...>* toCast =
+      secondaryCache == NULL ? this->primaryCache : this->secondaryCache;
+  PerCache<Ret, Args...>* casted =
+      static_cast<PerCache<Ret, Args...>*>(this->primaryCache);
   casted->setLoc(loc);
 }
 
 template <typename T, typename Ret, typename... Args>
 Ret PersistentMemoized<T, Ret, Args...>::solve(Args... args) {
-  if(!this->decision(args...)) return T::solve(args...);
+  if (!this->decision(args...)) return T::solve(args...);
   // Check if entry exists in primary cache
   std::optional<Ret> answer = primaryCache->get(args...);
   if (answer) {

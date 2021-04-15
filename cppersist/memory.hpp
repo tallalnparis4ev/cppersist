@@ -13,11 +13,13 @@
 namespace cpst {
 /**
  * Creates an object that has non-persistent memoization applied
- * to T's solve function. 
+ * to T's solve function.
  * @tparam T - the class which the user wants to instantiate an object of,
  * with a memoized version of the solve function.
- * @param type - this will indicate the eviction strategy of the in-memory cache. Default is REGULAR.
- * @param size - maximum size of the cache, not applicable if type == ONE. Default size is 1000.
+ * @param type - this will indicate the eviction strategy of the in-memory
+ * cache. Default is REGULAR.
+ * @param size - maximum size of the cache, not applicable if type == ONE.
+ * Default size is 1000.
  * @param key - this function should return a string representation for a
  * given argument to the solve function.
  * @param pickle - this function should return a string representation
@@ -43,7 +45,7 @@ Memoized<T, Ret, Args...> getMemoizedObj(
           new LRUCache<Ret, Args...>(size, key, pickle, unpickle));
   }
   return Memoized<T, Ret, Args...>(
-          new RegCache<Ret, Args...>(size, key, pickle, unpickle));
+      new RegCache<Ret, Args...>(size, key, pickle, unpickle));
 }
 
 /**
@@ -51,7 +53,8 @@ Memoized<T, Ret, Args...> getMemoizedObj(
  * to T's solve function. Will use a cache with eviction type REGULAR.
  * @tparam T - the class which the user wants to instantiate an object of,
  * with a memoized version of the solve function.
- * @param size - maximum size of the cache, not applicable if type == ONE. Default size is 1000.
+ * @param size - maximum size of the cache, not applicable if type == ONE.
+ * Default size is 1000.
  * @param key - this function should return a string representation for a
  * given argument to the solve function.
  * @param pickle - this function should return a string representation
