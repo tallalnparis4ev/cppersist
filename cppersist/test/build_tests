@@ -2,6 +2,6 @@
 rm -rf build
 mkdir build
 cd build
-cmake -DMONGO=true -DCMAKE_BUILD_TYPE=Debug -DOPENSSL_ROOT_DIR=$1 ..
+cmake -DMONGO=true -DCMAKE_BUILD_TYPE=Debug ..
 make
 mv tests ../run_tests
